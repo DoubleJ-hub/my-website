@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>启明教务管理系统 - 高级质感版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #F8FAFC; }
+        /* 高级质感阴影 */
+        .soft-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02); }
+        /* 表格样式 */
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border-bottom: 1px solid #F1F5F9; padding: 16px 20px; text-align: left; }
+        th { background: #F8FAFC; color: #64748B; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { font-size: 14px; color: #1E293B; }
+        tr { transition: all 0.2s ease; }
+        tr:hover { background-color: #F8FAFC; }
+        /* 侧边栏菜单激活态 */
+        .active-menu { background-color: #EFF6FF; color: #2563EB; font-weight: 600; }
+        .active-sub { color: #2563EB; font-weight: 500; background-color: #EFF6FF; }
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden text-slate-800">
+
+    <!-- 左侧导航栏 -->
+    <aside class="w-[250px] bg-white border-r border-slate-200 flex flex-col z-20 shrink-0">
+        <div class="h-16 flex items-center px-6 border-b border-slate-100">
+            <span class="text-blue-600 mr-2 text-xl">🎓</span> 
+            <span class="font-bold text-slate-800 tracking-wide">启明教务</span>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1 text-sm text-slate-600 overflow-y-auto">
+            <!-- 仪表盘 -->
+            <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('仪表盘', this)">
+                <span>📊</span> <span>数据概览</span>
+            </div>
+            <!-- 系统管理 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('sys')">
+                    <div class="flex items-center space-x-3"><span>⚙️</span> <span>系统管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="sys-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教务管理员信息', this)">教务管理员信息</div>
+                </div>
+            </div>
+            <!-- 学生管理 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('stu')">
+                    <div class="flex items-center space-x-3"><span>👨‍🎓</span> <span>学生管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="stu-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生档案', this)">学生档案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('班级管理', this)">班级管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩管理', this)">成绩管理</div>
+                </div>
+            </div>
+            <!-- 老师管理 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('teacher')">
+                    <div class="flex items-center space-x-3"><span>👩‍🏫</span> <span>老师管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="teacher-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('师资档案', this)">师资档案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课程管理', this)">课程管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课表管理', this)">课表管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评教', this)">学生评教</div>
+                </div>
+            </div>
+            <!-- 新闻管理 -->
+            <div class="mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('新闻管理', this)">
+                    <span>📰</span> <span>新闻管理</span>
+                </div>
+            </div>
+        </nav>
+        <!-- 底部版本信息 -->
+        <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
+            Version 1.0.0
+        </div>
+    </aside>
+
+    <!-- 右侧主内容 -->
+    <main class="flex-1 flex flex-col h-screen relative bg-[#F8FAFC]">
+        <!-- 顶部导航栏（毛玻璃效果） -->
+        <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-8 z-10 shrink-0 sticky top-0">
+            <div class="text-slate-400 text-sm flex items-center">
+                <span>首页</span> <span class="mx-2 text-slate-300">/</span> <span class="text-slate-700 font-medium" id="breadcrumb">数据概览</span>
+            </div>
+            
+            <!-- 右上角登录及功能区 -->
+            <div class="flex items-center space-x-5">
+                <div class="relative hidden md:block">
+                    <input type="text" placeholder="搜索档案..." class="bg-slate-100/50 pl-9 pr-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-64 border border-transparent focus:border-blue-200 transition-all placeholder-slate-400">
+                    <span class="absolute left-3 top-2.5 text-slate-400 text-sm">🔍</span>
+                </div>
+                <div class="cursor-pointer text-slate-400 hover:text-blue-600 transition-colors">
+                    <span class="text-lg">🔔</span>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-1.5 rounded-full shadow-md shadow-blue-500/20 transition-all flex items-center">
+                    <span class="mr-1 text-lg">👤</span> 登录系统
+                </button>
+            </div>
+        </header>
+
+        <!-- 数据区 -->
+        <div class="p-8 flex-1 overflow-y-auto" id="main-content">
+            <!-- 默认展示：数据概览看板（加分项） -->
+            <div id="dashboard-view">
+                <h2 class="text-2xl font-bold text-slate-800 mb-6">数据概览</h2>
+                
+                <!-- 核心指标卡片 -->
+                <div class="grid grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">学员总数</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">1,248</div>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center text-xl">👥</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">开设课程</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">18</div>
+                        </div>
+                        <div class="w-12 h-12 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-xl">📚</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">活跃班级</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">36</div>
+                        </div>
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center text-xl">🏫</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">今日课程</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">86</div>
+                        </div>
+                        <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-xl">📅</div>
+                    </div>
+                </div>
+
+                <!-- 图表占位区 -->
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="col-span-2 bg-white p-6 rounded-2xl soft-shadow border border-slate-100 min-h-[300px] flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-700">成绩分析趋势（折线图）</h3>
+                            <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">2026学年</span>
+                        </div>
+                        <div class="flex-1 flex items-center justify-center text-slate-300 border-2 border-dashed border-slate-100 rounded-xl">
+                            此处放置 ECharts 折线图（对应论文数据分析模块）
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl soft-shadow border border-slate-100 min-h-[300px] flex flex-col">
+                        <h3 class="font-bold text-slate-700 mb-4">近期动态</h3>
+                        <div class="flex-1 space-y-4">
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">教务处发布了《秋季运动会调休通知》</p></div>
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-green-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">张小明等15名学生学籍档案已更新</p></div>
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">高一年级本周课表已发布</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleMenu(id) { document.getElementById(id + '-menu').classList.toggle('hidden'); }
+
+        function changeContent(title, element) {
+            document.getElementById('breadcrumb').innerText = title;
+            document.querySelectorAll('.active-menu, .active-sub').forEach(el => el.classList.remove('active-menu', 'active-sub'));
+            if (element) element.classList.add('active-sub');
+
+            const main = document.getElementById('main-content');
+            
+            // 如果是仪表盘，直接恢复默认视图
+            if (title === '仪表盘') {
+                location.reload(); // 简单粗暴刷新恢复
+                return;
+            }
+
+            let html = '';
+            let titleHtml = '';
+            let refText = '';
+
+            // ================= 数据表映射区 =================
+
+            // 1. 教务管理员信息 (表4.1)
+            if (title === '教务管理员信息') {
+                refText = '对应表4.1 教务管理员信息表';
+                titleHtml = '教务管理员信息管理';
+                html = `
+                <table><thead><tr>
+                    <th>序号 (eaid)</th><th>用户名 (userName)</th><th>密码 (pwd)</th><th>权限 (status)</th>
+                    <th>姓名 (name)</th><th>性别 (sex)</th><th>工作岗位 (work)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>admin</td><td>******</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">超级管理员</span></td><td>李建国</td><td>男</td><td>教务主任</td><td>13800008888</td><td class="text-right text-blue-600 cursor-pointer hover:bg-blue-50 px-3 py-1 rounded transition-colors text-xs font-medium">编辑</td></tr>
+                </tbody></table>`;
+            }
+            // 2. 学生档案 (表4.3)
+            else if (title === '学生档案') {
+                refText = '对应表4.3 学生信息表';
+                titleHtml = '学生档案管理';
+                html = `
+                <table><thead><tr>
+                    <th>学号 (stuid)</th><th>用户名 (userName)</th><th>密码 (pwd)</th><th>学生姓名 (stuname)</th>
+                    <th>年龄 (age)</th><th>性别 (sex)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>20260101</td><td>zhangxm</td><td>******</td><td>张小明</td><td>17</td><td>男</td><td>13812345678</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
+                    <tr><td>20260102</td><td>lixh</td><td>******</td><td>李小红</td><td>16</td><td>女</td><td>13987654321</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
+                </tbody></table>`;
+            }
+            // 3. 班级管理 (表4.4)
+            else if (title === '班级管理') {
+                refText = '对应表4.4 班级信息表';
+                titleHtml = '班级管理';
+                html = `
+                <table><thead><tr>
+                    <th>序号 (classid)</th><th>班名 (className)</th><th>年级 (grade)</th><th>班主任 (teacher)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>高一(1)班</td><td>高一</td><td>王建国</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>高一(2)班</td><td>高一</td><td>李华</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 4. 师资档案 (表4.2)
+            else if (title === '师资档案') {
+                refText = '对应表4.2 教师信息表';
+                titleHtml = '师资档案管理';
+                html = `
+                <table><thead><tr>
+                    <th>序号 (tehid)</th><th>用户名 (teacherName)</th><th>密码 (pwd)</th><th>权限 (status)</th>
+                    <th>姓名 (name)</th><th>性别 (sex)</th><th>任教学科 (subject)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>wangwu</td><td>******</td><td>教师</td><td>王建国</td><td>男</td><td>数学</td><td>13800001111</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 5. 课程管理 (表4.5)
+            else if (title === '课程管理') {
+                refText = '对应表4.5 课程信息表';
+                titleHtml = '课程管理';
+                html = `
+                <table><thead><tr>
+                    <th>序号 (cid)</th><th>课程名称 (courseTitle)</th><th>课程代码 (courseCode)</th><th>任课老师ID (teacherid)</th><th>学时 (period)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>数学</td><td>MATH101</td><td>1</td><td>40</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 6. 课表管理 (表4.6)
+            else if (title === '课表管理') {
+                refText = '对应表4.6 课表';
+                titleHtml = '课表管理';
+                html = `
+                <table><thead><tr>
+                    <th>序号 (kbid)</th><th>班级 (className)</th><th>周次 (week)</th><th>节次 (cplan_lesson)</th>
+                    <th>课程 (courseTitle)</th><th>学年 (year)</th><th>学期 (year_half)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>高一(1)班</td><td>第1周</td><td>第1节</td><td>数学</td><td>2026</td><td>第一学期</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 7. 成绩管理 (表4.8)
+            else if (title === '成绩管理') {
+                refText = '对应表4.8 成绩';
+                titleHtml = '成绩管理';
+                html = `
+                <table><thead><tr>
+                    <th>课程ID (cid)</th><th>学生ID (stuid)</th><th>分数 (score)</th><th>学年 (year)</th>
+                    <th>学期 (year_half)</th><th>期中 (midterm)</th><th>期末 (finalterm)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>20260101</td><td>88</td><td>2026</td><td>第一学期</td><td>85</td><td>90</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 8. 学生评教 (表4.7)
+            else if (title === '学生评教') {
+                refText = '对应表4.7 评教表';
+                titleHtml = '学生评教管理';
+                html = `
+                <table><thead><tr>
+                    <th>序号 (pjid)</th><th>学年 (year)</th><th>学期 (year_half)</th><th>任课教师 (teacherName)</th>
+                    <th>课程 (courseTitle)</th><th>学号 (stuNum)</th><th>综合素质分</th><th>岗位分</th>
+                    <th>教学技能分</th><th>辅导情况分</th><th>总均分</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>2026</td><td>第一学期</td><td>王建国</td><td>数学</td><td>20260101</td><td>4.5</td><td>4.6</td><td>4.8</td><td>4.7</td><td class="font-bold text-blue-600">4.65</td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
+                </tbody></table>`;
+            }
+            // 9. 新闻管理 (新增板块，自己编)
+            else if (title === '新闻管理') {
+                refText = '新闻系统模块（独立于教务ER图）';
+                titleHtml = '新闻管理';
+                html = `
+                <table><thead><tr>
+                    <th>新闻ID</th><th>新闻标题</th><th>分类</th><th>发布人</th>
+                    <th>发布时间</th><th>阅读量</th><th>状态</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>关于2026年秋季运动会调休安排的通知</td><td><span class="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">教务通知</span></td><td>教务处</td><td>10-16</td><td>512</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已发布</span></td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>我校师生在全市科技创新大赛中斩获佳绩</td><td><span class="text-indigo-600 bg-indigo-50 px-2 py-1 rounded text-xs font-medium">校园新闻</span></td><td>校办</td><td>10-14</td><td>1024</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已发布</span></td><td class="text-right space-x-2"><button class="text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+
+            // 注入页面内容
+            main.innerHTML = `
+                <div class="bg-white rounded-2xl soft-shadow border border-slate-100 p-8 min-h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
+                            <p class="text-slate-500 text-sm mt-1">${refText}</p>
+                        </div>
+                        <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                            ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100 flex-1">
+                        ${html}
+                    </div>
+                    <!-- 分页器 -->
+                    <div class="mt-6 flex justify-between items-center text-sm text-slate-500 pt-4 border-t border-slate-100">
+                        <span>共 1,248 条记录，当前显示 1-10 条</span>
+                        <div class="flex space-x-1">
+                            <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 transition-colors">上一页</button>
+                            <button class="px-3 py-1.5 bg-blue-600 text-white rounded shadow-sm font-medium">1</button>
+                            <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 transition-colors">2</button>
+                            <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 transition-colors">下一页</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

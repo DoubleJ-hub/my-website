@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>启明教务管理系统</title>
+    <script>
+        // ECharts 多源回退加载（国内镜像优先，避免单一 CDN 不稳定导致图表空白）
+        window.__onEChartsReady = null;
+        (function () {
+            var urls = [
+                'https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js',
+                'https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js',
+                'https://registry.npmmirror.com/echarts/5.4.3/files/dist/echarts.min.js',
+                'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js'
+            ];
+            function tryLoad(i) {
+                if (i >= urls.length) { if (window.__onEChartsReady) window.__onEChartsReady(false); return; }
+                var s = document.createElement('script');
+                s.src = urls[i];
+                s.onload = function () { if (window.__onEChartsReady) window.__onEChartsReady(true); };
+                s.onerror = function () { tryLoad(i + 1); };
+                document.head.appendChild(s);
+            }
+            tryLoad(0);
+        })();
+    </script>
+    <style>
+        /* 基础重置（替代 Tailwind Preflight） */
+        *, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: currentColor; }
+        html, body { margin: 0; padding: 0; }
+        h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+        h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+        ul, ol { list-style: none; padding: 0; }
+        button, input, select, textarea { font-family: inherit; font-size: 100%; line-height: inherit; color: inherit; margin: 0; padding: 0; background-color: transparent; }
+        button { cursor: pointer; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif; background: #F8FAFC; line-height: 1.5; }
+        /* 高级质感阴影 */
+        .soft-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02); }
+        /* 表格样式 */
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border-bottom: 1px solid #F1F5F9; padding: 16px 20px; text-align: left; }
+        th { background: #F8FAFC; color: #64748B; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+        td { font-size: 14px; color: #1E293B; }
+        tr { transition: all 0.2s ease; }
+        tr:hover { background-color: #F8FAFC; }
+        /* 侧边栏菜单激活态 */
+        .active-menu { background-color: #EFF6FF; color: #2563EB; font-weight: 600; }
+        .active-sub { color: #2563EB; font-weight: 500; background-color: #EFF6FF; }
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+        /* 侧边栏过渡 */
+        #sidebar { transition: transform 0.25s ease; }
+        @media (max-width: 768px) {
+            #sidebar { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); }
+            #sidebar.open { transform: translateX(0); }
+            #overlay { transition: opacity 0.25s ease; }
+        }
+        /* 图表容器 */
+        .chart-box { width: 100%; height: 300px; }
+        /* 提示气泡动画 */
+        #toast {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        #toast.show { transform: translateX(0); opacity: 1; }
+        .fade-in { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        /* ===== 高级感增强 ===== */
+        body { background: linear-gradient(180deg, #F8FAFC 0%, #EEF2F7 100%); }
+        .card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04); }
+        .text-gradient { background: linear-gradient(120deg, #2563EB 0%, #7C3AED 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .active-sub { position: relative; }
+        .active-sub::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 16px; border-radius: 2px; background: linear-gradient(180deg, #2563EB, #7C3AED); }
+        .metric-icon { position: relative; overflow: hidden; }
+        .metric-icon::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.55), transparent 60%); }
+        tr:hover { background-color: #F1F5F9; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        /* ============ 静态样式（替代 Tailwind 运行时编译，秒开） ============ */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .flex-wrap { flex-wrap: wrap; }
+        .flex-1 { flex: 1 1 0%; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .shrink-0 { flex-shrink: 0; }
+        .min-w-0 { min-width: 0; }
+        .gap-2\.5 { gap: 0.625rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .space-x-1 > * + * { margin-left: 0.25rem; }
+        .space-x-2 > * + * { margin-left: 0.5rem; }
+        .space-x-3 > * + * { margin-left: 0.75rem; }
+        .space-x-5 > * + * { margin-left: 1.25rem; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .col-span-2 { grid-column: span 2 / span 2; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .fixed { position: fixed; }
+        .sticky { position: sticky; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .top-0 { top: 0; }
+        .top-2\.5 { top: 0.625rem; }
+        .top-20 { top: 5rem; }
+        .right-6 { right: 1.5rem; }
+        .left-3 { left: 0.75rem; }
+        .-top-0\.5 { top: -0.125rem; }
+        .-right-0\.5 { right: -0.125rem; }
+        .z-10 { z-index: 10; }
+        .z-20 { z-index: 20; }
+        .z-30 { z-index: 30; }
+        .z-50 { z-index: 50; }
+        .w-2 { width: 0.5rem; }
+        .w-8 { width: 2rem; }
+        .w-12 { width: 3rem; }
+        .w-64 { width: 16rem; }
+        .w-full { width: 100%; }
+        .w-\[250px\] { width: 250px; }
+        .h-2 { height: 0.5rem; }
+        .h-8 { height: 2rem; }
+        .h-12 { height: 3rem; }
+        .h-16 { height: 4rem; }
+        .h-full { height: 100%; }
+        .h-screen { height: 100vh; }
+        .max-w-xs { max-width: 20rem; }
+        .min-h-full { min-height: 100%; }
+        .p-4 { padding: 1rem; }
+        .p-5 { padding: 1.25rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .pl-9 { padding-left: 2.25rem; }
+        .pr-4 { padding-right: 1rem; }
+        .pt-4 { padding-top: 1rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-1\.5 { margin-top: 0.375rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .ml-3 { margin-left: 0.75rem; }
+        .mr-1 { margin-right: 0.25rem; }
+        .mr-3 { margin-right: 0.75rem; }
+        .mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .tracking-wide { letter-spacing: 0.025em; }
+        .leading-relaxed { line-height: 1.625; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .text-white { color: #fff; }
+        .text-slate-300 { color: #CBD5E1; }
+        .text-slate-400 { color: #94A3B8; }
+        .text-slate-500 { color: #64748B; }
+        .text-slate-600 { color: #475569; }
+        .text-slate-700 { color: #334155; }
+        .text-slate-800 { color: #1E293B; }
+        .text-blue-500 { color: #3B82F6; }
+        .text-blue-600 { color: #2563EB; }
+        .text-green-500 { color: #22C55E; }
+        .text-green-600 { color: #16A34A; }
+        .text-red-500 { color: #EF4444; }
+        .text-amber-500 { color: #F59E0B; }
+        .text-amber-600 { color: #D97706; }
+        .text-indigo-500 { color: #6366F1; }
+        .text-indigo-600 { color: #4F46E5; }
+        .text-purple-500 { color: #8B5CF6; }
+        .bg-white { background-color: #fff; }
+        .bg-white\/80 { background-color: rgba(255,255,255,0.8); }
+        .bg-black\/30 { background-color: rgba(0,0,0,0.3); }
+        .bg-slate-50 { background-color: #F8FAFC; }
+        .bg-slate-100 { background-color: #F1F5F9; }
+        .bg-slate-100\/50 { background-color: rgba(241,245,249,0.5); }
+        .bg-slate-800 { background-color: #1E293B; }
+        .bg-blue-50 { background-color: #EFF6FF; }
+        .bg-blue-100 { background-color: #DBEAFE; }
+        .bg-blue-600 { background-color: #2563EB; }
+        .bg-green-50 { background-color: #F0FDF4; }
+        .bg-red-50 { background-color: #FEF2F2; }
+        .bg-red-100 { background-color: #FEE2E2; }
+        .bg-red-500 { background-color: #EF4444; }
+        .bg-indigo-50 { background-color: #EEF2FF; }
+        .bg-amber-50 { background-color: #FFFBEB; }
+        .bg-\[#F8FAFC\] { background-color: #F8FAFC; }
+        .bg-gradient-to-r { background-image: linear-gradient(to right, var(--g-from), var(--g-to)); }
+        .bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--g-from), var(--g-to)); }
+        .from-blue-500 { --g-from: #3B82F6; }
+        .from-blue-600 { --g-from: #2563EB; }
+        .from-blue-700 { --g-from: #1D4ED8; }
+        .to-violet-600 { --g-to: #7C3AED; }
+        .to-violet-700 { --g-to: #6D28D9; }
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .rounded-full { border-radius: 9999px; }
+        .border { border-width: 1px; }
+        .border-r { border-right-width: 1px; }
+        .border-b { border-bottom-width: 1px; }
+        .border-t { border-top-width: 1px; }
+        .border-dashed { border-style: dashed; }
+        .border-transparent { border-color: transparent; }
+        .border-white { border-color: #fff; }
+        .border-slate-100 { border-color: #F1F5F9; }
+        .border-slate-200 { border-color: #E2E8F0; }
+        .border-slate-200\/60 { border-color: rgba(226,232,240,0.6); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
+        .shadow-blue-500\/30 { box-shadow: 0 4px 6px -1px rgba(59,130,246,0.3), 0 2px 4px -2px rgba(59,130,246,0.3); }
+        .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .transition-all { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+        .transition-colors { transition: color 0.15s, background-color 0.15s, border-color 0.15s; }
+        .hidden { display: none; }
+        .cursor-pointer { cursor: pointer; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-x-auto { overflow-x: auto; }
+        .overflow-y-auto { overflow-y: auto; }
+        .hover\:bg-slate-50:hover { background-color: #F8FAFC; }
+        .hover\:bg-blue-100:hover { background-color: #DBEAFE; }
+        .hover\:bg-red-100:hover { background-color: #FEE2E2; }
+        .hover\:text-blue-600:hover { color: #2563EB; }
+        .hover\:from-blue-700:hover { --g-from: #1D4ED8; }
+        .hover\:to-violet-700:hover { --g-to: #6D28D9; }
+        .hover\:shadow-lg:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
+        .focus\:outline-none:focus { outline: none; }
+        .focus\:ring-2:focus { box-shadow: 0 0 0 2px rgba(59,130,246,0.4); }
+        .focus\:border-blue-200:focus { border-color: #BFDBFE; }
+        .placeholder-slate-400::placeholder { color: #94A3B8; }
+        @media (min-width: 768px) {
+            .md\:hidden { display: none; }
+            .md\:block { display: block; }
+            .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
+            .md\:p-8 { padding: 2rem; }
+            .md\:space-x-5 > * + * { margin-left: 1.25rem; }
+            .md\:gap-6 { gap: 1.5rem; }
+        }
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .lg\:col-span-2 { grid-column: span 2 / span 2; }
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden text-slate-800">
+
+    <!-- 移动端遮罩 -->
+    <div id="overlay" class="hidden fixed inset-0 bg-black/30 z-20 md:hidden" onclick="closeSidebar()"></div>
+
+    <!-- 左侧导航栏 -->
+    <aside id="sidebar" class="w-[250px] bg-white border-r border-slate-200 flex flex-col z-30 shrink-0">
+        <div class="h-16 flex items-center px-6 border-b border-slate-100 justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-base shadow-md shadow-blue-500/30">🎓</div>
+                <span class="font-bold text-slate-800 tracking-wide">启明教务</span>
+            </div>
+            <button class="md:hidden text-slate-400" onclick="closeSidebar()">✕</button>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1 text-sm text-slate-600 overflow-y-auto">
+            <!-- 仪表盘 -->
+            <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('仪表盘', this)">
+                <span>📊</span> <span>数据概览</span>
+            </div>
+            <!-- 数据分析 -->
+            <div class="mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('数据分析', this)">
+                    <span>📈</span> <span>数据分析</span>
+                </div>
+            </div>
+            <!-- 系统管理 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('sys')">
+                    <div class="flex items-center space-x-3"><span>⚙️</span> <span>系统管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="sys-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教务管理员信息', this)">教务管理员信息</div>
+                </div>
+            </div>
+            <!-- 学生管理 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('stu')">
+                    <div class="flex items-center space-x-3"><span>👨‍🎓</span> <span>学生管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="stu-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生档案', this)">学生档案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('班级管理', this)">班级管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩管理', this)">成绩管理</div>
+                </div>
+            </div>
+            <!-- 老师管理 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('teacher')">
+                    <div class="flex items-center space-x-3"><span>👩‍🏫</span> <span>老师管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="teacher-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('师资档案', this)">师资档案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课程管理', this)">课程管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课表管理', this)">课表管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评教', this)">学生评教</div>
+                </div>
+            </div>
+            <!-- 新闻管理 -->
+            <div class="mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('新闻管理', this)">
+                    <span>📰</span> <span>新闻管理</span>
+                </div>
+            </div>
+        </nav>
+        <!-- 底部版本信息 -->
+        <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
+            Version 1.1.0
+        </div>
+    </aside>
+
+    <!-- 右侧主内容 -->
+    <main class="flex-1 flex flex-col h-screen relative bg-[#F8FAFC] min-w-0">
+        <!-- 顶部导航栏（毛玻璃效果） -->
+        <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-4 md:px-8 z-10 shrink-0 sticky top-0">
+            <div class="flex items-center gap-3">
+                <button class="md:hidden text-slate-500 text-lg" onclick="openSidebar()">☰</button>
+                <div class="text-slate-400 text-sm flex items-center">
+                    <span>首页</span> <span class="mx-2 text-slate-300">/</span> <span class="text-slate-700 font-medium" id="breadcrumb">数据概览</span>
+                </div>
+            </div>
+
+            <!-- 右上角登录及功能区 -->
+            <div class="flex items-center space-x-3 md:space-x-5">
+                <div class="relative hidden md:block">
+                    <input id="global-search" type="text" placeholder="搜索档案..." class="bg-slate-100/50 pl-9 pr-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 w-64 border border-transparent focus:border-blue-200 transition-all placeholder-slate-400">
+                    <span class="absolute left-3 top-2.5 text-slate-400 text-sm">🔍</span>
+                </div>
+                <div class="relative cursor-pointer text-slate-400 hover:text-blue-600 transition-colors" onclick="toast('暂无新通知', 'info')">
+                    <span class="text-lg">🔔</span>
+                    <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                </div>
+                <button id="login-btn" class="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white text-sm font-medium px-5 py-1.5 rounded-full shadow-md shadow-blue-500/30 hover:shadow-lg transition-all flex items-center">
+                    <span class="mr-1 text-lg">👤</span> 登录系统
+                </button>
+            </div>
+        </header>
+
+        <!-- 数据区 -->
+        <div class="p-4 md:p-8 flex-1 overflow-y-auto" id="main-content">
+            <!-- 默认展示：数据概览看板（加分项） -->
+            <div id="dashboard-view">
+                <h2 class="text-2xl font-bold mb-6"><span class="text-gradient">数据概览</span></h2>
+
+                <!-- 核心指标卡片 -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                    <div class="card-hover bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">学员总数</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">1,248</div>
+                            <div class="text-xs font-medium text-green-500 mt-1">↑ 12.5%</div>
+                        </div>
+                        <div class="metric-icon w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center text-xl">👥</div>
+                    </div>
+                    <div class="card-hover bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">开设课程</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">18</div>
+                            <div class="text-xs font-medium text-green-500 mt-1">↑ 3 门新开</div>
+                        </div>
+                        <div class="metric-icon w-12 h-12 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-xl">📚</div>
+                    </div>
+                    <div class="card-hover bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">活跃班级</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">36</div>
+                            <div class="text-xs font-medium text-slate-400 mt-1">— 持平</div>
+                        </div>
+                        <div class="metric-icon w-12 h-12 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center text-xl">🏫</div>
+                    </div>
+                    <div class="card-hover bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-500 text-sm">今日课程</div>
+                            <div class="text-2xl font-bold text-slate-800 mt-1">86</div>
+                            <div class="text-xs font-medium text-green-500 mt-1">↑ 8.9%</div>
+                        </div>
+                        <div class="metric-icon w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-xl">📅</div>
+                    </div>
+                </div>
+
+                <!-- 图表区 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-slate-700">成绩分析趋势（折线图）</h3>
+                            <span class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">2026学年</span>
+                        </div>
+                        <div id="trend-chart" class="chart-box"></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl soft-shadow border border-slate-100 flex flex-col">
+                        <h3 class="font-bold text-slate-700 mb-4">近期动态</h3>
+                        <div class="flex-1 space-y-4">
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">教务处发布了《秋季运动会调休通知》</p></div>
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-green-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">张小明等15名学生学籍档案已更新</p></div>
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">高一年级本周课表已发布</p></div>
+                            <div class="flex items-start"><div class="w-2 h-2 rounded-full bg-purple-500 mt-1.5 mr-3"></div><p class="text-sm text-slate-600">期末评教数据已汇总，共 1,248 份</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 全局提示气泡 -->
+    <div id="toast" class="fixed top-20 right-6 z-50 bg-slate-800 text-white text-sm px-5 py-3 rounded-xl shadow-lg max-w-xs"></div>
+
+    <script>
+        // ============ 工具函数 ============
+        function toast(msg, type = 'info') {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.style.background = type === 'error' ? '#DC2626' : type === 'success' ? '#16A34A' : '#1E293B';
+            el.classList.add('show');
+            clearTimeout(el._t);
+            el._t = setTimeout(() => el.classList.remove('show'), 2200);
+        }
+
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('overlay').classList.remove('hidden');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.add('hidden');
+        }
+
+        function toggleMenu(id) {
+            document.getElementById(id + '-menu').classList.toggle('hidden');
+        }
+
+        // 当前页面数据记录数（用于分页器显示）
+        let currentRecordCount = 0;
+
+        // ============ ECharts 渲染 ============
+        const chartInstances = {};
+        function renderChart(domId, option) {
+            const el = document.getElementById(domId);
+            if (!el) return;
+            if (typeof echarts === 'undefined') {
+                el.innerHTML = '<div class="h-full w-full flex items-center justify-center text-slate-400 text-sm">图表组件加载失败，请检查网络后刷新</div>';
+                return;
+            }
+            if (chartInstances[domId]) chartInstances[domId].dispose();
+            const chart = echarts.init(el);
+            chart.setOption(option);
+            chartInstances[domId] = chart;
+        }
+
+        // 成绩趋势折线图（数据概览）
+        function renderTrendChart() {
+            renderChart('trend-chart', {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['语文', '数学', '英语', '综合'], bottom: 0, icon: 'circle', itemWidth: 8 },
+                grid: { left: 40, right: 20, top: 20, bottom: 48 },
+                xAxis: { type: 'category', boundaryGap: false, data: ['9月月考', '10月月考', '期中', '11月月考', '12月月考', '期末'] },
+                yAxis: { type: 'value', min: 60, max: 100 },
+                series: [
+                    { name: '语文', type: 'line', smooth: true, symbol: 'none', data: [82, 84, 86, 85, 88, 89], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } },
+                    { name: '数学', type: 'line', smooth: true, symbol: 'none', data: [78, 80, 83, 82, 86, 90], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } },
+                    { name: '英语', type: 'line', smooth: true, symbol: 'none', data: [75, 79, 81, 80, 84, 87], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } },
+                    { name: '综合', type: 'line', smooth: true, symbol: 'none', data: [85, 87, 89, 90, 91, 93], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } }
+                ],
+                color: ['#2563EB', '#16A34A', '#F59E0B', '#8B5CF6']
+            });
+        }
+
+        // 数据分析页雷达图（对应图5.26）
+        function renderRadarChart() {
+            renderChart('radar-chart', {
+                tooltip: {},
+                legend: { data: ['李*华', '张*英', '何*广'], bottom: 0, icon: 'circle', itemWidth: 8 },
+                radar: {
+                    indicator: [
+                        { name: '语文', max: 100 }, { name: '数学', max: 100 }, { name: '英语', max: 100 },
+                        { name: '物理', max: 100 }, { name: '化学', max: 100 }, { name: '生物', max: 100 }
+                    ],
+                    radius: '65%'
+                },
+                series: [{
+                    type: 'radar',
+                    data: [
+                        { value: [72, 92, 68, 85, 90, 82], name: '李*华', areaStyle: { opacity: 0.15 } },
+                        { value: [80, 70, 95, 65, 78, 75], name: '张*英', areaStyle: { opacity: 0.15 } },
+                        { value: [88, 90, 86, 89, 91, 88], name: '何*广', areaStyle: { opacity: 0.15 } }
+                    ]
+                }],
+                color: ['#2563EB', '#F59E0B', '#16A34A']
+            });
+        }
+
+        // 数据分析页历次考试折线图（对应图5.27）
+        function renderHistoryChart() {
+            renderChart('history-chart', {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['物理', '数学', '化学', '技术'], bottom: 0, icon: 'circle', itemWidth: 8 },
+                grid: { left: 40, right: 20, top: 20, bottom: 48 },
+                xAxis: { type: 'category', boundaryGap: false, data: ['第1次', '第2次', '第3次', '第4次', '第5次'] },
+                yAxis: { type: 'value', min: 50, max: 100 },
+                series: [
+                    { name: '物理', type: 'line', smooth: true, symbol: 'none', data: [92, 90, 88, 86, 83], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } },
+                    { name: '数学', type: 'line', smooth: true, symbol: 'none', data: [85, 86, 85, 86, 87], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } },
+                    { name: '化学', type: 'line', smooth: true, symbol: 'none', data: [70, 72, 71, 74, 75], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } },
+                    { name: '技术', type: 'line', smooth: true, symbol: 'none', data: [68, 74, 80, 85, 90], lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.10 } }
+                ],
+                color: ['#2563EB', '#16A34A', '#F59E0B', '#8B5CF6']
+            });
+        }
+
+        // 数据概览 HTML 快照（用于切回时不刷新页面）
+        let dashboardHTML = '';
+
+        function changeContent(title, element) {
+            document.getElementById('breadcrumb').innerText = title;
+            document.querySelectorAll('.active-menu, .active-sub').forEach(el => el.classList.remove('active-menu', 'active-sub'));
+            if (element) element.classList.add('active-sub');
+            closeSidebar();
+
+            const main = document.getElementById('main-content');
+
+            // 数据概览：直接恢复快照，不刷新页面
+            if (title === '仪表盘') {
+                main.innerHTML = dashboardHTML;
+                currentRecordCount = 0;
+                requestAnimationFrame(renderTrendChart);
+                return;
+            }
+
+            let html = '';
+            let titleHtml = '';
+            let refText = '';
+            let recordCount = 1;
+
+            // ================= 数据表映射区 =================
+
+            // 1. 教务管理员信息 (表4.1)
+            if (title === '教务管理员信息') {
+                refText = '对应表4.1 教务管理员信息表';
+                titleHtml = '教务管理员信息管理';
+                recordCount = 2;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (eaid)</th><th>用户名 (userName)</th><th>密码 (pwd)</th><th>权限 (status)</th>
+                    <th>姓名 (name)</th><th>性别 (sex)</th><th>工作岗位 (work)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>admin</td><td>******</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">超级管理员</span></td><td>李建国</td><td>男</td><td>教务主任</td><td>13800008888</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>teacher01</td><td>******</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">教务员</span></td><td>王芳</td><td>女</td><td>教务科员</td><td>13800009999</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 2. 学生档案 (表4.3)
+            else if (title === '学生档案') {
+                refText = '对应表4.3 学生信息表';
+                titleHtml = '学生档案管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>学号 (stuid)</th><th>用户名 (userName)</th><th>密码 (pwd)</th><th>学生姓名 (stuname)</th>
+                    <th>年龄 (age)</th><th>性别 (sex)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>20260101</td><td>zhangxm</td><td>******</td><td>张小明</td><td>17</td><td>男</td><td>13812345678</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="js-delete text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
+                    <tr><td>20260102</td><td>lixh</td><td>******</td><td>李小红</td><td>16</td><td>女</td><td>13987654321</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="js-delete text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
+                    <tr><td>20260103</td><td>wangq</td><td>******</td><td>王强</td><td>17</td><td>男</td><td>13712345678</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="js-delete text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
+                </tbody></table>`;
+            }
+            // 3. 班级管理 (表4.4)
+            else if (title === '班级管理') {
+                refText = '对应表4.4 班级信息表';
+                titleHtml = '班级管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (classid)</th><th>班名 (className)</th><th>年级 (grade)</th><th>班主任 (teacher)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>高一(1)班</td><td>高一</td><td>王建国</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>高一(2)班</td><td>高一</td><td>李华</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>3</td><td>高二(1)班</td><td>高二</td><td>赵敏</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 4. 师资档案 (表4.2)
+            else if (title === '师资档案') {
+                refText = '对应表4.2 教师信息表';
+                titleHtml = '师资档案管理';
+                recordCount = 2;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (tehid)</th><th>用户名 (teacherName)</th><th>密码 (pwd)</th><th>权限 (status)</th>
+                    <th>姓名 (name)</th><th>性别 (sex)</th><th>任教学科 (subject)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>wangwu</td><td>******</td><td>教师</td><td>王建国</td><td>男</td><td>数学</td><td>13800001111</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>lihua</td><td>******</td><td>教师</td><td>李华</td><td>女</td><td>英语</td><td>13800002222</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 5. 课程管理 (表4.5)
+            else if (title === '课程管理') {
+                refText = '对应表4.5 课程信息表';
+                titleHtml = '课程管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (cid)</th><th>课程名称 (courseTitle)</th><th>课程代码 (courseCode)</th><th>任课老师ID (teacherid)</th><th>学时 (period)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>数学</td><td>MATH101</td><td>1</td><td>40</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>英语</td><td>ENG101</td><td>2</td><td>40</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>3</td><td>物理</td><td>PHY101</td><td>1</td><td>36</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 6. 课表管理 (表4.6)
+            else if (title === '课表管理') {
+                refText = '对应表4.6 课表';
+                titleHtml = '课表管理';
+                recordCount = 2;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (kbid)</th><th>班级 (className)</th><th>周次 (week)</th><th>节次 (cplan_lesson)</th>
+                    <th>课程 (courseTitle)</th><th>学年 (year)</th><th>学期 (year_half)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>高一(1)班</td><td>第1周</td><td>第1节</td><td>数学</td><td>2026</td><td>第一学期</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>高一(1)班</td><td>第1周</td><td>第2节</td><td>英语</td><td>2026</td><td>第一学期</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 7. 成绩管理 (表4.8)
+            else if (title === '成绩管理') {
+                refText = '对应表4.8 成绩';
+                titleHtml = '成绩管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>课程ID (cid)</th><th>学生ID (stuid)</th><th>分数 (score)</th><th>学年 (year)</th>
+                    <th>学期 (year_half)</th><th>期中 (midterm)</th><th>期末 (finalterm)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>20260101</td><td>88</td><td>2026</td><td>第一学期</td><td>85</td><td>90</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>1</td><td>20260102</td><td>92</td><td>2026</td><td>第一学期</td><td>89</td><td>94</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>20260101</td><td>85</td><td>2026</td><td>第一学期</td><td>82</td><td>87</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 8. 学生评教 (表4.7)
+            else if (title === '学生评教') {
+                refText = '对应表4.7 评教表';
+                titleHtml = '学生评教管理';
+                recordCount = 2;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (pjid)</th><th>学年 (year)</th><th>学期 (year_half)</th><th>任课教师 (teacherName)</th>
+                    <th>课程 (courseTitle)</th><th>学号 (stuNum)</th><th>综合素质分</th><th>岗位分</th>
+                    <th>教学技能分</th><th>辅导情况分</th><th>总均分</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>2026</td><td>第一学期</td><td>王建国</td><td>数学</td><td>20260101</td><td>4.5</td><td>4.6</td><td>4.8</td><td>4.7</td><td class="font-bold text-blue-600">4.65</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
+                    <tr><td>2</td><td>2026</td><td>第一学期</td><td>李华</td><td>英语</td><td>20260102</td><td>4.7</td><td>4.5</td><td>4.6</td><td>4.8</td><td class="font-bold text-blue-600">4.65</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
+                </tbody></table>`;
+            }
+            // 9. 新闻管理 (新增板块，自己编)
+            else if (title === '新闻管理') {
+                refText = '新闻系统模块（独立于教务ER图）';
+                titleHtml = '新闻管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>新闻ID</th><th>新闻标题</th><th>分类</th><th>发布人</th>
+                    <th>发布时间</th><th>阅读量</th><th>状态</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>关于2026年秋季运动会调休安排的通知</td><td><span class="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">教务通知</span></td><td>教务处</td><td>10-16</td><td>512</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已发布</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>我校师生在全市科技创新大赛中斩获佳绩</td><td><span class="text-indigo-600 bg-indigo-50 px-2 py-1 rounded text-xs font-medium">校园新闻</span></td><td>校办</td><td>10-14</td><td>1024</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已发布</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>3</td><td>关于高一年级选科指导讲座的通知</td><td><span class="text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">活动预告</span></td><td>教务处</td><td>10-12</td><td>768</td><td><span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-xs font-medium">草稿</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>`;
+            }
+            // 10. 数据分析 (对应5.9)
+            else if (title === '数据分析') {
+                refText = '对应5.9 数据分析模块（图5.26 雷达图 / 图5.27 折线图）';
+                titleHtml = '数据分析';
+                recordCount = 0;
+                // 直接注入图表专用布局
+                main.innerHTML = `
+                    <div class="bg-white rounded-2xl soft-shadow border border-slate-100 p-8 min-h-full flex flex-col fade-in">
+                        <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">数据分析</h2>
+                                <p class="text-slate-500 text-sm mt-1">对应5.9 数据分析模块 · 基于 ECharts 可视化</p>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-500">
+                                <span>学年</span>
+                                <select class="border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
+                                    <option>2026学年</option><option>2025学年</option>
+                                </select>
+                                <span class="ml-3">学期</span>
+                                <select class="border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
+                                    <option>第一学期</option><option>第二学期</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="border border-slate-100 rounded-xl p-5">
+                                <h3 class="font-semibold text-slate-700 mb-1">学生各科成绩对比（雷达图）</h3>
+                                <p class="text-xs text-slate-400 mb-3">图5.26 · 高二选考班（物化生）第一学期末成绩</p>
+                                <div id="radar-chart" class="chart-box"></div>
+                            </div>
+                            <div class="border border-slate-100 rounded-xl p-5">
+                                <h3 class="font-semibold text-slate-700 mb-1">学生历次考试各科成绩（折线图）</h3>
+                                <p class="text-xs text-slate-400 mb-3">图5.27 · 单生各科成绩变化趋势</p>
+                                <div id="history-chart" class="chart-box"></div>
+                            </div>
+                        </div>
+                        <div class="mt-6 text-sm text-slate-500 bg-slate-50 rounded-xl p-4 leading-relaxed">
+                            <span class="font-medium text-slate-700">📌 分析解读：</span>李*华同学数学、化学成绩较好，语文英语偏弱，属偏理科思维；张*英同学英语突出、数学物理较弱，属偏文科思维；何*广同学各科均衡、无明显短板。单生历次考试中，技术（信息+通用）分数呈持续上升趋势，进步明显；物理虽分高但整体下滑，需引起重视。
+                        </div>
+                    </div>
+                `;
+                requestAnimationFrame(() => { renderRadarChart(); renderHistoryChart(); });
+                return;
+            }
+
+            // 注入页面内容
+            main.innerHTML = `
+                <div class="bg-white rounded-2xl soft-shadow border border-slate-100 p-8 min-h-full flex flex-col fade-in">
+                    <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
+                            <p class="text-slate-500 text-sm mt-1">${refText}</p>
+                        </div>
+                        <button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                            ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100 flex-1">
+                        ${html}
+                    </div>
+                    <!-- 分页器 -->
+                    <div class="mt-6 flex justify-between items-center text-sm text-slate-500 pt-4 border-t border-slate-100">
+                        <span>共 <span class="text-slate-700 font-medium">${recordCount}</span> 条记录，当前显示 1-${recordCount} 条</span>
+                        <div class="flex space-x-1">
+                            <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 transition-colors" onclick="toast('已是第一页')">上一页</button>
+                            <button class="px-3 py-1.5 bg-blue-600 text-white rounded shadow-sm font-medium">1</button>
+                            <button class="px-3 py-1.5 border border-slate-200 rounded hover:bg-slate-50 transition-colors" onclick="toast('演示数据仅一页')">下一页</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            currentRecordCount = recordCount;
+        }
+
+        // ============ 事件委托：表格操作按钮 ============
+        document.getElementById('main-content').addEventListener('click', function (e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const row = btn.closest('tr');
+            const firstCell = row ? row.cells[0].innerText.trim() : '';
+            if (btn.classList.contains('js-edit')) toast(`编辑第 ${firstCell} 条记录（演示）`, 'info');
+            else if (btn.classList.contains('js-delete')) toast(`已删除第 ${firstCell} 条记录（演示）`, 'error');
+            else if (btn.classList.contains('js-view')) toast(`查看第 ${firstCell} 条评教详情（演示）`, 'info');
+            else if (btn.classList.contains('js-add')) toast('演示环境：新增需接入后端接口', 'info');
+        });
+
+        // ============ 登录按钮 ============
+        document.getElementById('login-btn').addEventListener('click', function () {
+            toast('演示环境：登录功能需接入后端验证', 'info');
+        });
+
+        // ============ 全局搜索过滤 ============
+        document.getElementById('global-search').addEventListener('input', function () {
+            const q = this.value.trim().toLowerCase();
+            const rows = document.querySelectorAll('#main-content tbody tr');
+            rows.forEach(tr => {
+                tr.style.display = tr.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+
+        // ============ 窗口尺寸变化自适应图表 ============
+        window.addEventListener('resize', () => {
+            Object.values(chartInstances).forEach(c => c.resize());
+        });
+
+        // ============ 初始化 ============
+        // 立即保存数据概览快照（不等 ECharts，避免异步竞态导致切回时空白）
+        dashboardHTML = document.getElementById('dashboard-view').outerHTML;
+
+        function boot() {
+            renderTrendChart();
+            // 若已提前进入数据分析页，补渲染其图表
+            if (document.getElementById('radar-chart')) { renderRadarChart(); renderHistoryChart(); }
+        }
+        if (window.echarts) {
+            boot();
+        } else {
+            window.__onEChartsReady = function () { boot(); };
+        }
+    </script>
+</body>
+</html>
