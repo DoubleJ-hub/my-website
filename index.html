@@ -38,10 +38,11 @@
         /* 高级质感阴影 */
         .soft-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02); }
         /* 表格样式 */
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border-bottom: 1px solid #F1F5F9; padding: 16px 20px; text-align: left; }
-        th { background: #F8FAFC; color: #64748B; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-        td { font-size: 14px; color: #1E293B; }
+        table { border-collapse: collapse; width: 100%; table-layout: auto; }
+        th, td { border-bottom: 1px solid #F1F5F9; padding: 14px 14px; text-align: left; }
+        th { background: #F8FAFC; color: #64748B; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; white-space: normal; word-break: break-word; }
+        td { font-size: 14px; color: #1E293B; white-space: nowrap; }
+        td button, td .btn-cell { white-space: nowrap; }
         tr { transition: all 0.2s ease; }
         tr:hover { background-color: #F8FAFC; }
         /* 侧边栏菜单激活态 */
@@ -249,7 +250,7 @@
         .hidden { display: none; }
         .cursor-pointer { cursor: pointer; }
         .overflow-hidden { overflow: hidden; }
-        .overflow-x-auto { overflow-x: auto; }
+        .overflow-x-auto { overflow-x: auto; min-width: 0; }
         .overflow-y-auto { overflow-y: auto; }
         .hover\:bg-slate-50:hover { background-color: #F8FAFC; }
         .hover\:bg-blue-100:hover { background-color: #EDE9FE; }
@@ -304,6 +305,22 @@
             <div class="mt-2">
                 <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('数据分析', this)">
                     <span>📈</span> <span>数据分析</span>
+                </div>
+            </div>
+            <!-- 劳务管理（实验五：劳务管理系统） -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('lw')">
+                    <div class="flex items-center space-x-3"><span>🏗️</span> <span>劳务管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="lw-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('建筑劳务备案', this)">建筑劳务备案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('劳务合同管理', this)">劳务合同管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('工程项目管理', this)">工程项目管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('派遣考勤管理', this)">派遣考勤管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('工资管理', this)">工资管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('劳务查询统计', this)">查询统计</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('劳务系统管理', this)">劳务系统管理</div>
                 </div>
             </div>
             <!-- 系统管理 -->
@@ -380,7 +397,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.4.0
+            冲鸭教育 · v1.5.0
         </div>
     </aside>
 
@@ -655,6 +672,7 @@
 
         function changeContent(title, element) {
             document.getElementById('breadcrumb').innerText = title;
+            try { if (location.hash.slice(1) !== title) history.replaceState(null, '', '#' + encodeURIComponent(title)); } catch (e) {}
             document.querySelectorAll('.active-menu, .active-sub').forEach(el => el.classList.remove('active-menu', 'active-sub'));
             if (element) element.classList.add('active-sub');
             closeSidebar();
@@ -968,6 +986,173 @@
                 return;
             }
 
+
+            // ================= 劳务管理子系统（实验五）=================
+
+            // L1. 建筑劳务备案
+            else if (title === '建筑劳务备案') {
+                refText = '对应表5.1 建筑劳务备案表 —— 劳务企业与班组进场前的资质与人员备案';
+                titleHtml = '建筑劳务备案管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>备案编号 (recNo)</th><th>劳务企业 (company)</th><th>资质等级 (qualLevel)</th>
+                    <th>班组名称 (teamName)</th><th>负责人 (leader)</th><th>进场日期 (enterDate)</th>
+                    <th>备案状态 (status)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>BA-2026-001</td><td>宏远建筑劳务有限公司</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">一级</span></td><td>钢筋一班</td><td>张大海</td><td>2026-03-01</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已通过</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>BA-2026-002</td><td>宏远建筑劳务有限公司</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">一级</span></td><td>木工二班</td><td>李长江</td><td>2026-03-05</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已通过</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>BA-2026-003</td><td>恒信劳务服务有限公司</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">二级</span></td><td>混凝土班</td><td>王大勇</td><td>2026-03-12</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待审核</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 业务规则：</span>备案状态为"待审核"的班组不得进入派遣环节；同一劳务企业同一班组不得重复备案（唯一性约束）。
+                </div>`;
+            }
+
+            // L2. 劳务合同管理
+            else if (title === '劳务合同管理') {
+                refText = '对应表5.2 劳务合同表 —— 企业与劳务班组签订的用工协议';
+                titleHtml = '劳务合同管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>合同编号 (contractNo)</th><th>劳务企业 (company)</th><th>签约班组 (teamName)</th>
+                    <th>合同类型 (type)</th><th>开始日期 (startDate)</th><th>结束日期 (endDate)</th>
+                    <th>合同金额 (amount)</th><th>状态 (status)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>HT-2026-001</td><td>宏远建筑劳务有限公司</td><td>钢筋一班</td><td>固定期限</td><td>2026-03-01</td><td>2027-02-28</td><td class="text-right">¥860,000</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">履行中</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>HT-2026-002</td><td>宏远建筑劳务有限公司</td><td>木工二班</td><td>固定期限</td><td>2026-03-05</td><td>2027-03-04</td><td class="text-right">¥720,000</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">履行中</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>HT-2025-018</td><td>恒信劳务服务有限公司</td><td>混凝土班</td><td>以完成一定工作为期限</td><td>2025-09-01</td><td>2026-02-28</td><td class="text-right">¥450,000</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">已到期</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 业务规则：</span>合同到期前 30 天系统预警；已到期合同不得继续发生派遣与工资记录（BR-05 合同有效性校验）。
+                </div>`;
+            }
+
+            // L3. 工程项目管理
+            else if (title === '工程项目管理') {
+                refText = '对应表5.3 工程项目表 —— 劳务派遣所服务的施工项目';
+                titleHtml = '工程项目管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>项目编号 (projNo)</th><th>项目名称 (projName)</th><th>建设单位 (owner)</th>
+                    <th>项目地址 (address)</th><th>开工日期 (startDate)</th><th>计划竣工 (endDate)</th>
+                    <th>项目状态 (status)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>PR-2026-01</td><td>科教楼二期工程</td><td>广西科建投资有限公司</td><td>柳州市城中区</td><td>2026-03-01</td><td>2027-06-30</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">在建</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>PR-2026-02</td><td>城东安置房 A 标段</td><td>柳州市城投集团</td><td>柳州市柳东新区</td><td>2026-02-15</td><td>2027-03-31</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">在建</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>PR-2025-07</td><td>河西小学改扩建</td><td>柳州市教育局</td><td>柳州市柳南区</td><td>2025-07-01</td><td>2026-02-28</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">已竣工</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 业务规则：</span>已竣工项目不得新增派遣与考勤记录；一个班组在同一时段只能被派遣到一个项目（BR-06 派遣冲突校验）。
+                </div>`;
+            }
+
+            // L4. 派遣考勤管理
+            else if (title === '派遣考勤管理') {
+                refText = '对应表5.4 派遣考勤表 —— 班组人员按日在项目的出勤记录';
+                titleHtml = '派遣考勤管理';
+                recordCount = 4;
+                html = `
+                <table><thead><tr>
+                    <th>考勤编号 (attNo)</th><th>班组 (teamName)</th><th>项目名称 (projName)</th>
+                    <th>工人姓名 (workerName)</th><th>身份证号 (idCard)</th><th>考勤日期 (attDate)</th>
+                    <th>出勤状态 (status)</th><th>工时 (hours)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>KQ-2026-1001</td><td>钢筋一班</td><td>科教楼二期工程</td><td>赵大柱</td><td>4502**********1234</td><td>2026-04-08</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">出勤</span></td><td class="text-right">8.0</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>KQ-2026-1002</td><td>钢筋一班</td><td>科教楼二期工程</td><td>钱二柱</td><td>4502**********5678</td><td>2026-04-08</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">迟到</span></td><td class="text-right">7.0</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>KQ-2026-1003</td><td>木工二班</td><td>城东安置房 A 标段</td><td>孙三柱</td><td>4502**********9012</td><td>2026-04-08</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">出勤</span></td><td class="text-right">8.0</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>KQ-2026-1004</td><td>木工二班</td><td>城东安置房 A 标段</td><td>李四柱</td><td>4502**********3456</td><td>2026-04-08</td><td><span class="bg-red-50 text-red-600 px-2 py-1 rounded text-xs font-medium">缺勤</span></td><td class="text-right">0.0</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 业务规则：</span>同一工人同一日期只能有一条考勤记录（唯一性约束）；缺勤工时记 0，迟到按实际工时折算（BR-08 工资计算以考勤工时为基数）。
+                </div>`;
+            }
+
+            // L5. 工资管理
+            else if (title === '工资管理') {
+                refText = '对应表5.5 工资表 —— 按考勤工时自动核算的劳务工资';
+                titleHtml = '工资管理';
+                recordCount = 4;
+                html = `
+                <table><thead><tr>
+                    <th>工资编号 (salaryNo)</th><th>工人姓名 (workerName)</th><th>班组 (teamName)</th>
+                    <th>结算月份 (month)</th><th>出勤工时 (totalHours)</th><th>时薪 (hourRate)</th>
+                    <th>应发工资 (shouldPay)</th><th>发放状态 (status)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>GZ-2026-04-001</td><td>赵大柱</td><td>钢筋一班</td><td>2026-04</td><td class="text-right">168.0</td><td class="text-right">¥35</td><td class="text-right font-medium">¥5,880</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已发放</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>GZ-2026-04-002</td><td>钱二柱</td><td>钢筋一班</td><td>2026-04</td><td class="text-right">160.0</td><td class="text-right">¥35</td><td class="text-right font-medium">¥5,600</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已发放</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>GZ-2026-04-003</td><td>孙三柱</td><td>木工二班</td><td>2026-04</td><td class="text-right">176.0</td><td class="text-right">¥38</td><td class="text-right font-medium">¥6,688</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待发放</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>GZ-2026-04-004</td><td>李四柱</td><td>木工二班</td><td>2026-04</td><td class="text-right">152.0</td><td class="text-right">¥38</td><td class="text-right font-medium">¥5,776</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待发放</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 业务规则：</span>应发工资 = 出勤工时 × 时薪（BR-08）；已发放工资不可重复计算，如需调整须走"工资调整"流程并留痕；工资发放前须校验对应合同仍在有效期内。
+                </div>`;
+            }
+
+            // L6. 查询统计
+            else if (title === '劳务查询统计') {
+                refText = '多条件组合查询与统计分析 —— 支持按项目、班组、月份聚合';
+                titleHtml = '劳务查询统计';
+                recordCount = 0;
+                html = `
+                <div data-outside="1" style="padding:16px 0 0">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:16px">
+                    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px">
+                        <div style="color:#64748B;font-size:12px">在册工人</div>
+                        <div style="font-size:24px;font-weight:700;color:#1E293B;margin-top:4px">386</div>
+                    </div>
+                    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px">
+                        <div style="color:#64748B;font-size:12px">在册班组</div>
+                        <div style="font-size:24px;font-weight:700;color:#1E293B;margin-top:4px">14</div>
+                    </div>
+                    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px">
+                        <div style="color:#64748B;font-size:12px">本月出勤工时</div>
+                        <div style="font-size:24px;font-weight:700;color:#1E293B;margin-top:4px">42,180</div>
+                    </div>
+                    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px">
+                        <div style="color:#64748B;font-size:12px">本月工资合计</div>
+                        <div style="font-size:24px;font-weight:700;color:#1E293B;margin-top:4px">¥1,476,300</div>
+                    </div>
+                </div>
+                </div>
+                <div style="padding:0 16px 16px">
+                <table><thead><tr>
+                    <th>统计维度</th><th>班组</th><th>所属项目</th><th>出勤工时</th>
+                    <th>工资合计</th><th>出勤率</th>
+                </tr></thead><tbody>
+                    <tr><td>按班组汇总</td><td>钢筋一班</td><td>科教楼二期工程</td><td class="text-right">3,860</td><td class="text-right">¥135,100</td><td class="text-right">96.2%</td></tr>
+                    <tr><td>按班组汇总</td><td>木工二班</td><td>城东安置房 A 标段</td><td class="text-right">4,120</td><td class="text-right">¥156,560</td><td class="text-right">94.8%</td></tr>
+                    <tr><td>按班组汇总</td><td>混凝土班</td><td>城东安置房 A 标段</td><td class="text-right">3,290</td><td class="text-right">¥118,440</td><td class="text-right">92.5%</td></tr>
+                    <tr><td>按项目汇总</td><td>—</td><td>科教楼二期工程</td><td class="text-right">18,640</td><td class="text-right">¥652,400</td><td class="text-right">95.4%</td></tr>
+                    <tr><td>按项目汇总</td><td>—</td><td>城东安置房 A 标段</td><td class="text-right">23,540</td><td class="text-right">¥823,900</td><td class="text-right">93.7%</td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 说明：</span>统计结果由考勤表与工资表联合聚合得到，支持按班组、项目、月份三个维度组合筛选；出勤率 = 实际出勤工时 ÷ 应出勤工时。
+                </div>
+                </div>`;
+            }
+
+            // L7. 劳务系统管理
+            else if (title === '劳务系统管理') {
+                refText = '对应劳务子系统的账号、权限与操作日志';
+                titleHtml = '劳务系统管理';
+                recordCount = 3;
+                html = `
+                <table><thead><tr>
+                    <th>序号 (lid)</th><th>账号 (userName)</th><th>姓名 (name)</th><th>角色 (role)</th>
+                    <th>所属单位 (org)</th><th>数据范围 (scope)</th><th>状态 (status)</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>1</td><td>lw_admin</td><td>周建军</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">劳务管理员</span></td><td>总公司</td><td>全部项目</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>2</td><td>proj_01</td><td>吴海涛</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">项目负责人</span></td><td>科教楼二期项目部</td><td>仅本科目</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>3</td><td>finance_01</td><td>陈丽</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">财务人员</span></td><td>财务部</td><td>仅工资数据</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div class="mt-4 text-sm text-slate-600 bg-slate-50 rounded-lg p-4">
+                    <span class="font-medium text-slate-700">📌 业务规则：</span>项目负责人只能查看与操作本科目数据（数据范围隔离）；工资数据的查看与导出须经财务角色授权，导出操作写入操作日志留痕。
+                </div>`;
+            }
+
             // 注入页面内容
             main.innerHTML = `
                 <div class="bg-white rounded-2xl soft-shadow border border-slate-100 p-8 min-h-full flex flex-col fade-in">
@@ -976,9 +1161,9 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        <button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(title === '劳务查询统计' || title === '数据分析') ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
-                        </button>
+                        </button>`}
                     </div>
                     <div class="overflow-x-auto rounded-xl border border-slate-100 flex-1">
                         ${html}
@@ -1035,6 +1220,15 @@
         function boot() {
             renderTrendChart();
             renderCategoryChart();
+            // 支持 #视图名 深链直接打开对应页面
+            try {
+                var h = decodeURIComponent((location.hash || '').slice(1));
+                if (h && h !== '仪表盘') {
+                    var el = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
+                        .filter(function (n) { return (n.getAttribute('onclick') || '').indexOf("changeContent('" + h + "'") === 0; })[0];
+                    changeContent(h, el || null);
+                }
+            } catch (e) {}
             // 若已提前进入数据分析页，补渲染其图表
             if (document.getElementById('radar-chart')) { renderRadarChart(); renderHistoryChart(); }
         }
