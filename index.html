@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.12.0
+      冲鸭教育管理系统   v1.13.1
       单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
@@ -381,7 +381,6 @@
                 </div>
                 <div id="mine-menu" class="hidden mt-1 space-y-1">
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表', this)">我的课表</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂签到', this)">课堂签到</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('选课中心', this)">选课中心</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课程', this)">我的课程</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的成绩', this)">我的成绩</div>
@@ -487,7 +486,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.12.0 · 期中版
+            冲鸭教育 · v1.13.1 · 期中版
         </div>
     </aside>
 
@@ -1431,30 +1430,12 @@
                 html = '<div id="workload-box" style="padding:2px 0 12px"></div>';
             }
 
-            // T4. 教学进度
+            // T4. 教学进度（可标记章节完成，联动学生端）
             else if (title === '教学进度') {
-                refText = '本人任教课程的教学进度 —— 高一(1)班 数学';
+                refText = '高一(1)班 数学 —— 标记章节完成后，学生端「学习进度」同步更新';
                 titleHtml = '教学进度';
-                recordCount = 6;
-                html = `
-                <table><thead><tr>
-                    <th style="width:70px">周次</th><th>教学内容</th><th style="width:80px">课时</th>
-                    <th style="width:110px">计划完成时间</th><th style="width:110px">状态</th><th class="text-right">操作</th>
-                </tr></thead><tbody>
-                    <tr><td>第 5 周</td><td>函数的概念与表示法</td><td>4</td><td>2026-10-02</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已完成</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                    <tr><td>第 6 周</td><td>函数的单调性（第 1-8 题）</td><td>4</td><td>2026-10-09</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已完成</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                    <tr><td>第 7 周</td><td>函数的奇偶性</td><td>4</td><td>2026-10-16</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已完成</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                    <tr><td>第 8 周</td><td>指数函数及其性质</td><td>4</td><td>2026-10-23</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">进行中</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                    <tr><td>第 9 周</td><td>对数函数及其性质</td><td>4</td><td>2026-10-30</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">未开始</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                    <tr><td>第 10 周</td><td>期中复习与模拟测试</td><td>4</td><td>2026-11-06</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">未开始</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                </tbody></table>
-                <div style="margin-top:14px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F8FAFC;border-radius:10px">
-                    <span style="font-size:13px;color:#64748B">整体进度</span>
-                    <div style="flex:1;height:8px;background:#E2E8F0;border-radius:99px;overflow:hidden">
-                        <div style="width:50%;height:100%;background:linear-gradient(90deg,#8B5CF6,#D946EF)"></div>
-                    </div>
-                    <span style="font-size:13px;font-weight:600;color:#7C3AED">50%</span>
-                </div>`;
+                recordCount = 0;
+                html = '<div id="teachprog-box" style="padding:2px 0 12px"></div>';
             }
 
             // T5. 学生评语
@@ -1681,14 +1662,6 @@
 
 
 
-            // S1a. 课堂签到
-            else if (title === '课堂签到') {
-                refText = '今日课程签到 —— 由本人完成，出勤统计由任课教师负责';
-                titleHtml = '课堂签到';
-                recordCount = 0;
-                html = '<div id="checkin-box" style="padding:2px 0 12px"></div>';
-            }
-
             // S1b. 选课中心
             else if (title === '选课中心') {
                 refText = '本学期可选课程 —— 受门数、学分、容量、时间四重约束';
@@ -1903,7 +1876,7 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '角色权限', '学习进度', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '角色权限', '学习进度', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -2595,7 +2568,7 @@
             var tb = tbodyEl();
             if (!tb) return;
             // 交互型页面不参与分页
-            if (['课堂考勤', '成绩登记'].indexOf(title) >= 0) {
+            if (['课堂考勤', '成绩登记', '教学进度', '选课中心', '我的课程', '考勤统计', '工作量统计', '学习进度', '角色权限', '请假申请', '请假审批', '成绩录入', '作业布置'].indexOf(title) >= 0) {
                 var bx0 = paginationBox();
                 if (bx0) {
                     var bw0 = bx0.wrapper.querySelector('div:last-child');
@@ -2686,11 +2659,6 @@
         }
 
         function applyView(title) {
-            if (title === '课堂签到') {
-                setTimeout(function () { if (window.initCheckin) initCheckin(); }, 0);
-                enhanceToolbar();
-                return;
-            }
             if (title === '选课中心') {
                 setTimeout(function () { if (window.initCoursePage) initCoursePage(); }, 0);
                 enhanceToolbar();
@@ -2705,6 +2673,14 @@
                 setTimeout(function () { if (window.initPermPage) initPermPage(); }, 0);
                 enhanceToolbar();
                 return;
+            }
+            if (title === '教学进度') {
+                setTimeout(function () { if (window.initTeachProgress) initTeachProgress(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '作业布置') {
+                setTimeout(function () { if (window.initHwAssignPage) initHwAssignPage(); }, 0);
             }
             if (title === '学习进度') {
                 setTimeout(function () { if (window.initProgress) initProgress(); }, 0);
@@ -2785,7 +2761,7 @@
             // 教师仅可操作教学执行类页面；课程、课表、教材、学生档案等一律只读
             '授课教师': ['课堂考勤', '教学进度', '学生评语', '请假审批',
                          '成绩录入', '作业布置', '作业批改', '课件资源', '题库管理'],
-            '学生': ['课堂签到', '选课中心', '我的课程', '我的作业', '教学评价', '请假申请'],
+            '学生': ['选课中心', '我的课程', '我的作业', '教学评价', '请假申请'],
             '劳务管理员': ['建筑劳务备案', '劳务合同管理', '工程项目管理', '派遣考勤管理',
                            '工资管理', '劳务系统管理'],
             '项目经理': ['派遣考勤管理'],
@@ -2982,92 +2958,7 @@
             });
         }
 
-        // ---------- 课堂签到（学生本人操作，不做统计） ----------
-        var CHECKIN_KEY = 'cy_checkin_v1';
-        var TODAY_CLASSES = [
-            { id: 'K1', course: '数学', teacher: '王建国', time: '08:00 - 09:40', period: '第1-2节', room: '科教楼301' },
-            { id: 'K2', course: '化学', teacher: '刘强', time: '10:00 - 11:40', period: '第3-4节', room: '实验楼102' },
-            { id: 'K3', course: '英语', teacher: '李华', time: '14:00 - 15:40', period: '第5-6节', room: '科教楼302' },
-            { id: 'K4', course: '语文', teacher: '陈静', time: '16:00 - 17:40', period: '第7-8节', room: '科教楼303' }
-        ];
-        var CHECKIN_DEFAULT = {
-            K1: { at: '07:52', status: '已签到' },
-            K2: { at: '10:06', status: '已签到' }
-        };
-
-        function checkinData() {
-            try {
-                var raw = localStorage.getItem(CHECKIN_KEY);
-                if (!raw) return JSON.parse(JSON.stringify(CHECKIN_DEFAULT));
-                return JSON.parse(raw) || {};
-            } catch (e) { return JSON.parse(JSON.stringify(CHECKIN_DEFAULT)); }
-        }
-        function checkinSave(d) {
-            try { localStorage.setItem(CHECKIN_KEY, JSON.stringify(d)); } catch (e) {}
-        }
-        function nowHM() {
-            var t = new Date();
-            function p(n) { return (n < 10 ? '0' : '') + n; }
-            return p(t.getHours()) + ':' + p(t.getMinutes());
-        }
-
-        function initCheckin() {
-            var box = document.getElementById('checkin-box');
-            if (!box) return;
-            var d = checkinData();
-            var done = 0;
-            TODAY_CLASSES.forEach(function (c) { if (d[c.id]) done++; });
-
-            var cards = '';
-            TODAY_CLASSES.forEach(function (c) {
-                var rec = d[c.id];
-                var isDone = !!rec;
-                var badge = isDone
-                    ? '<span style="padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;color:#059669;background:#ECFDF5">已签到 ' + rec.at + '</span>'
-                    : '<span style="padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;color:#94A3B8;background:#F1F5F9">未签到</span>';
-                var btn = isDone
-                    ? '<button disabled style="padding:7px 18px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#CBD5E1;background:#F8FAFC;cursor:not-allowed">已签到</button>'
-                    : '<button onclick="doCheckin(\'' + c.id + '\')" style="padding:7px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">签 到</button>';
-
-                cards += '<div style="display:flex;align-items:center;gap:14px;border:1px solid ' + (isDone ? '#E2E8F0' : '#DDD6FE') + ';border-radius:12px;padding:15px 18px;margin-bottom:10px;background:' + (isDone ? '#fff' : '#FAF9FF') + '">' +
-                    '<div style="width:46px;height:46px;border-radius:10px;background:' + (isDone ? '#F1F5F9' : '#EEF2FF') + ';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:' + (isDone ? '#94A3B8' : '#4F46E5') + '">' + c.period.replace('第', '').replace('节', '') + '</div>' +
-                    '<div style="flex:1;min-width:0">' +
-                        '<div style="font-size:15px;font-weight:600;color:#1E293B">' + c.course + ' <span style="font-size:12px;font-weight:400;color:#94A3B8">· ' + c.teacher + ' · ' + c.room + '</span></div>' +
-                        '<div style="font-size:12px;color:#94A3B8;margin-top:3px">' + c.period + ' · ' + c.time + '</div>' +
-                    '</div>' +
-                    '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px">' + badge + btn + '</div>' +
-                    '</div>';
-            });
-
-            box.innerHTML =
-                '<div style="padding:12px 16px;background:#EEF2FF;border-radius:10px;margin-bottom:14px;font-size:13px;color:#4338CA">' +
-                    '今日共 <b>' + TODAY_CLASSES.length + ' 节</b>课，已签到 <b>' + done + ' 节</b>' +
-                    (done < TODAY_CLASSES.length ? '，还有 ' + (TODAY_CLASSES.length - done) + ' 节待签到' : '，全部完成') +
-                '</div>' +
-                cards +
-                '<div style="margin-top:8px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
-                    '<span style="font-weight:600;color:#475569">📋 说明：</span>签到仅用于记录本人到课情况；' +
-                    '出勤统计、缺勤认定与请假审批由任课教师负责，学生端不展示班级出勤数据。' +
-                '</div>';
-        }
-
-        function doCheckin(cid) {
-            var d = checkinData();
-            if (d[cid]) { toast('本节课已签到', 'error'); return; }
-            var cls = null;
-            for (var i = 0; i < TODAY_CLASSES.length; i++) { if (TODAY_CLASSES[i].id === cid) cls = TODAY_CLASSES[i]; }
-            if (!cls) return;
-            var at = nowHM();
-            d[cid] = { at: at, status: '已签到' };
-            checkinSave(d);
-            toast('签到成功（' + at + '）', 'success');
-            initCheckin();
-        }
-
-        window.initCheckin = initCheckin;
-        window.doCheckin = doCheckin;
-
-        // ---------- 选课中心（含 5 条业务规则）----------
+        // ---------- 选课中心（含 6 条业务规则） ----------
         var COURSE_LIMITS = { maxCourses: 6, maxCredit: 20 };
         var COURSES = [
             { id: 'C01', name: '数学', teacher: '王建国', credit: 4, hours: 96, cap: 40, taken: 36, time: '周一 第1-2节', room: '301', cat: '必修' },
@@ -3119,6 +3010,20 @@
                 if (oc && oc.time === c.time)
                     return { ok: false, reason: '与已选《' + oc.name + '》上课时间冲突（' + c.time + '）' };
             }
+            // R6 阶段门槛：已选课程未全部结课时不可再选新课
+            var unfinished = [];
+            sel.forEach(function (sid) {
+                var oc2 = courseById(sid);
+                if (!oc2) return;
+                var h = courseHours(oc2.name);
+                if (h.total > 0 && h.finished < h.total) unfinished.push(oc2.name);
+            });
+            if (unfinished.length > 0) {
+                return { ok: false,
+                    reason: '已选课程尚未全部结课（' + unfinished.slice(0, 3).join('、') +
+                            (unfinished.length > 3 ? ' 等 ' + unfinished.length + ' 门' : '') +
+                            '），需完成全部课时后方可选新课' };
+            }
             return { ok: true, reason: '' };
         }
 
@@ -3133,7 +3038,12 @@
                 ['已选课程', sel.length + ' / ' + COURSE_LIMITS.maxCourses + ' 门', sel.length >= COURSE_LIMITS.maxCourses ? '#DC2626' : '#4F46E5', sel.length >= COURSE_LIMITS.maxCourses ? '#FEF2F2' : '#EEF2FF'],
                 ['已修学分', credit + ' / ' + COURSE_LIMITS.maxCredit + ' 分', credit >= COURSE_LIMITS.maxCredit ? '#DC2626' : '#059669', credit >= COURSE_LIMITS.maxCredit ? '#FEF2F2' : '#ECFDF5'],
                 ['可选课程', COURSES.length + ' 门', '#1E293B', '#F8FAFC'],
-                ['剩余名额', (function () { var n = 0; COURSES.forEach(function (c) { if (c.taken < c.cap) n++; }); return n + ' 门可报'; })(), '#D97706', '#FFFBEB']
+                ['已结课', (function () {
+                    var n = 0;
+                    sel.forEach(function (x) { var c2 = courseById(x); if (!c2) return;
+                        var h = courseHours(c2.name); if (h.total > 0 && h.finished >= h.total) n++; });
+                    return n + ' / ' + sel.length + ' 门';
+                })(), '#D97706', '#FFFBEB']
             ];
             var statHtml = '';
             cards.forEach(function (x) {
@@ -3151,17 +3061,24 @@
                 else if (chk.ok) { status = '可选'; color = '#4F46E5'; bg = '#EEF2FF'; }
                 else if (c.taken >= c.cap) { status = '已满'; color = '#DC2626'; bg = '#FEF2F2'; }
                 else if (chk.reason.indexOf('冲突') >= 0) { status = '时间冲突'; color = '#D97706'; bg = '#FFFBEB'; }
+                else if (chk.reason.indexOf('结课') >= 0) { status = '未结课'; color = '#7C3AED'; bg = '#F5F3FF'; }
                 else { status = '受限'; color = '#94A3B8'; bg = '#F8FAFC'; }
 
                 var btn;
                 if (isSel) {
-                    btn = '<button onclick="dropCourse(\'' + c.id + '\')" style="padding:5px 14px;border:1px solid #FECACA;border-radius:7px;font-size:12px;color:#DC2626;background:#fff">退课</button>';
+                    var hh = courseHours(c.name);
+                    var finished = hh.total > 0 && hh.finished >= hh.total;
+                    btn = finished
+                        ? '<span style="font-size:12px;color:#059669;font-weight:600">已结课</span>'
+                        : '<button data-drop="' + c.id + '" style="padding:5px 14px;border:1px solid #FECACA;border-radius:7px;font-size:12px;color:#DC2626;background:#fff">退课</button>';
                 } else if (chk.ok) {
-                    btn = '<button onclick="selectCourse(\'' + c.id + '\')" style="padding:5px 14px;background:#7C3AED;color:#fff;border:1px solid #7C3AED;border-radius:7px;font-size:12px;font-weight:600">选课</button>';
+                    btn = '<button data-pick="' + c.id + '" style="padding:5px 14px;background:#7C3AED;color:#fff;border:1px solid #7C3AED;border-radius:7px;font-size:12px;font-weight:600">选课</button>';
                 } else {
                     btn = '<button disabled title="' + chk.reason + '" style="padding:5px 14px;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;color:#CBD5E1;background:#F8FAFC;cursor:not-allowed">选课</button>';
                 }
 
+                var h = courseHours(c.name);
+                var pct = h.total ? Math.round(h.finished / h.total * 100) : 0;
                 var capRate = Math.round(c.taken / c.cap * 100);
                 var capColor = capRate >= 100 ? '#DC2626' : (capRate >= 90 ? '#D97706' : '#059669');
 
@@ -3172,6 +3089,7 @@
                     '<td>' + c.hours + '</td>' +
                     '<td style="white-space:nowrap">' + c.time + '<br><span style="font-size:11px;color:#94A3B8">' + c.room + '</span></td>' +
                     '<td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;min-width:46px;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:' + Math.min(capRate, 100) + '%;height:100%;background:' + capColor + '"></div></div><span style="font-size:11px;color:#64748B;white-space:nowrap">' + c.taken + '/' + c.cap + '</span></div></td>' +
+                    '<td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;min-width:40px;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:#7C3AED"></div></div><span style="font-size:11px;color:#64748B;white-space:nowrap">' + pct + '%</span></div></td>' +
                     '<td><span style="padding:2px 8px;border-radius:5px;font-size:12px;font-weight:500;color:' + color + ';background:' + bg + '">' + status + '</span></td>' +
                     '<td class="text-right">' + btn + '</td>' +
                     '</tr>';
@@ -3179,11 +3097,19 @@
 
             box.innerHTML =
                 '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin-bottom:16px">' + statHtml + '</div>' +
-                '<table><thead><tr><th>课程</th><th>任课教师</th><th>学分</th><th>课时</th><th>上课时间</th><th>容量</th><th>状态</th><th class="text-right">操作</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<table><thead><tr><th>课程</th><th>任课教师</th><th>学分</th><th>课时</th><th>上课时间</th><th>容量</th><th>学习进度</th><th>状态</th><th class="text-right">操作</th></tr></thead><tbody>' + rows + '</tbody></table>' +
                 '<div style="margin-top:14px;padding:12px 14px;background:#EEF2FF;border-radius:10px;font-size:13px;color:#4338CA">' +
                     '<span style="font-weight:600">📋 选课规则：</span>每学期最多选 <b>' + COURSE_LIMITS.maxCourses + ' 门</b>、最多修 <b>' + COURSE_LIMITS.maxCredit + ' 学分</b>；' +
-                    '课程满员不可选；上课时间与已选课程冲突不可选；已选课程需先退课才能更换。' +
+                    '课程满员不可选；上课时间与已选课程冲突不可选；' +
+                    '<b>已选课程未全部结课前不可再选新课</b>（结课状态以教师登记的教学进度为准）。' +
                 '</div>';
+
+            box.querySelectorAll('button[data-pick]').forEach(function (b) {
+                b.addEventListener('click', function () { selectCourse(b.getAttribute('data-pick')); });
+            });
+            box.querySelectorAll('button[data-drop]').forEach(function (b) {
+                b.addEventListener('click', function () { dropCourse(b.getAttribute('data-drop')); });
+            });
         }
 
         function selectCourse(id) {
@@ -3326,6 +3252,242 @@
 
         window.initWorkload = initWorkload;
 
+        // ---------- 教学进度存储（教师写 / 学生读） ----------
+        var TEACH_PROG_KEY = 'cy_teach_prog_v1';
+        var CHAPTER_DEF = {
+            '数学': [
+                { n: '第1章 集合与函数概念', h: 16 },
+                { n: '第2章 函数的基本性质', h: 20 },
+                { n: '第3章 指数函数与对数函数', h: 24 },
+                { n: '第4章 三角函数', h: 24 },
+                { n: '第5章 数列', h: 12 }
+            ],
+            '英语': [
+                { n: 'Unit 1 校园生活', h: 18 },
+                { n: 'Unit 2 兴趣爱好', h: 18 },
+                { n: 'Unit 3 旅行与交通', h: 20 },
+                { n: 'Unit 4 科技发展', h: 20 },
+                { n: 'Unit 5 文化交流', h: 20 }
+            ],
+            '物理': [
+                { n: '第1章 运动的描述', h: 16 },
+                { n: '第2章 牛顿运动定律', h: 24 },
+                { n: '第3章 曲线运动', h: 24 }
+            ],
+            '语文': [
+                { n: '第一单元 现代诗歌', h: 16 },
+                { n: '第二单元 古代散文', h: 20 },
+                { n: '第三单元 小说阅读', h: 22 },
+                { n: '第四单元 写作训练', h: 22 }
+            ],
+            '化学': [
+                { n: '第1章 物质及其变化', h: 20 },
+                { n: '第2章 化学计量', h: 22 },
+                { n: '第3章 金属及其化合物', h: 22 }
+            ]
+        };
+        var TEACH_PROG_DEFAULT = {
+            '数学': ['第1章 集合与函数概念', '第2章 函数的基本性质'],
+            '英语': ['Unit 1 校园生活', 'Unit 2 兴趣爱好'],
+            '物理': ['第1章 运动的描述'],
+            '语文': ['第一单元 现代诗歌', '第二单元 古代散文'],
+            '化学': ['第1章 物质及其变化']
+        };
+
+        function teachProgAll() {
+            try {
+                var raw = localStorage.getItem(TEACH_PROG_KEY);
+                if (!raw) return JSON.parse(JSON.stringify(TEACH_PROG_DEFAULT));
+                return JSON.parse(raw) || {};
+            } catch (e) { return JSON.parse(JSON.stringify(TEACH_PROG_DEFAULT)); }
+        }
+        function teachProgSave(o) {
+            try { localStorage.setItem(TEACH_PROG_KEY, JSON.stringify(o)); } catch (e) {}
+        }
+        /** 计算某课程的课时进度 */
+        function courseHours(name) {
+            var chapters = CHAPTER_DEF[name] || [];
+            var done = teachProgAll()[name] || [];
+            var total = 0, finished = 0;
+            chapters.forEach(function (c) {
+                total += c.h;
+                if (done.indexOf(c.n) >= 0) finished += c.h;
+            });
+            return { total: total, finished: finished,
+                     doneCount: chapters.filter(function (c) { return done.indexOf(c.n) >= 0; }).length,
+                     all: chapters.length };
+        }
+
+        function initTeachProgress() {
+            var box = document.getElementById('teachprog-box');
+            if (!box) return;
+            var store = teachProgAll();
+            var chapters = CHAPTER_DEF['数学'] || [];
+            var done = store['数学'] || [];
+
+            var totalH = 0, doneH = 0;
+            chapters.forEach(function (c) { totalH += c.h; if (done.indexOf(c.n) >= 0) doneH += c.h; });
+            var pct = Math.round(doneH / totalH * 100);
+
+            var rows = '';
+            chapters.forEach(function (c) {
+                var isDone = done.indexOf(c.n) >= 0;
+                var btn = isDone
+                var btn = isDone
+                    ? '<button data-chap="' + c.n + '" style="padding:5px 12px;border:1px solid #E2E8F0;border-radius:6px;font-size:12px;color:#94A3B8;background:#fff">撤销</button>'
+                    : '<button data-chap="' + c.n + '" style="padding:5px 12px;background:#7C3AED;color:#fff;border-radius:6px;font-size:12px;font-weight:600">标记完成</button>';
+                rows += '<tr>' +
+                    '<td>' + c.n + '</td><td>' + c.h + ' 课时</td>' +
+                    '<td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' +
+                        (isDone ? '#059669' : '#94A3B8') + ';background:' + (isDone ? '#ECFDF5' : '#F8FAFC') + '">' +
+                        (isDone ? '已完成' : '未完成') + '</span></td>' +
+                    '<td class="text-right">' + btn + '</td></tr>';
+            });
+
+            box.innerHTML =
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px">' +
+                    '<div style="background:#EEF2FF;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#4F46E5">总课时</div><div style="font-size:20px;font-weight:700;color:#4F46E5;margin-top:3px">' + totalH + ' 课时</div></div>' +
+                    '<div style="background:#ECFDF5;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#059669">已完成</div><div style="font-size:20px;font-weight:700;color:#059669;margin-top:3px">' + doneH + ' 课时</div></div>' +
+                    '<div style="background:#F5F3FF;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#7C3AED">完成进度</div><div style="font-size:20px;font-weight:700;color:#7C3AED;margin-top:3px">' + pct + '%</div></div>' +
+                    '<div style="background:#F8FAFC;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#64748B">已完成章节</div><div style="font-size:20px;font-weight:700;color:#1E293B;margin-top:3px">' + done.length + ' / ' + chapters.length + '</div></div>' +
+                '</div>' +
+                '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#FAFBFC;border:1px solid #F1F5F9;border-radius:10px;margin-bottom:16px">' +
+                    '<span style="font-size:13px;color:#64748B;white-space:nowrap">整体进度</span>' +
+                    '<div style="flex:1;height:8px;background:#E2E8F0;border-radius:99px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:linear-gradient(90deg,#8B5CF6,#D946EF)"></div></div>' +
+                    '<span style="font-size:13px;font-weight:700;color:#7C3AED">' + pct + '%</span>' +
+                '</div>' +
+                '<table><thead><tr><th>章节 / 单元</th><th style="width:110px">课时</th><th style="width:110px">状态</th><th class="text-right" style="width:130px">操作</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📌 联动说明：</span>教师标记章节完成后，本班学生的「学习进度」会同步更新已完成课时与进度百分比；' +
+                    '学生端为只读，不参与登记。' +
+                '</div>';
+
+            // 绑定章节按钮（避免内联 onclick 的引号转义问题）
+            box.querySelectorAll('button[data-chap]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    toggleChapter(b.getAttribute('data-chap'));
+                });
+            });
+        }
+
+        function toggleChapter(name) {
+            var store = teachProgAll();
+            var arr = store['数学'] || [];
+            var i = arr.indexOf(name);
+            if (i >= 0) arr.splice(i, 1);
+            else arr.push(name);
+            store['数学'] = arr;
+            teachProgSave(store);
+            toast(i >= 0 ? ('已撤销「' + name + '」') : ('已标记「' + name + '」为完成，学生端已同步'), i >= 0 ? 'info' : 'success');
+            initTeachProgress();
+        }
+
+        window.initTeachProgress = initTeachProgress;
+        window.toggleChapter = toggleChapter;
+        window.courseHours = courseHours;
+
+        // ---------- 作业按次布置 ----------
+        var HW_ASSIGN_KEY = 'cy_hw_assign_v1';
+
+        function hwAssignAll() {
+            try { return JSON.parse(localStorage.getItem(HW_ASSIGN_KEY) || '[]'); } catch (e) { return []; }
+        }
+        function hwAssignSave(a) {
+            try { localStorage.setItem(HW_ASSIGN_KEY, JSON.stringify(a)); } catch (e) {}
+        }
+
+        function openHomeworkForm() {
+            var old = document.getElementById('hwassign-modal');
+            if (old) old.parentNode.removeChild(old);
+            var list = hwAssignAll();
+            var seq = list.length + 1;
+
+            var m = document.createElement('div');
+            m.id = 'hwassign-modal';
+            m.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.45)';
+            m.innerHTML =
+                '<div style="background:#fff;border-radius:16px;width:min(540px,94vw);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(15,23,42,.28)">' +
+                    '<div style="padding:18px 24px;border-bottom:1px solid #F1F5F9">' +
+                        '<div style="font-size:16px;font-weight:700;color:#1E293B">布置作业</div>' +
+                        '<div style="font-size:12px;color:#94A3B8;margin-top:3px">本次为该课程第 ' + seq + ' 次作业</div>' +
+                    '</div>' +
+                    '<div style="padding:18px 24px;display:grid;gap:13px;overflow-y:auto">' +
+                        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+                            '<label style="display:grid;gap:5px;font-size:13px;color:#475569"><span style="font-weight:600">班级</span>' +
+                                '<select id="hw-cls" style="padding:9px 11px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"><option>高一(1)班</option><option>高一(2)班</option><option>高一(3)班</option></select></label>' +
+                            '<label style="display:grid;gap:5px;font-size:13px;color:#475569"><span style="font-weight:600">课程</span>' +
+                                '<select id="hw-course" style="padding:9px 11px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"><option>数学</option><option>英语</option><option>物理</option></select></label>' +
+                        '</div>' +
+                        '<label style="display:grid;gap:5px;font-size:13px;color:#475569"><span style="font-weight:600">作业标题</span>' +
+                            '<input id="hw-title" type="text" placeholder="如：函数单调性练习（第1-8题）" style="padding:9px 11px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"></label>' +
+                        '<label style="display:grid;gap:5px;font-size:13px;color:#475569"><span style="font-weight:600">作业要求</span>' +
+                            '<textarea id="hw-req" rows="2" placeholder="题量、提交形式等" style="padding:9px 11px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;resize:vertical;font-family:inherit"></textarea></label>' +
+                        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+                            '<label style="display:grid;gap:5px;font-size:13px;color:#475569"><span style="font-weight:600">截止时间</span>' +
+                                '<input id="hw-due" type="date" value="2026-10-29" style="padding:9px 11px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"></label>' +
+                            '<label style="display:grid;gap:5px;font-size:13px;color:#475569"><span style="font-weight:600">作业次数</span>' +
+                                '<input id="hw-no" type="text" value="第 ' + seq + ' 次" readonly style="padding:9px 11px;border:1px solid #F1F5F9;border-radius:8px;font-size:13px;background:#F8FAFC;color:#94A3B8"></label>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="padding:14px 24px;border-top:1px solid #F1F5F9;display:flex;justify-content:flex-end;gap:10px">' +
+                        '<button data-hwcancel="1" style="padding:9px 20px;border:1px solid #E2E8F0;border-radius:9px;color:#475569;font-size:14px">取消</button>' +
+                        '<button onclick="submitHwAssign()" style="padding:9px 22px;background:#7C3AED;color:#fff;border-radius:9px;font-size:14px;font-weight:600">确认布置</button>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(m);
+            m.addEventListener('click', function (e) { if (e.target === m) m.remove(); });
+            var hwCancel = m.querySelector('[data-hwcancel]');
+            if (hwCancel) hwCancel.addEventListener('click', function () { m.remove(); });
+        }
+
+        function submitHwAssign() {
+            var title = (document.getElementById('hw-title') || {}).value || '';
+            title = title.trim();
+            var due = (document.getElementById('hw-due') || {}).value || '';
+            var cls = (document.getElementById('hw-cls') || {}).value || '';
+            var course = (document.getElementById('hw-course') || {}).value || '';
+            var req = (document.getElementById('hw-req') || {}).value || '';
+            if (!title) { toast('请填写作业标题', 'error'); return; }
+            if (!due) { toast('请选择截止时间', 'error'); return; }
+
+            var list = hwAssignAll();
+            var rec = {
+                no: '第 ' + (list.length + 1) + ' 次',
+                title: title, cls: cls, course: course,
+                req: req, due: due,
+                at: new Date().toISOString().slice(0, 10),
+                by: currentRole() === '授课教师' ? '王建国' : '教务管理员'
+            };
+            list.push(rec);
+            hwAssignSave(list);
+            var mo = document.getElementById('hwassign-modal');
+            if (mo) mo.parentNode.removeChild(mo);
+            toast('已布置「' + title + '」（' + rec.no + '）', 'success');
+            // 刷新作业布置页
+            var el = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
+                .filter(function (n) { return (n.getAttribute('onclick') || '').indexOf("changeContent('作业布置'") === 0; })[0];
+            if (el) changeContent('作业布置', el);
+        }
+
+        function initHwAssignPage() {
+            var tbl = document.querySelector('#main-content table');
+            if (!tbl) return;
+            // 在表格上方插入已布置记录摘要
+            var bar = document.querySelector('#main-content .flex.flex-wrap.justify-between');
+            if (bar && !bar.querySelector('.js-hwassign')) {
+                var b = document.createElement('button');
+                b.className = 'js-hwassign';
+                b.textContent = '＋ 布置新作业';
+                b.style.cssText = 'padding:9px 18px;background:#7C3AED;color:#fff;border-radius:8px;font-size:14px;font-weight:600;margin-left:8px';
+                b.onclick = function () { if (!guardWrite(currentTitle)) return; openHomeworkForm(); };
+                (bar.querySelector('div:last-child') || bar).appendChild(b);
+            }
+        }
+
+        window.openHomeworkForm = openHomeworkForm;
+        window.submitHwAssign = submitHwAssign;
+        window.initHwAssignPage = initHwAssignPage;
+
         // ---------- 学习进度（学生端查看） ----------
         var PROG_DATA = [
             { name: '数学', teacher: '王建国', total: 96, done: 32, color: '#4F46E5', cat: '必修',
@@ -3369,13 +3531,32 @@
         function initProgress() {
             var box = document.getElementById('progress-box');
             if (!box) return;
+            var store = teachProgAll();
+
+            // 依据教学进度存储计算每门课的实时进度
+            PROG_DATA.forEach(function (c) {
+                var chapters = CHAPTER_DEF[c.name] || [];
+                var done = store[c.name] || [];
+                c.chapters = chapters.map(function (ch, idx) {
+                    var isDone = done.indexOf(ch.n) >= 0;
+                    var firstUndone = -1;
+                    for (var k = 0; k < chapters.length; k++) {
+                        if (done.indexOf(chapters[k].n) < 0) { firstUndone = k; break; }
+                    }
+                    var st = isDone ? '已完成' : (idx === firstUndone ? '进行中' : '未开始');
+                    return { n: ch.n, h: ch.h, st: st, at: isDone ? '已完成' : (idx === firstUndone ? '学习中' : '—') };
+                });
+                c.total = c.chapters.reduce(function (a, x) { return a + x.h; }, 0);
+                c.done = c.chapters.filter(function (x) { return x.st === '已完成'; })
+                                   .reduce(function (a, x) { return a + x.h; }, 0);
+            });
 
             var totalH = 0, doneH = 0, finishedChap = 0, allChap = 0;
             PROG_DATA.forEach(function (c) {
                 totalH += c.total; doneH += c.done;
                 c.chapters.forEach(function (ch) { allChap++; if (ch.st === '已完成') finishedChap++; });
             });
-            var rate = Math.round(doneH / totalH * 100);
+            var rate = totalH ? Math.round(doneH / totalH * 100) : 0;
 
             var kpis = [
                 ['本学期总课时', totalH + ' 课时', '#4F46E5', '#EEF2FF'],
@@ -3390,10 +3571,9 @@
                     '<div style="font-size:21px;font-weight:700;color:' + k[2] + ';margin-top:3px">' + k[1] + '</div></div>';
             });
 
-            // 课程卡片（可点击切换）
             var cards = '';
             PROG_DATA.forEach(function (c, idx) {
-                var pct = Math.round(c.done / c.total * 100);
+                var pct = c.total ? Math.round(c.done / c.total * 100) : 0;
                 var cur = c.chapters.filter(function (ch) { return ch.st === '进行中'; })[0];
                 var active = (idx === progSelected);
                 cards += '<div onclick="selectProgress(' + idx + ')" style="cursor:pointer;border:1px solid ' +
@@ -3407,11 +3587,10 @@
                     '<div style="height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden;margin:9px 0 7px">' +
                         '<div style="width:' + pct + '%;height:100%;background:' + c.color + '"></div></div>' +
                     '<div style="font-size:11px;color:#94A3B8">' + c.done + ' / ' + c.total + ' 课时' +
-                        (cur ? ' · 当前：' + cur.n.split(' ')[0] : '') + '</div>' +
+                        (cur ? ' · 当前：' + cur.n.split(' ')[0] : (pct >= 100 ? ' · 已结课' : '')) + '</div>' +
                     '</div>';
             });
 
-            // 章节明细
             var sel = PROG_DATA[progSelected];
             var chapRows = '';
             sel.chapters.forEach(function (ch) {
@@ -3432,8 +3611,8 @@
                 '<div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:8px">' + sel.name + ' · 章节明细</div>' +
                 '<table><thead><tr><th>章节 / 单元</th><th style="width:100px">课时</th><th style="width:100px">状态</th><th style="width:170px">进度说明</th></tr></thead><tbody>' + chapRows + '</tbody></table>' +
                 '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
-                    '<span style="font-weight:600;color:#475569">📌 说明：</span>学习进度由任课教师在「教学进度」中登记，学生端仅供查看；' +
-                    '完成率 = 已完成课时 ÷ 本学期总课时；章节状态分为「已完成 / 进行中 / 未开始」。' +
+                    '<span style="font-weight:600;color:#475569">📌 说明：</span>进度由任课教师在「教学进度」中标记章节完成后实时同步；' +
+                    '学生端只读。全部章节完成即视为该课程结课，方可继续选修新课。' +
                 '</div>';
         }
 
