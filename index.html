@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.10.1
+      冲鸭教育管理系统   v1.11.0
       单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
@@ -416,6 +416,7 @@
                 </div>
                 <div id="sys-menu" class="hidden mt-1 space-y-1">
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教务管理员信息', this)">教务管理员信息</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('角色权限', this)">角色权限</div>
                 </div>
             </div>
             <!-- 学生管理 -->
@@ -485,7 +486,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.10.1 · 期中版
+            冲鸭教育 · v1.11.0 · 期中版
         </div>
     </aside>
 
@@ -1478,6 +1479,15 @@
             }
 
 
+
+            // P1. 角色权限（超管）
+            else if (title === '角色权限') {
+                refText = '角色 x 工作区 权限矩阵 —— 读写能力一目了然';
+                titleHtml = '角色权限规划';
+                recordCount = 0;
+                html = '<div id="perm-box" style="padding:2px 0 12px"></div>';
+            }
+
             // A1. 学籍异动（教务）
             else if (title === '学籍异动') {
                 refText = '休学 / 复学 / 转学 / 退学 登记与审批';
@@ -1883,7 +1893,7 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '角色权限', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -2384,11 +2394,11 @@
         document.addEventListener('click', function (e) {
             var btn = e.target.closest('button');
             if (!btn) return;
-            if (btn.classList.contains('js-add')) { openForm('add'); }
-            else if (btn.classList.contains('js-edit')) { openForm('edit', btn.closest('tr')); }
-            else if (btn.classList.contains('js-delete')) { deleteRow(btn); }
+            if (btn.classList.contains('js-add')) { if (!guardWrite(currentTitle)) return; openForm('add'); }
+            else if (btn.classList.contains('js-edit')) { if (!guardWrite(currentTitle)) return; openForm('edit', btn.closest('tr')); }
+            else if (btn.classList.contains('js-delete')) { if (!guardWrite(currentTitle)) return; deleteRow(btn); }
             else if (btn.classList.contains('js-view')) { viewRow(btn); }
-            else if (btn.classList.contains('js-submit')) { submitHomework(btn); }
+            else if (btn.classList.contains('js-submit')) { if (!guardWrite(currentTitle)) return; submitHomework(btn); }
         });
 
         // ---------- 接管 changeContent ----------
@@ -2398,7 +2408,11 @@
             currentTitle = title;
             if (title && title !== '仪表盘') {
                 applyView(title);
-                setTimeout(function () { applyScope(); renderPagination(title); }, 0);
+                setTimeout(function () {
+                    applyScope();
+                    renderPagination(title);
+                    applyReadOnly(title);
+                }, 0);
             }
         };
 
@@ -2677,6 +2691,11 @@
                 enhanceToolbar();
                 return;
             }
+            if (title === '角色权限') {
+                setTimeout(function () { if (window.initPermPage) initPermPage(); }, 0);
+                enhanceToolbar();
+                return;
+            }
             if (title === '工作量统计') {
                 setTimeout(function () { if (window.initWorkload) initWorkload(); }, 0);
                 enhanceToolbar();
@@ -2716,6 +2735,7 @@
             applyScope();
             renderPagination(title);
             enhanceToolbar();
+            setTimeout(function () { applyReadOnly(title); }, 0);
         }
 
         // ---------- 劳务子菜单按角色过滤 ----------
@@ -2741,6 +2761,169 @@
                 items[i].style.display = (allow.indexOf(label) >= 0) ? '' : 'none';
             }
         }
+
+        // ---------- RBAC：读写权限 ----------
+        // '*' 表示该角色对所有可见页面都有写权限；列出页面 = 仅这些可写，其余只读
+        var WRITE_PERM = {
+            '超级管理员': '*',
+            '教务管理员': '*',
+            '授课教师': ['课堂考勤', '考勤统计', '教学进度', '学生评语', '请假审批',
+                         '成绩录入', '作业布置', '作业批改', '课件资源', '教材管理', '题库管理'],
+            '学生': ['课堂签到', '选课中心', '我的课程', '我的作业', '教学评价', '请假申请'],
+            '劳务管理员': ['建筑劳务备案', '劳务合同管理', '工程项目管理', '派遣考勤管理',
+                           '工资管理', '劳务系统管理'],
+            '项目经理': ['派遣考勤管理'],
+            '财务人员': ['工资管理']
+        };
+
+        function currentRole() {
+            var sess = getSession();
+            return sess ? sess.role : '教务管理员';
+        }
+
+        /** 当前角色能否修改指定页面 */
+        function canWrite(title) {
+            var w = WRITE_PERM[currentRole()];
+            if (w === '*') return true;
+            if (!w) return false;
+            return w.indexOf(title) >= 0;
+        }
+
+        /** 只读处理：剥离写操作控件 + 显示徽章 */
+        function applyReadOnly(title) {
+            var main = document.getElementById('main-content');
+            if (!main) return;
+            var writable = canWrite(title);
+
+            // 移除已存在的徽章
+            var old = main.querySelector('.ro-badge');
+            if (old) old.parentNode.removeChild(old);
+
+            if (writable) {
+                main.querySelectorAll('[data-ro-hidden]').forEach(function (el) {
+                    el.style.display = '';
+                });
+                return;
+            }
+
+            // 1) 新增类按钮
+            main.querySelectorAll('.js-add, .js-submit').forEach(function (b) {
+                if (b.style.display !== 'none') {
+                    b.setAttribute('data-ro-hidden', '1');
+                    b.style.display = 'none';
+                }
+            });
+
+            // 2) 表格操作列：整列移除
+            var tbl = main.querySelector('table');
+            if (tbl) {
+                var ths = tbl.querySelectorAll('thead th');
+                var last = ths[ths.length - 1];
+                if (last && /操作/.test(last.innerText)) {
+                    last.style.display = 'none';
+                    tbl.querySelectorAll('tbody tr').forEach(function (tr) {
+                        var td = tr.cells[tr.cells.length - 1];
+                        if (td) td.style.display = 'none';
+                    });
+                }
+                // 3) 表内零散的编辑/删除按钮
+                tbl.querySelectorAll('.js-edit, .js-delete').forEach(function (b) {
+                    b.style.display = 'none';
+                });
+            }
+
+            // 4) 顶部「只读」徽章
+            var bar = main.querySelector('.flex.flex-wrap.justify-between');
+            if (bar) {
+                var badge = document.createElement('span');
+                badge.className = 'ro-badge';
+                badge.style.cssText = 'margin-left:10px;padding:5px 12px;border-radius:7px;font-size:12px;' +
+                    'font-weight:600;color:#64748B;background:#F1F5F9;white-space:nowrap';
+                badge.textContent = '🔒 只读权限 · 当前角色不可修改';
+                badge.title = '当前角色「' + currentRole() + '」对「' + title + '」仅有查看权限';
+                var titleBox = bar.querySelector('div');
+                if (titleBox) titleBox.appendChild(badge);
+                else bar.appendChild(badge);
+            }
+        }
+
+        // 防御性校验：写操作入口统一拦截
+        function guardWrite(title) {
+            if (canWrite(title)) return true;
+            toast('当前角色对「' + title + '」只有查看权限，不能修改', 'error');
+            return false;
+        }
+
+        window.canWrite = canWrite;
+        window.applyReadOnly = applyReadOnly;
+        window.currentRole = currentRole;
+
+        // ---------- 角色权限矩阵页 ----------
+        var PERM_ZONES = [
+            { key: 'dashboard', label: '数据概览', menus: ['dashboard', 'analysis'],
+              pages: ['仪表盘', '数据分析'] },
+            { key: 'mine', label: '我的学习', menus: ['mine'],
+              pages: ['我的课表', '课堂签到', '选课中心', '我的课程', '我的成绩', '我的作业', '教学评价', '请假申请', '通知公告', '个人信息'] },
+            { key: 'twork', label: '教师工作台', menus: ['twork'],
+              pages: ['我的课表_师', '我的班级', '课堂考勤', '考勤统计', '工作量统计', '教学进度', '学生评语', '请假审批', '成绩录入'] },
+            { key: 'edu', label: '教务管理', menus: ['sys', 'stu', 'teacher', 'hw', 'res', 'scholarship', 'news'],
+              pages: ['学生档案', '班级管理', '学籍异动', '考试管理', '成绩登记', '成绩台账', '师资档案', '课程管理', '课表管理', '学生评教', '作业布置', '作业提交', '作业批改', '课件资源', '教材管理', '题库管理', '奖学金管理', '新闻管理', '教务管理员信息', '角色权限'] },
+            { key: 'lw', label: '劳务管理', menus: ['lw'],
+              pages: ['建筑劳务备案', '劳务合同管理', '工程项目管理', '派遣考勤管理', '工资管理', '劳务查询统计', '劳务系统管理'] }
+        ];
+
+        function zonePerm(role, zone) {
+            var roleMenus = ROLE_MENUS[role] || [];
+            var keys = zone.menus || [zone.key];
+            var visible = false;
+            keys.forEach(function (k) { if (roleMenus.indexOf(k) >= 0) visible = true; });
+            if (!visible) return 'none';
+            var w = WRITE_PERM[role];
+            if (w === '*') return 'rw';
+            var any = false;
+            zone.pages.forEach(function (p) { if (w && w.indexOf(p) >= 0) any = true; });
+            return any ? 'rw' : 'ro';
+        }
+
+        function initPermPage() {
+            var box = document.getElementById('perm-box');
+            if (!box) return;
+            var roles = ['超级管理员', '教务管理员', '授课教师', '学生', '劳务管理员', '项目经理', '财务人员'];
+            var head = '<th style="min-width:110px">角色</th>';
+            PERM_ZONES.forEach(function (z) { head += '<th style="text-align:center">' + z.label + '</th>'; });
+
+            var rows = '';
+            roles.forEach(function (r) {
+                var tds = '<td><b>' + r + '</b></td>';
+                PERM_ZONES.forEach(function (z) {
+                    var p = zonePerm(r, z);
+                    var conf = p === 'rw' ? ['可读写', '#059669', '#ECFDF5'] :
+                               (p === 'ro' ? ['只读', '#D97706', '#FFFBEB'] : ['无权限', '#94A3B8', '#F8FAFC']);
+                    tds += '<td style="text-align:center"><span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;color:' +
+                        conf[1] + ';background:' + conf[2] + '">' + conf[0] + '</span></td>';
+                });
+                rows += '<tr>' + tds + '</tr>';
+            });
+
+            var legend =
+                '<div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;color:#64748B">' +
+                    '<span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#059669;margin-right:6px"></span>可读写：可查看并新增/编辑/删除</span>' +
+                    '<span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#D97706;margin-right:6px"></span>只读：仅可查看与导出，修改按钮自动隐藏</span>' +
+                    '<span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#94A3B8;margin-right:6px"></span>无权限：菜单不显示，直接访问会被拦截</span>' +
+                '</div>';
+
+            box.innerHTML = legend +
+                '<table><thead><tr>' + head + '</tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:16px;padding:14px 16px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B;line-height:1.9">' +
+                    '<div style="font-weight:600;color:#475569;margin-bottom:6px">📋 权限设计要点</div>' +
+                    '① <b>菜单级</b>：角色看不到的工作区不显示菜单，越权访问会被重定向回首页；<br>' +
+                    '② <b>操作级</b>：只读页面自动剥离「新增/编辑/删除/提交」按钮，顶部显示「只读」徽章；<br>' +
+                    '③ <b>数据级</b>：项目经理仅见本项目数据、教师仅见任教班级、学生仅见本人；<br>' +
+                    '④ <b>防御层</b>：即使绕过界面直接触发写操作，服务端入口仍会二次校验并拒绝。' +
+                '</div>';
+        }
+
+        window.initPermPage = initPermPage;
 
         // ---------- 启动 ----------
         applySession();
