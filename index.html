@@ -40,7 +40,7 @@
         /* 表格样式 */
         table { border-collapse: collapse; width: 100%; table-layout: auto; }
         th, td { border-bottom: 1px solid #F1F5F9; padding: 14px 14px; text-align: left; }
-        th { background: #F8FAFC; color: #64748B; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; white-space: normal; word-break: break-word; }
+        th { background: #F8FAFC; color: #64748B; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; white-space: normal; word-break: normal; overflow-wrap: break-word; }
         td { font-size: 14px; color: #1E293B; white-space: nowrap; }
         td button, td .btn-cell { white-space: nowrap; }
         tr { transition: all 0.2s ease; }
@@ -397,7 +397,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.6.1 · 期中版
+            冲鸭教育 · v1.6.3 · 期中版
         </div>
     </aside>
 
@@ -701,8 +701,8 @@
                 recordCount = 2;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (eaid)</th><th>用户名 (userName)</th><th>密码 (pwd)</th><th>权限 (status)</th>
-                    <th>姓名 (name)</th><th>性别 (sex)</th><th>工作岗位 (work)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                    <th data-field="eaid" title="序号 (eaid)">序号</th><th data-field="userName" title="用户名 (userName)">用户名</th><th data-field="pwd" title="密码 (pwd)">密码</th><th data-field="status" title="权限 (status)">权限</th>
+                    <th data-field="name" title="姓名 (name)">姓名</th><th data-field="sex" title="性别 (sex)">性别</th><th data-field="work" title="工作岗位 (work)">工作岗位</th><th data-field="tel" title="联系电话 (tel)">联系电话</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>admin</td><td>******</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">超级管理员</span></td><td>李建国</td><td>男</td><td>教务主任</td><td>13800008888</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>teacher01</td><td>******</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">教务员</span></td><td>王芳</td><td>女</td><td>教务科员</td><td>13800009999</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -715,8 +715,8 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>学号 (stuid)</th><th>用户名 (userName)</th><th>密码 (pwd)</th><th>学生姓名 (stuname)</th>
-                    <th>年龄 (age)</th><th>性别 (sex)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                    <th data-field="stuid" title="学号 (stuid)">学号</th><th data-field="userName" title="用户名 (userName)">用户名</th><th data-field="pwd" title="密码 (pwd)">密码</th><th data-field="stuname" title="学生姓名 (stuname)">学生姓名</th>
+                    <th data-field="age" title="年龄 (age)">年龄</th><th data-field="sex" title="性别 (sex)">性别</th><th data-field="tel" title="联系电话 (tel)">联系电话</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>20260101</td><td>zhangxm</td><td>******</td><td>张小明</td><td>17</td><td>男</td><td>13812345678</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="js-delete text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
                     <tr><td>20260102</td><td>lixh</td><td>******</td><td>李小红</td><td>16</td><td>女</td><td>13987654321</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button><button class="js-delete text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded text-xs font-medium transition-colors">删除</button></td></tr>
@@ -730,7 +730,7 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (classid)</th><th>班名 (className)</th><th>年级 (grade)</th><th>班主任 (teacher)</th><th class="text-right">操作</th>
+                    <th data-field="classid" title="序号 (classid)">序号</th><th data-field="className" title="班名 (className)">班名</th><th data-field="grade" title="年级 (grade)">年级</th><th data-field="teacher" title="班主任 (teacher)">班主任</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>高一(1)班</td><td>高一</td><td>王建国</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>高一(2)班</td><td>高一</td><td>李华</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -744,8 +744,8 @@
                 recordCount = 2;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (tehid)</th><th>用户名 (teacherName)</th><th>密码 (pwd)</th><th>权限 (status)</th>
-                    <th>姓名 (name)</th><th>性别 (sex)</th><th>任教学科 (subject)</th><th>联系电话 (tel)</th><th class="text-right">操作</th>
+                    <th data-field="tehid" title="序号 (tehid)">序号</th><th data-field="teacherName" title="用户名 (teacherName)">用户名</th><th data-field="pwd" title="密码 (pwd)">密码</th><th data-field="status" title="权限 (status)">权限</th>
+                    <th data-field="name" title="姓名 (name)">姓名</th><th data-field="sex" title="性别 (sex)">性别</th><th data-field="subject" title="任教学科 (subject)">任教学科</th><th data-field="tel" title="联系电话 (tel)">联系电话</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>wangwu</td><td>******</td><td>教师</td><td>王建国</td><td>男</td><td>数学</td><td>13800001111</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>lihua</td><td>******</td><td>教师</td><td>李华</td><td>女</td><td>英语</td><td>13800002222</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -758,7 +758,7 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (cid)</th><th>课程名称 (courseTitle)</th><th>课程代码 (courseCode)</th><th>任课老师ID (teacherid)</th><th>学时 (period)</th><th class="text-right">操作</th>
+                    <th data-field="cid" title="序号 (cid)">序号</th><th data-field="courseTitle" title="课程名称 (courseTitle)">课程名称</th><th data-field="courseCode" title="课程代码 (courseCode)">课程代码</th><th data-field="teacherid" title="任课老师ID (teacherid)">任课老师ID</th><th data-field="period" title="学时 (period)">学时</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>数学</td><td>MATH101</td><td>1</td><td>40</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>英语</td><td>ENG101</td><td>2</td><td>40</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -772,8 +772,8 @@
                 recordCount = 2;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (kbid)</th><th>班级 (className)</th><th>周次 (week)</th><th>节次 (cplan_lesson)</th>
-                    <th>课程 (courseTitle)</th><th>学年 (year)</th><th>学期 (year_half)</th><th class="text-right">操作</th>
+                    <th data-field="kbid" title="序号 (kbid)">序号</th><th data-field="className" title="班级 (className)">班级</th><th data-field="week" title="周次 (week)">周次</th><th data-field="cplan_lesson" title="节次 (cplan_lesson)">节次</th>
+                    <th data-field="courseTitle" title="课程 (courseTitle)">课程</th><th data-field="year" title="学年 (year)">学年</th><th data-field="year_half" title="学期 (year_half)">学期</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>高一(1)班</td><td>第1周</td><td>第1节</td><td>数学</td><td>2026</td><td>第一学期</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>高一(1)班</td><td>第1周</td><td>第2节</td><td>英语</td><td>2026</td><td>第一学期</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -786,8 +786,8 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>课程ID (cid)</th><th>学生ID (stuid)</th><th>分数 (score)</th><th>学年 (year)</th>
-                    <th>学期 (year_half)</th><th>期中 (midterm)</th><th>期末 (finalterm)</th><th class="text-right">操作</th>
+                    <th data-field="cid" title="课程ID (cid)">课程ID</th><th data-field="stuid" title="学生ID (stuid)">学生ID</th><th data-field="score" title="分数 (score)">分数</th><th data-field="year" title="学年 (year)">学年</th>
+                    <th data-field="year_half" title="学期 (year_half)">学期</th><th data-field="midterm" title="期中 (midterm)">期中</th><th data-field="finalterm" title="期末 (finalterm)">期末</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>20260101</td><td>88</td><td>2026</td><td>第一学期</td><td>85</td><td>90</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>1</td><td>20260102</td><td>92</td><td>2026</td><td>第一学期</td><td>89</td><td>94</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -801,8 +801,8 @@
                 recordCount = 2;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (pjid)</th><th>学年 (year)</th><th>学期 (year_half)</th><th>任课教师 (teacherName)</th>
-                    <th>课程 (courseTitle)</th><th>学号 (stuNum)</th><th>综合素质分</th><th>岗位分</th>
+                    <th data-field="pjid" title="序号 (pjid)">序号</th><th data-field="year" title="学年 (year)">学年</th><th data-field="year_half" title="学期 (year_half)">学期</th><th data-field="teacherName" title="任课教师 (teacherName)">任课教师</th>
+                    <th data-field="courseTitle" title="课程 (courseTitle)">课程</th><th data-field="stuNum" title="学号 (stuNum)">学号</th><th>综合素质分</th><th>岗位分</th>
                     <th>教学技能分</th><th>辅导情况分</th><th>总均分</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>2026</td><td>第一学期</td><td>王建国</td><td>数学</td><td>20260101</td><td>4.5</td><td>4.6</td><td>4.8</td><td>4.7</td><td class="font-bold text-blue-600">4.65</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
@@ -816,9 +816,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (hwid)</th><th>课程 (courseTitle)</th><th>班级 (className)</th><th>任课教师 (teacherName)</th>
-                    <th>作业标题 (hwTitle)</th><th>布置时间 (setDate)</th><th>截止时间 (dueDate)</th>
-                    <th>提交情况</th><th>状态 (hwStatus)</th><th class="text-right">操作</th>
+                    <th data-field="hwid" title="序号 (hwid)">序号</th><th data-field="courseTitle" title="课程 (courseTitle)">课程</th><th data-field="className" title="班级 (className)">班级</th><th data-field="teacherName" title="任课教师 (teacherName)">任课教师</th>
+                    <th data-field="hwTitle" title="作业标题 (hwTitle)">作业标题</th><th data-field="setDate" title="布置时间 (setDate)">布置时间</th><th data-field="dueDate" title="截止时间 (dueDate)">截止时间</th>
+                    <th>提交情况</th><th data-field="hwStatus" title="状态 (hwStatus)">状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>数学</td><td>高一(1)班</td><td>王建国</td><td>函数单调性练习（第1-8题）</td><td>2026-10-05</td><td>2026-10-08</td><td><span class="text-blue-600 font-medium">32/35</span></td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">进行中</span></td><td class="text-right space-x-2"><button class="js-add text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">催交</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>英语</td><td>高一(2)班</td><td>李华</td><td>Unit 4 阅读理解专项训练</td><td>2026-10-04</td><td>2026-10-07</td><td><span class="text-blue-600 font-medium">35/35</span></td><td><span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-xs font-medium">已截止</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -833,9 +833,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (submitid)</th><th>作业标题 (hwTitle)</th><th>学号 (stuid)</th><th>学生姓名 (stuname)</th>
-                    <th>提交时间 (submitTime)</th><th>提交方式 (submitType)</th><th>附件 (fileName)</th>
-                    <th>提交状态 (submitStatus)</th><th class="text-right">操作</th>
+                    <th data-field="submitid" title="序号 (submitid)">序号</th><th data-field="hwTitle" title="作业标题 (hwTitle)">作业标题</th><th data-field="stuid" title="学号 (stuid)">学号</th><th data-field="stuname" title="学生姓名 (stuname)">学生姓名</th>
+                    <th data-field="submitTime" title="提交时间 (submitTime)">提交时间</th><th data-field="submitType" title="提交方式 (submitType)">提交方式</th><th data-field="fileName" title="附件 (fileName)">附件</th>
+                    <th data-field="submitStatus" title="提交状态 (submitStatus)">提交状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>函数单调性练习（第1-8题）</td><td>20260101</td><td>张小明</td><td>2026-10-06 20:14</td><td>在线提交</td><td>作业照片_张小明.jpg</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已提交</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
                     <tr><td>2</td><td>函数单调性练习（第1-8题）</td><td>20260102</td><td>李小红</td><td>2026-10-07 19:02</td><td>在线提交</td><td>作业照片_李小红.jpg</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已提交</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
@@ -850,9 +850,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (gradeid)</th><th>作业标题 (hwTitle)</th><th>学生姓名 (stuname)</th><th>提交时间 (submitTime)</th>
-                    <th>批改状态 (gradeStatus)</th><th>得分 (score)</th><th>等级 (gradeLevel)</th>
-                    <th>教师点评 (comment)</th><th class="text-right">操作</th>
+                    <th data-field="gradeid" title="序号 (gradeid)">序号</th><th data-field="hwTitle" title="作业标题 (hwTitle)">作业标题</th><th data-field="stuname" title="学生姓名 (stuname)">学生姓名</th><th data-field="submitTime" title="提交时间 (submitTime)">提交时间</th>
+                    <th data-field="gradeStatus" title="批改状态 (gradeStatus)">批改状态</th><th data-field="score" title="得分 (score)">得分</th><th data-field="gradeLevel" title="等级 (gradeLevel)">等级</th>
+                    <th data-field="comment" title="教师点评 (comment)">教师点评</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>函数单调性练习（第1-8题）</td><td>张小明</td><td>2026-10-06 20:14</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已批改</span></td><td class="font-bold text-blue-600">92</td><td><span class="text-green-600 font-medium">优秀</span></td><td>解题步骤完整，第 6 题可用更简便方法</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
                     <tr><td>2</td><td>函数单调性练习（第1-8题）</td><td>李小红</td><td>2026-10-07 19:02</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">已批改</span></td><td class="font-bold text-blue-600">85</td><td><span class="text-blue-600 font-medium">良好</span></td><td>第 3 题符号判断有误，注意区间端点</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button></td></tr>
@@ -867,9 +867,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (cwid)</th><th>课件名称 (cwTitle)</th><th>所属课程 (courseTitle)</th><th>资源类型 (cwType)</th>
-                    <th>文件格式 (fileType)</th><th>版本号 (version)</th><th>上传人 (uploader)</th>
-                    <th>上传时间 (uploadTime)</th><th>下载次数 (downloads)</th><th class="text-right">操作</th>
+                    <th data-field="cwid" title="序号 (cwid)">序号</th><th data-field="cwTitle" title="课件名称 (cwTitle)">课件名称</th><th data-field="courseTitle" title="所属课程 (courseTitle)">所属课程</th><th data-field="cwType" title="资源类型 (cwType)">资源类型</th>
+                    <th data-field="fileType" title="文件格式 (fileType)">文件格式</th><th data-field="version" title="版本号 (version)">版本号</th><th data-field="uploader" title="上传人 (uploader)">上传人</th>
+                    <th data-field="uploadTime" title="上传时间 (uploadTime)">上传时间</th><th data-field="downloads" title="下载次数 (downloads)">下载次数</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>函数单调性（第1课时）</td><td>数学</td><td><span class="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">课堂课件</span></td><td>PPTX</td><td>v2.1</td><td>王建国</td><td>2026-09-28</td><td>86</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">预览</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>Unit 4 阅读理解技巧</td><td>英语</td><td><span class="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">课堂课件</span></td><td>PPTX</td><td>v1.3</td><td>李华</td><td>2026-10-02</td><td>64</td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">预览</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -884,9 +884,9 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (tbid)</th><th>教材名称 (bookTitle)</th><th>适用课程 (courseTitle)</th><th>主编 (chiefEditor)</th>
-                    <th>出版社 (publisher)</th><th>ISBN</th><th>适用年级 (grade)</th><th>版本 (edition)</th>
-                    <th>使用状态 (useStatus)</th><th class="text-right">操作</th>
+                    <th data-field="tbid" title="序号 (tbid)">序号</th><th data-field="bookTitle" title="教材名称 (bookTitle)">教材名称</th><th data-field="courseTitle" title="适用课程 (courseTitle)">适用课程</th><th data-field="chiefEditor" title="主编 (chiefEditor)">主编</th>
+                    <th data-field="publisher" title="出版社 (publisher)">出版社</th><th>ISBN</th><th data-field="grade" title="适用年级 (grade)">适用年级</th><th data-field="edition" title="版本 (edition)">版本</th>
+                    <th data-field="useStatus" title="使用状态 (useStatus)">使用状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>高中数学必修第一册</td><td>数学</td><td>人民教育出版社</td><td>人民教育出版社</td><td>978-7-107-34567-8</td><td>高一</td><td>2019 版</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">在用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>英语必修第二册</td><td>英语</td><td>外语教学与研究出版社</td><td>外语教学与研究出版社</td><td>978-7-5213-2345-6</td><td>高一</td><td>2019 版</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">在用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -900,9 +900,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>题目编号 (qid)</th><th>题型 (qtype)</th><th>知识点 (knowledge)</th><th>所属课程 (courseTitle)</th>
-                    <th>难度 (difficulty)</th><th>题干摘要 (stem)</th><th>录入教师 (teacherName)</th>
-                    <th>使用次数 (useCount)</th><th>状态 (qStatus)</th><th class="text-right">操作</th>
+                    <th data-field="qid" title="题目编号 (qid)">题目编号</th><th data-field="qtype" title="题型 (qtype)">题型</th><th data-field="knowledge" title="知识点 (knowledge)">知识点</th><th data-field="courseTitle" title="所属课程 (courseTitle)">所属课程</th>
+                    <th data-field="difficulty" title="难度 (difficulty)">难度</th><th data-field="stem" title="题干摘要 (stem)">题干摘要</th><th data-field="teacherName" title="录入教师 (teacherName)">录入教师</th>
+                    <th data-field="useCount" title="使用次数 (useCount)">使用次数</th><th data-field="qStatus" title="状态 (qStatus)">状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>Q0001</td><td><span class="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">单选题</span></td><td>函数单调性</td><td>数学</td><td><span class="text-green-600 font-medium">易</span></td><td>判断函数 f(x)=x²-2x 在区间 (1,+∞) 上的单调性……</td><td>王建国</td><td>32</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>Q0002</td><td><span class="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">单选题</span></td><td>阅读理解</td><td>英语</td><td><span class="text-amber-600 font-medium">中</span></td><td>According to the passage, the author's attitude towards……</td><td>李华</td><td>48</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -917,9 +917,9 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (schid)</th><th>奖学金名称 (schName)</th><th>等级 (schLevel)</th><th>金额 (amount)</th>
-                    <th>评选条件 (condition)</th><th>名额 (quota)</th><th>申报截止 (applyDeadline)</th>
-                    <th>公示时间 (publicDate)</th><th>状态 (schStatus)</th><th class="text-right">操作</th>
+                    <th data-field="schid" title="序号 (schid)">序号</th><th data-field="schName" title="奖学金名称 (schName)">奖学金名称</th><th data-field="schLevel" title="等级 (schLevel)">等级</th><th data-field="amount" title="金额 (amount)">金额</th>
+                    <th data-field="condition" title="评选条件 (condition)">评选条件</th><th data-field="quota" title="名额 (quota)">名额</th><th data-field="applyDeadline" title="申报截止 (applyDeadline)">申报截止</th>
+                    <th data-field="publicDate" title="公示时间 (publicDate)">公示时间</th><th data-field="schStatus" title="状态 (schStatus)">状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>冲鸭优秀学员奖学金</td><td><span class="text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">一等</span></td><td class="font-bold text-blue-600">2000 元</td><td>学期总评 90 分以上且无缺勤记录</td><td>5</td><td>2026-10-20</td><td>2026-10-25</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">申报中</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看申请</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>冲鸭优秀学员奖学金</td><td><span class="text-slate-500 bg-slate-100 px-2 py-1 rounded text-xs font-medium">二等</span></td><td class="font-bold text-blue-600">1000 元</td><td>学期总评 80 分以上且缺勤不超过 2 次</td><td>10</td><td>2026-10-20</td><td>2026-10-25</td><td><span class="text-green-600 bg-green-50 px-2 py-1 rounded text-xs font-medium">申报中</span></td><td class="text-right space-x-2"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看申请</button><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -996,9 +996,9 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>备案编号 (recNo)</th><th>劳务企业 (company)</th><th>资质等级 (qualLevel)</th>
-                    <th>班组名称 (teamName)</th><th>负责人 (leader)</th><th>进场日期 (enterDate)</th>
-                    <th>备案状态 (status)</th><th class="text-right">操作</th>
+                    <th data-field="recNo" title="备案编号 (recNo)">备案编号</th><th data-field="company" title="劳务企业 (company)">劳务企业</th><th data-field="qualLevel" title="资质等级 (qualLevel)">资质等级</th>
+                    <th data-field="teamName" title="班组名称 (teamName)">班组名称</th><th data-field="leader" title="负责人 (leader)">负责人</th><th data-field="enterDate" title="进场日期 (enterDate)">进场日期</th>
+                    <th data-field="status" title="备案状态 (status)">备案状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>BA-2026-001</td><td>宏远建筑劳务有限公司</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">一级</span></td><td>钢筋一班</td><td>张大海</td><td>2026-03-01</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已通过</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>BA-2026-002</td><td>宏远建筑劳务有限公司</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">一级</span></td><td>木工二班</td><td>李长江</td><td>2026-03-05</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已通过</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -1016,9 +1016,9 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>合同编号 (contractNo)</th><th>劳务企业 (company)</th><th>签约班组 (teamName)</th>
-                    <th>合同类型 (type)</th><th>开始日期 (startDate)</th><th>结束日期 (endDate)</th>
-                    <th>合同金额 (amount)</th><th>状态 (status)</th><th class="text-right">操作</th>
+                    <th data-field="contractNo" title="合同编号 (contractNo)">合同编号</th><th data-field="company" title="劳务企业 (company)">劳务企业</th><th data-field="teamName" title="签约班组 (teamName)">签约班组</th>
+                    <th data-field="type" title="合同类型 (type)">合同类型</th><th data-field="startDate" title="开始日期 (startDate)">开始日期</th><th data-field="endDate" title="结束日期 (endDate)">结束日期</th>
+                    <th data-field="amount" title="合同金额 (amount)">合同金额</th><th data-field="status" title="状态 (status)">状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>HT-2026-001</td><td>宏远建筑劳务有限公司</td><td>钢筋一班</td><td>固定期限</td><td>2026-03-01</td><td>2027-02-28</td><td class="text-right">¥860,000</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">履行中</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>HT-2026-002</td><td>宏远建筑劳务有限公司</td><td>木工二班</td><td>固定期限</td><td>2026-03-05</td><td>2027-03-04</td><td class="text-right">¥720,000</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">履行中</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -1036,9 +1036,9 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>项目编号 (projNo)</th><th>项目名称 (projName)</th><th>建设单位 (owner)</th>
-                    <th>项目地址 (address)</th><th>开工日期 (startDate)</th><th>计划竣工 (endDate)</th>
-                    <th>项目状态 (status)</th><th class="text-right">操作</th>
+                    <th data-field="projNo" title="项目编号 (projNo)">项目编号</th><th data-field="projName" title="项目名称 (projName)">项目名称</th><th data-field="owner" title="建设单位 (owner)">建设单位</th>
+                    <th data-field="address" title="项目地址 (address)">项目地址</th><th data-field="startDate" title="开工日期 (startDate)">开工日期</th><th data-field="endDate" title="计划竣工 (endDate)">计划竣工</th>
+                    <th data-field="status" title="项目状态 (status)">项目状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>PR-2026-01</td><td>科教楼二期工程</td><td>广西科建投资有限公司</td><td>柳州市城中区</td><td>2026-03-01</td><td>2027-06-30</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">在建</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>PR-2026-02</td><td>城东安置房 A 标段</td><td>柳州市城投集团</td><td>柳州市柳东新区</td><td>2026-02-15</td><td>2027-03-31</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">在建</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -1056,9 +1056,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>考勤编号 (attNo)</th><th>班组 (teamName)</th><th>项目名称 (projName)</th>
-                    <th>工人姓名 (workerName)</th><th>身份证号 (idCard)</th><th>考勤日期 (attDate)</th>
-                    <th>出勤状态 (status)</th><th>工时 (hours)</th><th class="text-right">操作</th>
+                    <th data-field="attNo" title="考勤编号 (attNo)">考勤编号</th><th data-field="teamName" title="班组 (teamName)">班组</th><th data-field="projName" title="项目名称 (projName)">项目名称</th>
+                    <th data-field="workerName" title="工人姓名 (workerName)">工人姓名</th><th data-field="idCard" title="身份证号 (idCard)">身份证号</th><th data-field="attDate" title="考勤日期 (attDate)">考勤日期</th>
+                    <th data-field="status" title="出勤状态 (status)">出勤状态</th><th data-field="hours" title="工时 (hours)">工时</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>KQ-2026-1001</td><td>钢筋一班</td><td>科教楼二期工程</td><td>赵大柱</td><td>4502**********1234</td><td>2026-04-08</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">出勤</span></td><td class="text-right">8.0</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>KQ-2026-1002</td><td>钢筋一班</td><td>科教楼二期工程</td><td>钱二柱</td><td>4502**********5678</td><td>2026-04-08</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">迟到</span></td><td class="text-right">7.0</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -1077,9 +1077,9 @@
                 recordCount = 4;
                 html = `
                 <table><thead><tr>
-                    <th>工资编号 (salaryNo)</th><th>工人姓名 (workerName)</th><th>班组 (teamName)</th>
-                    <th>结算月份 (month)</th><th>出勤工时 (totalHours)</th><th>时薪 (hourRate)</th>
-                    <th>应发工资 (shouldPay)</th><th>发放状态 (status)</th><th class="text-right">操作</th>
+                    <th data-field="salaryNo" title="工资编号 (salaryNo)">工资编号</th><th data-field="workerName" title="工人姓名 (workerName)">工人姓名</th><th data-field="teamName" title="班组 (teamName)">班组</th>
+                    <th data-field="month" title="结算月份 (month)">结算月份</th><th data-field="totalHours" title="出勤工时 (totalHours)">出勤工时</th><th data-field="hourRate" title="时薪 (hourRate)">时薪</th>
+                    <th data-field="shouldPay" title="应发工资 (shouldPay)">应发工资</th><th data-field="status" title="发放状态 (status)">发放状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>GZ-2026-04-001</td><td>赵大柱</td><td>钢筋一班</td><td>2026-04</td><td class="text-right">168.0</td><td class="text-right">¥35</td><td class="text-right font-medium">¥5,880</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已发放</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>GZ-2026-04-002</td><td>钱二柱</td><td>钢筋一班</td><td>2026-04</td><td class="text-right">160.0</td><td class="text-right">¥35</td><td class="text-right font-medium">¥5,600</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已发放</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -1141,8 +1141,8 @@
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
-                    <th>序号 (lid)</th><th>账号 (userName)</th><th>姓名 (name)</th><th>角色 (role)</th>
-                    <th>所属单位 (org)</th><th>数据范围 (scope)</th><th>状态 (status)</th><th class="text-right">操作</th>
+                    <th data-field="lid" title="序号 (lid)">序号</th><th data-field="userName" title="账号 (userName)">账号</th><th data-field="name" title="姓名 (name)">姓名</th><th data-field="role" title="角色 (role)">角色</th>
+                    <th data-field="org" title="所属单位 (org)">所属单位</th><th data-field="scope" title="数据范围 (scope)">数据范围</th><th data-field="status" title="状态 (status)">状态</th><th class="text-right">操作</th>
                 </tr></thead><tbody>
                     <tr><td>1</td><td>lw_admin</td><td>周建军</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">劳务管理员</span></td><td>总公司</td><td>全部项目</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>proj_01</td><td>吴海涛</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">项目负责人</span></td><td>科教楼二期项目部</td><td>仅本科目</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">启用</span></td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
@@ -1263,6 +1263,15 @@
                 <input id="login-pass" type="password" value="123456" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B">
             </label>
 
+            <label id="login-project-wrap" style="display:none;gap:6px;font-size:13px;color:#475569;margin-bottom:20px">
+                <span style="font-weight:600">负责项目</span>
+                <select id="login-project" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B;background:#fff">
+                    <option value="科教楼二期工程">科教楼二期工程</option>
+                    <option value="城东安置房 A 标段">城东安置房 A 标段</option>
+                    <option value="河西小学改扩建">河西小学改扩建</option>
+                </select>
+            </label>
+
             <button id="login-submit" style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#7C3AED,#A21CAF);color:#fff;font-size:15px;font-weight:600;box-shadow:0 8px 20px rgba(124,58,237,.3)">登 录 系 统</button>
             <div style="margin-top:14px;font-size:12px;color:#94A3B8;text-align:center;line-height:1.7">
                 演示账号已预填，直接点「登录系统」即可进入<br>
@@ -1317,11 +1326,22 @@
             var pass = document.getElementById('login-pass').value || '';
             if (!user) { toast('请输入用户名', 'error'); return; }
             if (!pass) { toast('请输入密码', 'error'); return; }
-            setSession({ user: user, role: role, at: Date.now() });
+            var projEl = document.getElementById('login-project');
+            var project = (role === '项目经理' && projEl) ? projEl.value : '';
+            setSession({ user: user, role: role, project: project, at: Date.now() });
             applySession();
             applyRoleMenus(role);
             toast('欢迎回来，' + user + '（' + role + '）', 'success');
         });
+        // 角色切换：项目经理才显示「负责项目」
+        var roleSel = document.getElementById('login-role');
+        if (roleSel) {
+            roleSel.addEventListener('change', function () {
+                var w = document.getElementById('login-project-wrap');
+                if (w) w.style.display = (this.value === '项目经理') ? 'grid' : 'none';
+            });
+        }
+
         // 回车登录
         ['login-user', 'login-pass'].forEach(function (id) {
             var el = document.getElementById(id);
@@ -1354,11 +1374,12 @@
             var out = [];
             for (var i = 0; i < ths.length; i++) {
                 var raw = ths[i].innerText.trim();
+                var df = ths[i].getAttribute('data-field') || '';
                 var m = raw.match(/^(.*?)\s*[（(]([^)）]+)[)）]\s*$/);
                 out.push({
                     idx: i,
                     label: (m ? m[1] : raw).trim(),
-                    field: m ? m[2].trim() : '',
+                    field: df || (m ? m[2].trim() : ''),
                     action: /操作/.test(raw)
                 });
             }
@@ -1387,6 +1408,9 @@
         function saveTable() {
             var tb = tbodyEl();
             if (!tb || !currentTitle) return;
+            // 存档前清掉行内 display，避免把分页/筛选的隐藏状态写进数据
+            var rs = tb.querySelectorAll('tr');
+            for (var i = 0; i < rs.length; i++) rs[i].style.removeProperty('display');
             STORE[currentTitle] = tb.innerHTML;
             persist();
         }
@@ -1531,7 +1555,8 @@
                 toast('已新增 1 条记录', 'success');
             }
             saveTable();
-            syncCount();
+            applyScope();
+            renderPagination(currentTitle);
             closeModal();
         }
 
@@ -1542,7 +1567,8 @@
             if (!confirm('确定删除「' + first + '」这条记录吗？\n删除后不可恢复。')) return;
             tr.parentNode.removeChild(tr);
             saveTable();
-            syncCount();
+            applyScope();
+            renderPagination(currentTitle);
             toast('已删除 1 条记录', 'success');
         }
 
@@ -1641,8 +1667,8 @@
             _cc(title, el);
             currentTitle = title;
             if (title && title !== '仪表盘') {
-                restoreTable(title);
-                setTimeout(enhanceToolbar, 0);
+                applyView(title);
+                setTimeout(function () { applyScope(); renderPagination(title); }, 0);
             }
         };
 
@@ -1727,6 +1753,167 @@
                     if (dash) changeContent('仪表盘', dash);
                 }
             }
+            if (typeof applyRoleSubMenus === 'function') applyRoleSubMenus(role);
+        }
+
+        // ---------- 数据范围：项目经理只看本项目 ----------
+        var TEAM_PROJECT = {
+            '钢筋一班': '科教楼二期工程',
+            '木工二班': '城东安置房 A 标段',
+            '混凝土班': '城东安置房 A 标段'
+        };
+
+        function scopeProject() {
+            var sess = getSession();
+            if (!sess) return null;
+            if (sess.role === '项目经理') return sess.project || '科教楼二期工程';
+            return null;
+        }
+
+        function colIdx(labels) {
+            var cs = cols();
+            for (var i = 0; i < cs.length; i++) {
+                for (var j = 0; j < labels.length; j++) {
+                    if (cs[i].label.indexOf(labels[j]) >= 0) return cs[i].idx;
+                }
+            }
+            return -1;
+        }
+
+        function applyScope() {
+            var tb = tbodyEl();
+            if (!tb) return;
+            var proj = scopeProject();
+            var rows = tb.querySelectorAll('tr');
+            if (!proj) {
+                for (var i = 0; i < rows.length; i++) rows[i].setAttribute('data-out', '');
+                return;
+            }
+            var pIdx = colIdx(['项目名称', '所属项目', '负责项目']);
+            var tIdx = colIdx(['班组', '劳务班组']);
+            for (var r = 0; r < rows.length; r++) {
+                var row = rows[r];
+                var keep = true;
+                if (pIdx >= 0 && row.cells[pIdx]) {
+                    keep = row.cells[pIdx].innerText.trim() === proj;
+                } else if (tIdx >= 0 && row.cells[tIdx]) {
+                    var team = row.cells[tIdx].innerText.trim();
+                    keep = (TEAM_PROJECT[team] === proj);
+                }
+                row.setAttribute('data-out', keep ? '' : '1');
+            }
+        }
+
+        // ---------- 真分页 ----------
+        var PAGE_SIZE = 3;
+        var pageState = {};
+        var SEARCH_Q = '';
+
+        function paginationBox() {
+            var spans = document.querySelectorAll('#main-content span');
+            for (var i = 0; i < spans.length; i++) {
+                var sp = spans[i], p = sp.parentElement;
+                if (p && /条记录/.test(p.innerText) && sp.classList.contains('font-medium')) {
+                    return { count: p, wrapper: p.parentElement };
+                }
+            }
+            return null;
+        }
+
+        function renderPagination(title) {
+            var tb = tbodyEl();
+            if (!tb) return;
+            var all = tb.querySelectorAll('tr');
+            var pool = [];
+            for (var i = 0; i < all.length; i++) {
+                var r = all[i];
+                if (r.getAttribute('data-out') === '1') { r.style.display = 'none'; continue; }
+                if (SEARCH_Q && r.innerText.toLowerCase().indexOf(SEARCH_Q) < 0) {
+                    r.style.display = 'none';
+                    continue;
+                }
+                pool.push(r);
+            }
+
+            var total = pool.length;
+            var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+            var page = pageState[title] || 1;
+            if (page > pages) page = pages;
+            if (page < 1) page = 1;
+            pageState[title] = page;
+
+            var start = (page - 1) * PAGE_SIZE;
+            for (var k = 0; k < all.length; k++) {
+                all[k].style.display = 'none';
+            }
+            var end = Math.min(start + PAGE_SIZE, total);
+            for (var m = start; m < end; m++) pool[m].style.display = '';
+
+            var box = paginationBox();
+            if (!box) return;
+            box.count.innerHTML = '共 <span class="text-slate-700 font-medium">' + total +
+                '</span> 条记录，当前显示 ' + (total ? start + 1 : 0) + '-' + end + ' 条';
+
+            var btnWrap = box.wrapper.querySelector('div:last-child');
+            if (!btnWrap) return;
+            var html = '';
+            html += '<button data-pg="' + (page - 1) + '" class="px-3 py-1.5 border border-slate-200 rounded transition-colors' +
+                    (page <= 1 ? '" disabled style="opacity:.35;cursor:not-allowed"' : ' hover:bg-slate-50"') + '>上一页</button>';
+            for (var n = 1; n <= pages; n++) {
+                if (pages <= 7 || n === 1 || n === pages || Math.abs(n - page) <= 1) {
+                    html += '<button data-pg="' + n + '" class="px-3 py-1.5 rounded transition-colors ' +
+                            (n === page ? 'bg-blue-600 text-white shadow-sm font-medium' :
+                                          'border border-slate-200 hover:bg-slate-50') + '">' + n + '</button>';
+                } else if (n === page - 2 || n === page + 2) {
+                    html += '<span class="px-2 py-1.5 text-slate-300">…</span>';
+                }
+            }
+            html += '<button data-pg="' + (page + 1) + '" class="px-3 py-1.5 border border-slate-200 rounded transition-colors' +
+                    (page >= pages ? '" disabled style="opacity:.35;cursor:not-allowed"' : ' hover:bg-slate-50"') + '>下一页</button>';
+            btnWrap.innerHTML = html;
+
+            var bts = btnWrap.querySelectorAll('button[data-pg]');
+            for (var b = 0; b < bts.length; b++) {
+                (function (bt) {
+                    bt.onclick = function () {
+                        var pg = parseInt(bt.getAttribute('data-pg'), 10);
+                        if (isNaN(pg) || pg < 1 || pg > pages) return;
+                        pageState[title] = pg;
+                        renderPagination(title);
+                    };
+                })(bts[b]);
+            }
+        }
+
+        function applyView(title) {
+            restoreTable(title);
+            applyScope();
+            renderPagination(title);
+            enhanceToolbar();
+        }
+
+        // ---------- 劳务子菜单按角色过滤 ----------
+        var LW_SUBS = {
+            '劳务管理员': null,
+            '项目经理': ['工程项目管理', '派遣考勤管理', '查询统计'],
+            '财务人员': ['工资管理', '查询统计', '劳务合同管理']
+        };
+
+        function applyRoleSubMenus(role) {
+            var menu = document.getElementById('lw-menu');
+            if (!menu) return;
+            var allow = LW_SUBS[role];
+            if (allow === null || allow === undefined) {
+                // 非劳务角色由菜单组隐藏控制；劳务管理员全部可见
+                var items0 = menu.querySelectorAll('div');
+                for (var i0 = 0; i0 < items0.length; i0++) items0[i0].style.display = '';
+                return;
+            }
+            var items = menu.querySelectorAll('div');
+            for (var i = 0; i < items.length; i++) {
+                var label = items[i].innerText.trim();
+                items[i].style.display = (allow.indexOf(label) >= 0) ? '' : 'none';
+            }
         }
 
         // ---------- 启动 ----------
@@ -1740,6 +1927,15 @@
                 setTimeout(enhanceToolbar, 0);
             }
         })();
+
+        // 全局搜索与分页、数据范围协同
+        var gsEl = document.getElementById('global-search');
+        if (gsEl) {
+            gsEl.addEventListener('input', function () {
+                SEARCH_Q = this.value.trim().toLowerCase();
+                renderPagination(currentTitle);
+            });
+        }
 
         // 暴露给调试
         window.__crud = { export: exportCSV, store: function () { return STORE; } };
