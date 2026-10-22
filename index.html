@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.11.1
+      冲鸭教育管理系统   v1.12.0
       单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
@@ -385,6 +385,7 @@
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('选课中心', this)">选课中心</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课程', this)">我的课程</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的成绩', this)">我的成绩</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学习进度', this)">学习进度</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的作业', this)">我的作业</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学评价', this)">教学评价</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('请假申请', this)">请假申请</div>
@@ -486,7 +487,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.11.1 · 期中版
+            冲鸭教育 · v1.12.0 · 期中版
         </div>
     </aside>
 
@@ -1704,6 +1705,15 @@
                 html = '<div id="my-courses" style="padding:2px 0 12px"></div>';
             }
 
+
+            // S2b. 学习进度
+            else if (title === '学习进度') {
+                refText = '本学期各课程学习进度 —— 已完成课时与当前章节';
+                titleHtml = '学习进度';
+                recordCount = 0;
+                html = '<div id="progress-box" style="padding:2px 0 12px"></div>';
+            }
+
             // S3. 我的成绩
             else if (title === '我的成绩') {
                 refText = '本学期各科成绩 —— 期中、期末与总评';
@@ -1893,7 +1903,7 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '角色权限', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '角色权限', '学习进度', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -2696,6 +2706,11 @@
                 enhanceToolbar();
                 return;
             }
+            if (title === '学习进度') {
+                setTimeout(function () { if (window.initProgress) initProgress(); }, 0);
+                enhanceToolbar();
+                return;
+            }
             if (title === '工作量统计') {
                 setTimeout(function () { if (window.initWorkload) initWorkload(); }, 0);
                 enhanceToolbar();
@@ -3310,6 +3325,125 @@
         }
 
         window.initWorkload = initWorkload;
+
+        // ---------- 学习进度（学生端查看） ----------
+        var PROG_DATA = [
+            { name: '数学', teacher: '王建国', total: 96, done: 32, color: '#4F46E5', cat: '必修',
+              chapters: [
+                  { n: '第1章 集合与函数概念', h: 16, st: '已完成', at: '2026-09-26' },
+                  { n: '第2章 函数的基本性质', h: 20, st: '已完成', at: '2026-10-14' },
+                  { n: '第3章 指数函数与对数函数', h: 24, st: '进行中', at: '已学 8/24 课时' },
+                  { n: '第4章 三角函数', h: 24, st: '未开始', at: '—' },
+                  { n: '第5章 数列', h: 12, st: '未开始', at: '—' }
+              ] },
+            { name: '英语', teacher: '李华', total: 96, done: 28, color: '#059669', cat: '必修',
+              chapters: [
+                  { n: 'Unit 1 校园生活', h: 18, st: '已完成', at: '2026-09-28' },
+                  { n: 'Unit 2 兴趣爱好', h: 18, st: '已完成', at: '2026-10-12' },
+                  { n: 'Unit 3 旅行与交通', h: 20, st: '进行中', at: '已学 10/20 课时' },
+                  { n: 'Unit 4 科技发展', h: 20, st: '未开始', at: '—' },
+                  { n: 'Unit 5 文化交流', h: 20, st: '未开始', at: '—' }
+              ] },
+            { name: '物理', teacher: '赵敏', total: 64, done: 24, color: '#EA580C', cat: '必修',
+              chapters: [
+                  { n: '第1章 运动的描述', h: 16, st: '已完成', at: '2026-10-08' },
+                  { n: '第2章 牛顿运动定律', h: 24, st: '进行中', at: '已学 8/24 课时' },
+                  { n: '第3章 曲线运动', h: 24, st: '未开始', at: '—' }
+              ] },
+            { name: '语文', teacher: '陈静', total: 80, done: 28, color: '#DC2626', cat: '必修',
+              chapters: [
+                  { n: '第一单元 现代诗歌', h: 16, st: '已完成', at: '2026-09-30' },
+                  { n: '第二单元 古代散文', h: 20, st: '已完成', at: '2026-10-16' },
+                  { n: '第三单元 小说阅读', h: 22, st: '进行中', at: '已学 12/22 课时' },
+                  { n: '第四单元 写作训练', h: 22, st: '未开始', at: '—' }
+              ] },
+            { name: '化学', teacher: '刘强', total: 64, done: 20, color: '#7C3AED', cat: '选修',
+              chapters: [
+                  { n: '第1章 物质及其变化', h: 20, st: '已完成', at: '2026-10-10' },
+                  { n: '第2章 化学计量', h: 22, st: '进行中', at: '已学 0/22 课时' },
+                  { n: '第3章 金属及其化合物', h: 22, st: '未开始', at: '—' }
+              ] }
+        ];
+        var progSelected = 0;
+
+        function initProgress() {
+            var box = document.getElementById('progress-box');
+            if (!box) return;
+
+            var totalH = 0, doneH = 0, finishedChap = 0, allChap = 0;
+            PROG_DATA.forEach(function (c) {
+                totalH += c.total; doneH += c.done;
+                c.chapters.forEach(function (ch) { allChap++; if (ch.st === '已完成') finishedChap++; });
+            });
+            var rate = Math.round(doneH / totalH * 100);
+
+            var kpis = [
+                ['本学期总课时', totalH + ' 课时', '#4F46E5', '#EEF2FF'],
+                ['已完成课时', doneH + ' 课时', '#059669', '#ECFDF5'],
+                ['学习完成率', rate + '%', '#7C3AED', '#F5F3FF'],
+                ['已完成单元', finishedChap + ' / ' + allChap, '#0EA5E9', '#F0F9FF']
+            ];
+            var kpiHtml = '';
+            kpis.forEach(function (k) {
+                kpiHtml += '<div style="background:' + k[3] + ';border-radius:10px;padding:14px 16px">' +
+                    '<div style="font-size:12px;color:' + k[2] + '">' + k[0] + '</div>' +
+                    '<div style="font-size:21px;font-weight:700;color:' + k[2] + ';margin-top:3px">' + k[1] + '</div></div>';
+            });
+
+            // 课程卡片（可点击切换）
+            var cards = '';
+            PROG_DATA.forEach(function (c, idx) {
+                var pct = Math.round(c.done / c.total * 100);
+                var cur = c.chapters.filter(function (ch) { return ch.st === '进行中'; })[0];
+                var active = (idx === progSelected);
+                cards += '<div onclick="selectProgress(' + idx + ')" style="cursor:pointer;border:1px solid ' +
+                    (active ? c.color : '#E2E8F0') + ';background:' + (active ? '#FAFBFF' : '#fff') +
+                    ';border-radius:11px;padding:13px 15px;transition:all .15s">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:baseline">' +
+                        '<div style="font-size:14px;font-weight:600;color:#1E293B">' + c.name +
+                            '<span style="font-size:11px;font-weight:400;color:#94A3B8;margin-left:6px">' + c.teacher + '</span></div>' +
+                        '<div style="font-size:14px;font-weight:700;color:' + c.color + '">' + pct + '%</div>' +
+                    '</div>' +
+                    '<div style="height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden;margin:9px 0 7px">' +
+                        '<div style="width:' + pct + '%;height:100%;background:' + c.color + '"></div></div>' +
+                    '<div style="font-size:11px;color:#94A3B8">' + c.done + ' / ' + c.total + ' 课时' +
+                        (cur ? ' · 当前：' + cur.n.split(' ')[0] : '') + '</div>' +
+                    '</div>';
+            });
+
+            // 章节明细
+            var sel = PROG_DATA[progSelected];
+            var chapRows = '';
+            sel.chapters.forEach(function (ch) {
+                var conf = ch.st === '已完成' ? ['#059669', '#ECFDF5'] :
+                           (ch.st === '进行中' ? ['#D97706', '#FFFBEB'] : ['#94A3B8', '#F8FAFC']);
+                chapRows += '<tr>' +
+                    '<td>' + ch.n + '</td>' +
+                    '<td>' + ch.h + ' 课时</td>' +
+                    '<td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' +
+                        conf[0] + ';background:' + conf[1] + '">' + ch.st + '</span></td>' +
+                    '<td style="color:#64748B">' + ch.at + '</td></tr>';
+            });
+
+            box.innerHTML =
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px">' + kpiHtml + '</div>' +
+                '<div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:10px">课程进度（点击可查看章节）</div>' +
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px;margin-bottom:20px">' + cards + '</div>' +
+                '<div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:8px">' + sel.name + ' · 章节明细</div>' +
+                '<table><thead><tr><th>章节 / 单元</th><th style="width:100px">课时</th><th style="width:100px">状态</th><th style="width:170px">进度说明</th></tr></thead><tbody>' + chapRows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📌 说明：</span>学习进度由任课教师在「教学进度」中登记，学生端仅供查看；' +
+                    '完成率 = 已完成课时 ÷ 本学期总课时；章节状态分为「已完成 / 进行中 / 未开始」。' +
+                '</div>';
+        }
+
+        function selectProgress(idx) {
+            progSelected = idx;
+            initProgress();
+        }
+
+        window.initProgress = initProgress;
+        window.selectProgress = selectProgress;
 
         // ---------- 请假申请 / 审批 ----------
         var LEAVE_KEY = 'cy_leave_v1';
