@@ -1,43 +1,44 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.8.1
-      单文件静态 Web 应用 · HTML5 + CSS3 + 原生 JavaScript（不依赖任何前端框架）
+      冲鸭教育管理系统   v1.9.3
+      单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
-      运行方式：浏览器直接打开本文件即可，无需服务器、无需数据库、无需联网。
-      数据存储：浏览器 localStorage（共 5 处：业务数据 / 会话 / 评教 / 成绩 / 考勤）。
+      运行方式  ·  用浏览器直接打开本文件即可运行
+                 不需要服务器、不需要数据库、不需要联网
+      数据存储  ·  浏览器 localStorage（业务数据 / 会话 / 评教 / 成绩 / 考勤）
     
-      ── 代码结构索引（行号）────────────────────────────────────────────
-         CSS 样式                   约第    33 行
-         左侧导航栏                    约第   296 行
-         顶部栏                      约第   445 行
-         数据概览看板                   约第   472 行
-         ECharts 加载器              约第     8 行
-         页面切换核心逻辑                 约第   711 行
-         表格数据（25 个业务模块）           约第   735 行
-         劳务管理子系统                  约第  1028 行
-         学生端·我的学习                 约第  1473 行
-         教师端页面                    约第  1197 行
-         考试管理                     约第  1395 行
-         登录页                      约第  1832 行
-         增删改引擎（CRUD）              约第  1883 行
-         字段自动生成表单                 约第  2070 行
-         角色权限控制                   约第  2297 行
-         数据范围隔离                   约第  2408 行
-         真实分页                     约第  2448 行
-         课堂考勤逻辑                   约第  2632 行
-         成绩登记逻辑                   约第  2786 行
-         教学评价弹窗                   约第  2912 行
-         CSV 导出                   约第  2200 行
+      ── 代码结构索引 ──────────────────────────────────────────────
+         约第   76 行   CSS 样式定义
+         约第  339 行   左侧导航栏
+         约第  488 行   顶部栏
+         约第  515 行   数据概览看板
+         约第  754 行   页面切换核心逻辑
+         约第  778 行   25 个业务模块的表格数据
+         约第 1071 行   劳务管理子系统
+         约第 1240 行   教师端页面
+         约第 1438 行   考试管理模块
+         约第 1516 行   学生端·我的学习
+         约第 1875 行   登录页
+         约第 1926 行   增删改引擎 CRUD
+         约第 2113 行   字段自动生成表单
+         约第 2243 行   CSV 导出
+         约第 2340 行   角色权限控制
+         约第 2451 行   数据范围隔离
+         约第 2491 行   真实分页
+         约第 2675 行   课堂考勤逻辑
+         约第 2829 行   成绩登记逻辑
+         约第 2955 行   教学评价弹窗
+         约第 3083 行   内嵌 ECharts 库（末尾）
     
-      ── 关于文件体积 ─────────────────────────────────────────────────
-         本文件约 1.18 MB，但其中约 0.89 MB 位于文件末尾，是内嵌的
-         Apache ECharts 5.4.3 图表库（第三方开源库，非本人编写）。
-         内嵌原因：保证断网时数据概览页的折线图与环形图仍能正常显示。
-         业务代码（HTML 结构 + CSS 样式 + 全部 JS 逻辑）约 290 KB。
+      ── 文件体积说明 ──────────────────────────────────────────────
+         文件约 1.18 MB，其中约 0.89 MB 是文件末尾内嵌的第三方开源库
+         Apache ECharts 5.4.3（图表库，非本人编写，有醒目起止标记）。
+         内嵌目的：保证断网环境下数据概览页的折线图与环形图仍正常显示。
+         本人编写的业务代码约 290 KB，位于第 1 行至库开始之前。
     
-      代码总行数：约 3096 行（含第三方库）
+      代码总行数  ·  约 3147 行（含第三方库）
     ==============================================================================
     -->
 
@@ -364,9 +365,10 @@
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表_师', this)">我的课表</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的班级', this)">我的班级</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂考勤', this)">课堂考勤</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考勤统计', this)">考勤统计</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学进度', this)">教学进度</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评语', this)">学生评语</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩登记', this)">成绩录入</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩录入', this)">成绩录入</div>
                 </div>
             </div>
             <!-- 我的学习（学生端工作区） -->
@@ -377,6 +379,8 @@
                 </div>
                 <div id="mine-menu" class="hidden mt-1 space-y-1">
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表', this)">我的课表</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂签到', this)">课堂签到</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('选课中心', this)">选课中心</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课程', this)">我的课程</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的成绩', this)">我的成绩</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的作业', this)">我的作业</div>
@@ -477,7 +481,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.8.1 · 期中版
+            冲鸭教育 · v1.9.3 · 期中版
         </div>
     </aside>
 
@@ -1386,6 +1390,24 @@
                 </div>`;
             }
 
+
+            // T3b. 考勤统计
+            else if (title === '考勤统计') {
+                refText = '按学生汇总出勤情况 —— 缺勤累计超课时 1/3 触发预警';
+                titleHtml = '考勤统计';
+                recordCount = 0;
+                html = '<div id="att-summary" style="padding:2px 0 12px"></div>';
+            }
+
+
+            // T3c. 成绩录入（教师，仅本人班级）
+            else if (title === '成绩录入') {
+                refText = '录入本人任教班级成绩 —— 提交后由教务审核';
+                titleHtml = '成绩录入';
+                recordCount = 0;
+                html = '<div id="tscore-box" style="padding:2px 0 12px"></div>';
+            }
+
             // T4. 教学进度
             else if (title === '教学进度') {
                 refText = '本人任教课程的教学进度 —— 高一(1)班 数学';
@@ -1486,7 +1508,7 @@
 
             // E2. 成绩登记
             else if (title === '成绩登记') {
-                refText = '选择考试后逐生登记成绩 —— 总评按「期中 40% + 期末 60%」自动计算';
+                refText = '全校成绩登记 —— 录入或调整成绩，含教师提交的待审核记录';
                 titleHtml = '成绩登记';
                 recordCount = 6;
                 html = `
@@ -1578,40 +1600,30 @@
                 </div>`;
             }
 
+
+
+            // S1a. 课堂签到
+            else if (title === '课堂签到') {
+                refText = '今日课程签到 —— 由本人完成，出勤统计由任课教师负责';
+                titleHtml = '课堂签到';
+                recordCount = 0;
+                html = '<div id="checkin-box" style="padding:2px 0 12px"></div>';
+            }
+
+            // S1b. 选课中心
+            else if (title === '选课中心') {
+                refText = '本学期可选课程 —— 受门数、学分、容量、时间四重约束';
+                titleHtml = '选课中心';
+                recordCount = 0;
+                html = '<div id="course-center" style="padding:2px 0 12px"></div>';
+            }
+
             // S2. 我的课程
             else if (title === '我的课程') {
-                refText = '本学期已选课程 —— 共 5 门';
+                refText = '本学期已选课程 —— 与选课中心实时同步';
                 titleHtml = '我的课程';
-                recordCount = 5;
-                html = `
-                <table><thead><tr>
-                    <th>课程名称</th><th>任课教师</th><th>总课时</th><th>已学课时</th>
-                    <th>学习进度</th><th>上课教室</th><th>课程类别</th><th class="text-right">操作</th>
-                </tr></thead><tbody>
-                    <tr><td><b>数学</b></td><td>王建国</td><td>96</td><td>32</td>
-                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:33%;height:100%;background:#4F46E5"></div></div><span style="font-size:12px;color:#64748B">33%</span></div></td>
-                        <td>科教楼301</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
-                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
-                    <tr><td><b>英语</b></td><td>李华</td><td>96</td><td>32</td>
-                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:33%;height:100%;background:#059669"></div></div><span style="font-size:12px;color:#64748B">33%</span></div></td>
-                        <td>科教楼302</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
-                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
-                    <tr><td><b>物理</b></td><td>赵敏</td><td>64</td><td>24</td>
-                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:38%;height:100%;background:#EA580C"></div></div><span style="font-size:12px;color:#64748B">38%</span></div></td>
-                        <td>实验楼101</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
-                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
-                    <tr><td><b>语文</b></td><td>陈静</td><td>80</td><td>28</td>
-                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:35%;height:100%;background:#DC2626"></div></div><span style="font-size:12px;color:#64748B">35%</span></div></td>
-                        <td>科教楼303</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
-                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
-                    <tr><td><b>化学</b></td><td>刘强</td><td>64</td><td>20</td>
-                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:31%;height:100%;background:#7C3AED"></div></div><span style="font-size:12px;color:#64748B">31%</span></div></td>
-                        <td>实验楼102</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">选修</span></td>
-                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
-                </tbody></table>
-                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
-                    <span style="font-weight:600;color:#475569">📌 说明：</span>课程由教务在「学生档案—选课记录」中登记，学生端仅供查看；如需调整请联系班主任。
-                </div>`;
+                recordCount = 0;
+                html = '<div id="my-courses" style="padding:2px 0 12px"></div>';
             }
 
             // S3. 我的成绩
@@ -1803,7 +1815,7 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -2582,6 +2594,31 @@
         }
 
         function applyView(title) {
+            if (title === '课堂签到') {
+                setTimeout(function () { if (window.initCheckin) initCheckin(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '选课中心') {
+                setTimeout(function () { if (window.initCoursePage) initCoursePage(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '我的课程') {
+                setTimeout(function () { if (window.initMyCourses) initMyCourses(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '成绩录入') {
+                setTimeout(function () { if (window.initTScore) initTScore(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '考勤统计') {
+                setTimeout(function () { if (window.initAttSummary) initAttSummary(); }, 0);
+                enhanceToolbar();
+                return;
+            }
             if (title === '课堂考勤') {
                 setTimeout(function () { if (window.initAttendPage) initAttendPage(); }, 0);
                 enhanceToolbar();
@@ -2642,6 +2679,470 @@
                 renderPagination(currentTitle);
             });
         }
+
+        // ---------- 课堂签到（学生本人操作，不做统计） ----------
+        var CHECKIN_KEY = 'cy_checkin_v1';
+        var TODAY_CLASSES = [
+            { id: 'K1', course: '数学', teacher: '王建国', time: '08:00 - 09:40', period: '第1-2节', room: '科教楼301' },
+            { id: 'K2', course: '化学', teacher: '刘强', time: '10:00 - 11:40', period: '第3-4节', room: '实验楼102' },
+            { id: 'K3', course: '英语', teacher: '李华', time: '14:00 - 15:40', period: '第5-6节', room: '科教楼302' },
+            { id: 'K4', course: '语文', teacher: '陈静', time: '16:00 - 17:40', period: '第7-8节', room: '科教楼303' }
+        ];
+        var CHECKIN_DEFAULT = {
+            K1: { at: '07:52', status: '已签到' },
+            K2: { at: '10:06', status: '已签到' }
+        };
+
+        function checkinData() {
+            try {
+                var raw = localStorage.getItem(CHECKIN_KEY);
+                if (!raw) return JSON.parse(JSON.stringify(CHECKIN_DEFAULT));
+                return JSON.parse(raw) || {};
+            } catch (e) { return JSON.parse(JSON.stringify(CHECKIN_DEFAULT)); }
+        }
+        function checkinSave(d) {
+            try { localStorage.setItem(CHECKIN_KEY, JSON.stringify(d)); } catch (e) {}
+        }
+        function nowHM() {
+            var t = new Date();
+            function p(n) { return (n < 10 ? '0' : '') + n; }
+            return p(t.getHours()) + ':' + p(t.getMinutes());
+        }
+
+        function initCheckin() {
+            var box = document.getElementById('checkin-box');
+            if (!box) return;
+            var d = checkinData();
+            var done = 0;
+            TODAY_CLASSES.forEach(function (c) { if (d[c.id]) done++; });
+
+            var cards = '';
+            TODAY_CLASSES.forEach(function (c) {
+                var rec = d[c.id];
+                var isDone = !!rec;
+                var badge = isDone
+                    ? '<span style="padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;color:#059669;background:#ECFDF5">已签到 ' + rec.at + '</span>'
+                    : '<span style="padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;color:#94A3B8;background:#F1F5F9">未签到</span>';
+                var btn = isDone
+                    ? '<button disabled style="padding:7px 18px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#CBD5E1;background:#F8FAFC;cursor:not-allowed">已签到</button>'
+                    : '<button onclick="doCheckin(\'' + c.id + '\')" style="padding:7px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">签 到</button>';
+
+                cards += '<div style="display:flex;align-items:center;gap:14px;border:1px solid ' + (isDone ? '#E2E8F0' : '#DDD6FE') + ';border-radius:12px;padding:15px 18px;margin-bottom:10px;background:' + (isDone ? '#fff' : '#FAF9FF') + '">' +
+                    '<div style="width:46px;height:46px;border-radius:10px;background:' + (isDone ? '#F1F5F9' : '#EEF2FF') + ';display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:' + (isDone ? '#94A3B8' : '#4F46E5') + '">' + c.period.replace('第', '').replace('节', '') + '</div>' +
+                    '<div style="flex:1;min-width:0">' +
+                        '<div style="font-size:15px;font-weight:600;color:#1E293B">' + c.course + ' <span style="font-size:12px;font-weight:400;color:#94A3B8">· ' + c.teacher + ' · ' + c.room + '</span></div>' +
+                        '<div style="font-size:12px;color:#94A3B8;margin-top:3px">' + c.period + ' · ' + c.time + '</div>' +
+                    '</div>' +
+                    '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px">' + badge + btn + '</div>' +
+                    '</div>';
+            });
+
+            box.innerHTML =
+                '<div style="padding:12px 16px;background:#EEF2FF;border-radius:10px;margin-bottom:14px;font-size:13px;color:#4338CA">' +
+                    '今日共 <b>' + TODAY_CLASSES.length + ' 节</b>课，已签到 <b>' + done + ' 节</b>' +
+                    (done < TODAY_CLASSES.length ? '，还有 ' + (TODAY_CLASSES.length - done) + ' 节待签到' : '，全部完成') +
+                '</div>' +
+                cards +
+                '<div style="margin-top:8px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 说明：</span>签到仅用于记录本人到课情况；' +
+                    '出勤统计、缺勤认定与请假审批由任课教师负责，学生端不展示班级出勤数据。' +
+                '</div>';
+        }
+
+        function doCheckin(cid) {
+            var d = checkinData();
+            if (d[cid]) { toast('本节课已签到', 'error'); return; }
+            var cls = null;
+            for (var i = 0; i < TODAY_CLASSES.length; i++) { if (TODAY_CLASSES[i].id === cid) cls = TODAY_CLASSES[i]; }
+            if (!cls) return;
+            var at = nowHM();
+            d[cid] = { at: at, status: '已签到' };
+            checkinSave(d);
+            toast('签到成功（' + at + '）', 'success');
+            initCheckin();
+        }
+
+        window.initCheckin = initCheckin;
+        window.doCheckin = doCheckin;
+
+        // ---------- 选课中心（含 5 条业务规则）----------
+        var COURSE_LIMITS = { maxCourses: 6, maxCredit: 20 };
+        var COURSES = [
+            { id: 'C01', name: '数学', teacher: '王建国', credit: 4, hours: 96, cap: 40, taken: 36, time: '周一 第1-2节', room: '301', cat: '必修' },
+            { id: 'C02', name: '英语', teacher: '李华', credit: 4, hours: 96, cap: 40, taken: 38, time: '周一 第3-4节', room: '302', cat: '必修' },
+            { id: 'C03', name: '物理', teacher: '赵敏', credit: 3, hours: 64, cap: 36, taken: 36, time: '周二 第3-4节', room: '101', cat: '必修' },
+            { id: 'C04', name: '语文', teacher: '陈静', credit: 3, hours: 80, cap: 40, taken: 32, time: '周三 第5-6节', room: '303', cat: '必修' },
+            { id: 'C05', name: '化学', teacher: '刘强', credit: 2, hours: 64, cap: 36, taken: 30, time: '周四 第3-4节', room: '102', cat: '选修' },
+            { id: 'C06', name: '生物', teacher: '周伟', credit: 2, hours: 48, cap: 36, taken: 20, time: '周一 第1-2节', room: '201', cat: '选修' },
+            { id: 'C07', name: '历史', teacher: '孙丽', credit: 2, hours: 48, cap: 36, taken: 25, time: '周五 第5-6节', room: '202', cat: '选修' },
+            { id: 'C08', name: '信息技术', teacher: '吴涛', credit: 2, hours: 48, cap: 30, taken: 12, time: '周二 第7-8节', room: '305', cat: '选修' }
+        ];
+        var DEFAULT_SELECTED = ['C01', 'C02', 'C03', 'C04', 'C05'];
+
+        function courseSelected() {
+            try {
+                var raw = localStorage.getItem('cy_course_v1');
+                if (!raw) return DEFAULT_SELECTED.slice();
+                var o = JSON.parse(raw);
+                return Array.isArray(o.selected) ? o.selected : DEFAULT_SELECTED.slice();
+            } catch (e) { return DEFAULT_SELECTED.slice(); }
+        }
+        function courseSave(sel) {
+            try { localStorage.setItem('cy_course_v1', JSON.stringify({ selected: sel })); } catch (e) {}
+        }
+        function courseById(id) {
+            for (var i = 0; i < COURSES.length; i++) { if (COURSES[i].id === id) return COURSES[i]; }
+            return null;
+        }
+
+        /** 判断能否选某门课，返回 {ok, reason} */
+        function canSelect(id, sel) {
+            var c = courseById(id);
+            if (!c) return { ok: false, reason: '课程不存在' };
+            // R1 重复选课
+            if (sel.indexOf(id) >= 0) return { ok: false, reason: '已选过该课程' };
+            // R2 门数上限
+            if (sel.length >= COURSE_LIMITS.maxCourses)
+                return { ok: false, reason: '已达本学期选课上限（' + COURSE_LIMITS.maxCourses + ' 门）' };
+            // R3 学分上限
+            var credit = 0;
+            sel.forEach(function (x) { var cc = courseById(x); if (cc) credit += cc.credit; });
+            if (credit + c.credit > COURSE_LIMITS.maxCredit)
+                return { ok: false, reason: '超出学分上限（已选 ' + credit + ' / 上限 ' + COURSE_LIMITS.maxCredit + '）' };
+            // R4 容量上限
+            if (c.taken >= c.cap) return { ok: false, reason: '该课程已满员（' + c.taken + '/' + c.cap + '）' };
+            // R5 时间冲突
+            for (var i = 0; i < sel.length; i++) {
+                var oc = courseById(sel[i]);
+                if (oc && oc.time === c.time)
+                    return { ok: false, reason: '与已选《' + oc.name + '》上课时间冲突（' + c.time + '）' };
+            }
+            return { ok: true, reason: '' };
+        }
+
+        function initCoursePage() {
+            var box = document.getElementById('course-center');
+            if (!box) return;
+            var sel = courseSelected();
+            var credit = 0;
+            sel.forEach(function (x) { var c = courseById(x); if (c) credit += c.credit; });
+
+            var cards = [
+                ['已选课程', sel.length + ' / ' + COURSE_LIMITS.maxCourses + ' 门', sel.length >= COURSE_LIMITS.maxCourses ? '#DC2626' : '#4F46E5', sel.length >= COURSE_LIMITS.maxCourses ? '#FEF2F2' : '#EEF2FF'],
+                ['已修学分', credit + ' / ' + COURSE_LIMITS.maxCredit + ' 分', credit >= COURSE_LIMITS.maxCredit ? '#DC2626' : '#059669', credit >= COURSE_LIMITS.maxCredit ? '#FEF2F2' : '#ECFDF5'],
+                ['可选课程', COURSES.length + ' 门', '#1E293B', '#F8FAFC'],
+                ['剩余名额', (function () { var n = 0; COURSES.forEach(function (c) { if (c.taken < c.cap) n++; }); return n + ' 门可报'; })(), '#D97706', '#FFFBEB']
+            ];
+            var statHtml = '';
+            cards.forEach(function (x) {
+                statHtml += '<div style="background:' + x[3] + ';border-radius:10px;padding:13px 15px">' +
+                    '<div style="font-size:12px;color:#64748B">' + x[0] + '</div>' +
+                    '<div style="font-size:18px;font-weight:700;color:' + x[2] + ';margin-top:3px">' + x[1] + '</div></div>';
+            });
+
+            var rows = '';
+            COURSES.forEach(function (c) {
+                var isSel = sel.indexOf(c.id) >= 0;
+                var chk = isSel ? { ok: false, reason: '' } : canSelect(c.id, sel);
+                var status, color, bg;
+                if (isSel) { status = '已选'; color = '#059669'; bg = '#ECFDF5'; }
+                else if (chk.ok) { status = '可选'; color = '#4F46E5'; bg = '#EEF2FF'; }
+                else if (c.taken >= c.cap) { status = '已满'; color = '#DC2626'; bg = '#FEF2F2'; }
+                else if (chk.reason.indexOf('冲突') >= 0) { status = '时间冲突'; color = '#D97706'; bg = '#FFFBEB'; }
+                else { status = '受限'; color = '#94A3B8'; bg = '#F8FAFC'; }
+
+                var btn;
+                if (isSel) {
+                    btn = '<button onclick="dropCourse(\'' + c.id + '\')" style="padding:5px 14px;border:1px solid #FECACA;border-radius:7px;font-size:12px;color:#DC2626;background:#fff">退课</button>';
+                } else if (chk.ok) {
+                    btn = '<button onclick="selectCourse(\'' + c.id + '\')" style="padding:5px 14px;background:#7C3AED;color:#fff;border:1px solid #7C3AED;border-radius:7px;font-size:12px;font-weight:600">选课</button>';
+                } else {
+                    btn = '<button disabled title="' + chk.reason + '" style="padding:5px 14px;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;color:#CBD5E1;background:#F8FAFC;cursor:not-allowed">选课</button>';
+                }
+
+                var capRate = Math.round(c.taken / c.cap * 100);
+                var capColor = capRate >= 100 ? '#DC2626' : (capRate >= 90 ? '#D97706' : '#059669');
+
+                rows += '<tr>' +
+                    '<td><b>' + c.name + '</b><br><span style="font-size:11px;color:#94A3B8">' + c.cat + '</span></td>' +
+                    '<td>' + c.teacher + '</td>' +
+                    '<td>' + c.credit + '</td>' +
+                    '<td>' + c.hours + '</td>' +
+                    '<td style="white-space:nowrap">' + c.time + '<br><span style="font-size:11px;color:#94A3B8">' + c.room + '</span></td>' +
+                    '<td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;min-width:46px;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:' + Math.min(capRate, 100) + '%;height:100%;background:' + capColor + '"></div></div><span style="font-size:11px;color:#64748B;white-space:nowrap">' + c.taken + '/' + c.cap + '</span></div></td>' +
+                    '<td><span style="padding:2px 8px;border-radius:5px;font-size:12px;font-weight:500;color:' + color + ';background:' + bg + '">' + status + '</span></td>' +
+                    '<td class="text-right">' + btn + '</td>' +
+                    '</tr>';
+            });
+
+            box.innerHTML =
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin-bottom:16px">' + statHtml + '</div>' +
+                '<table><thead><tr><th>课程</th><th>任课教师</th><th>学分</th><th>课时</th><th>上课时间</th><th>容量</th><th>状态</th><th class="text-right">操作</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#EEF2FF;border-radius:10px;font-size:13px;color:#4338CA">' +
+                    '<span style="font-weight:600">📋 选课规则：</span>每学期最多选 <b>' + COURSE_LIMITS.maxCourses + ' 门</b>、最多修 <b>' + COURSE_LIMITS.maxCredit + ' 学分</b>；' +
+                    '课程满员不可选；上课时间与已选课程冲突不可选；已选课程需先退课才能更换。' +
+                '</div>';
+        }
+
+        function selectCourse(id) {
+            var sel = courseSelected();
+            var chk = canSelect(id, sel);
+            if (!chk.ok) { toast(chk.reason, 'error'); return; }
+            sel.push(id);
+            courseSave(sel);
+            var c = courseById(id);
+            toast('已选《' + c.name + '》（' + c.credit + ' 学分）', 'success');
+            initCoursePage();
+        }
+
+        function dropCourse(id) {
+            var c = courseById(id);
+            if (!c) return;
+            if (!confirm('确认退选《' + c.name + '》吗？退课后该课程名额将释放。')) return;
+            var sel = courseSelected().filter(function (x) { return x !== id; });
+            courseSave(sel);
+            toast('已退选《' + c.name + '》', 'info');
+            initCoursePage();
+        }
+
+        function initMyCourses() {
+            var box = document.getElementById('my-courses');
+            if (!box) return;
+            var sel = courseSelected();
+            var credit = 0;
+            sel.forEach(function (x) { var c = courseById(x); if (c) credit += c.credit; });
+            if (!sel.length) {
+                box.innerHTML = '<div style="padding:40px;text-align:center;color:#94A3B8">本学期还没有选课，请前往「选课中心」选课</div>';
+                return;
+            }
+            var rows = '';
+            sel.forEach(function (id) {
+                var c = courseById(id);
+                if (!c) return;
+                var done = Math.round(c.hours * 0.33);
+                var pct = Math.round(done / c.hours * 100);
+                rows += '<tr>' +
+                    '<td><b>' + c.name + '</b></td><td>' + c.teacher + '</td>' +
+                    '<td>' + c.credit + '</td><td>' + c.hours + '</td><td>' + done + '</td>' +
+                    '<td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:#4F46E5"></div></div><span style="font-size:12px;color:#64748B">' + pct + '%</span></div></td>' +
+                    '<td>' + c.room + '</td><td>' + c.time + '</td>' +
+                    '<td class="text-right"><button onclick="dropCourse(\'' + c.id + '\')" style="padding:5px 12px;border:1px solid #FECACA;border-radius:7px;font-size:12px;color:#DC2626;background:#fff">退课</button></td>' +
+                    '</tr>';
+            });
+            box.innerHTML =
+                '<table><thead><tr><th>课程名称</th><th>任课教师</th><th>学分</th><th>总课时</th><th>已学课时</th><th>进度</th><th>教室</th><th>上课时间</th><th class="text-right">操作</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '本学期已选 <b style="color:#1E293B">' + sel.length + '</b> 门课程，合计 <b style="color:#1E293B">' + credit + '</b> 学分' +
+                    '（上限 ' + COURSE_LIMITS.maxCourses + ' 门 / ' + COURSE_LIMITS.maxCredit + ' 学分）。' +
+                '</div>';
+        }
+
+        window.initCoursePage = initCoursePage;
+        window.selectCourse = selectCourse;
+        window.dropCourse = dropCourse;
+        window.initMyCourses = initMyCourses;
+
+        // ---------- 成绩录入（教师端，仅本人班级） ----------
+        var TSCORE_KEY = 'cy_tscore_v1';
+        var TSCORE_CLASSES = ['高一(1)班', '高一(2)班', '高一(3)班'];
+        var TSCORE_STUDENTS = [
+            ['20260101', '张小明'], ['20260102', '李小红'], ['20260103', '王强'],
+            ['20260104', '陈晨'], ['20260105', '刘洋'], ['20260106', '周婷']
+        ];
+
+        function tscoreAll() {
+            try { return JSON.parse(localStorage.getItem(TSCORE_KEY) || '{}'); } catch (e) { return {}; }
+        }
+        function tscoreSaveAll(o) {
+            try { localStorage.setItem(TSCORE_KEY, JSON.stringify(o)); } catch (e) {}
+        }
+        function tscoreKey() {
+            var c = (document.getElementById('ts-class') || {}).value || '';
+            var e = (document.getElementById('ts-exam') || {}).value || '';
+            return c + '|' + e;
+        }
+        function tgradeOf(t) {
+            if (t === null || isNaN(t)) return ['—', '#94A3B8', '#F8FAFC'];
+            if (t >= 90) return ['优秀', '#059669', '#ECFDF5'];
+            if (t >= 80) return ['良好', '#2563EB', '#EFF6FF'];
+            if (t >= 70) return ['中等', '#7C3AED', '#F5F3FF'];
+            if (t >= 60) return ['合格', '#EA580C', '#FFF7ED'];
+            return ['待提高', '#DC2626', '#FEF2F2'];
+        }
+
+        function initTScore() {
+            var box = document.getElementById('tscore-box');
+            if (!box) return;
+            var key = tscoreKey();
+            var all = tscoreAll();
+            var cur = all[key] || { data: {}, status: '未提交' };
+            var status = cur.status || '未提交';
+            var data = cur.data || {};
+
+            var statColor = status === '已审核' ? ['#ECFDF5', '#059669'] :
+                            (status === '待审核' ? ['#FFFBEB', '#D97706'] : ['#F8FAFC', '#64748B']);
+
+            var rows = '';
+            TSCORE_STUDENTS.forEach(function (stu) {
+                var rec = data[stu[0]] || {};
+                var mid = (rec.mid === undefined || rec.mid === '') ? '' : rec.mid;
+                var fin = (rec.fin === undefined || rec.fin === '') ? '' : rec.fin;
+                rows += '<tr>' +
+                    '<td style="font-family:Consolas,monospace;color:#64748B">' + stu[0] + '</td>' +
+                    '<td><b>' + stu[1] + '</b></td>' +
+                    '<td><input type="number" min="0" max="100" data-ts="' + stu[0] + '" data-p="mid" value="' + mid +
+                        '" oninput="tcalc(this)" placeholder="0-100" style="width:86px;padding:7px 10px;border:1px solid #E2E8F0;border-radius:7px;font-size:13px;text-align:center"></td>' +
+                    '<td><input type="number" min="0" max="100" data-ts="' + stu[0] + '" data-p="fin" value="' + fin +
+                        '" oninput="tcalc(this)" placeholder="0-100" style="width:86px;padding:7px 10px;border:1px solid #E2E8F0;border-radius:7px;font-size:13px;text-align:center"></td>' +
+                    '<td data-tt="' + stu[0] + '" style="font-weight:700;color:#94A3B8">—</td>' +
+                    '<td data-tg="' + stu[0] + '"><span style="padding:2px 8px;border-radius:5px;font-size:12px;color:#94A3B8;background:#F8FAFC">—</span></td>' +
+                    '</tr>';
+            });
+
+            box.innerHTML =
+                '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 16px;background:#F8FAFC;border-radius:12px;margin-bottom:14px">' +
+                    '<div style="display:flex;align-items:center;gap:6px"><span style="font-size:13px;color:#64748B">任教班级</span>' +
+                        '<select id="ts-class" onchange="initTScore()" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px">' +
+                        TSCORE_CLASSES.map(function (c) { return '<option' + (c === (cur.cls || '高一(1)班') ? ' selected' : '') + '>' + c + '</option>'; }).join('') +
+                        '</select></div>' +
+                    '<div style="display:flex;align-items:center;gap:6px"><span style="font-size:13px;color:#64748B">考试</span>' +
+                        '<select id="ts-exam" onchange="initTScore()" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px">' +
+                        '<option>第一学期期中考试</option><option>10 月月考</option></select></div>' +
+                    '<button onclick="saveTScore(false)" style="padding:8px 16px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#475569;background:#fff">保存草稿</button>' +
+                    '<button onclick="saveTScore(true)" style="padding:9px 18px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">提交教务审核</button>' +
+                    '<span style="margin-left:auto;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;color:' + statColor[1] + ';background:' + statColor[0] + '">当前状态：' + status + '</span>' +
+                '</div>' +
+                '<table><thead><tr><th>学号</th><th>姓名</th><th>期中成绩</th><th>期末成绩</th><th>总评</th><th>等级</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 职责说明：</span>教师仅可录入本人任教班级的成绩，保存为草稿后可修改；' +
+                    '点击「提交教务审核」后状态变为「待审核」，由教务审核通过后才计入正式成绩台账。' +
+                '</div>';
+
+            TSCORE_STUDENTS.forEach(function (stu) {
+                var el = box.querySelector('input[data-ts="' + stu[0] + '"][data-p="mid"]');
+                if (el && el.value !== '') tcalc(el, true);
+            });
+        }
+
+        function tcalc(inp, silent) {
+            var id = inp.getAttribute('data-ts');
+            var tr = inp.closest('td').parentElement;
+            var midEl = tr.querySelector('input[data-ts="' + id + '"][data-p="mid"]');
+            var finEl = tr.querySelector('input[data-ts="' + id + '"][data-p="fin"]');
+            [midEl, finEl].forEach(function (el) {
+                if (!el || el.value === '') return;
+                var n = parseFloat(el.value);
+                if (isNaN(n)) return;
+                if (n > 100) el.value = '100';
+                if (n < 0) el.value = '0';
+            });
+            var m = midEl && midEl.value !== '' ? parseFloat(midEl.value) : null;
+            var f = finEl && finEl.value !== '' ? parseFloat(finEl.value) : null;
+            var total = null;
+            if (m !== null && f !== null) total = Math.round(m * 0.4 + f * 0.6);
+            else if (m !== null) total = Math.round(m);
+            else if (f !== null) total = Math.round(f);
+
+            var tc = tr.querySelector('[data-tt="' + id + '"]');
+            var gc = tr.querySelector('[data-tg="' + id + '"]');
+            if (tc) {
+                tc.textContent = total === null ? '—' : total;
+                tc.style.color = total === null ? '#94A3B8' : (total >= 80 ? '#059669' : (total >= 60 ? '#EA580C' : '#DC2626'));
+            }
+            if (gc) {
+                var g = tgradeOf(total);
+                gc.innerHTML = '<span style="padding:2px 8px;border-radius:5px;font-size:12px;font-weight:500;color:' + g[1] + ';background:' + g[2] + '">' + g[0] + '</span>';
+            }
+        }
+
+        function saveTScore(submit) {
+            var box = document.getElementById('tscore-box');
+            if (!box) return;
+            var key = tscoreKey();
+            var all = tscoreAll();
+            var data = {};
+            var complete = 0;
+            TSCORE_STUDENTS.forEach(function (stu) {
+                var m = box.querySelector('input[data-ts="' + stu[0] + '"][data-p="mid"]');
+                var f = box.querySelector('input[data-ts="' + stu[0] + '"][data-p="fin"]');
+                var mv = m ? m.value.trim() : '';
+                var fv = f ? f.value.trim() : '';
+                if (mv === '' && fv === '') return;
+                data[stu[0]] = { mid: mv === '' ? '' : Number(mv), fin: fv === '' ? '' : Number(fv) };
+                if (mv !== '' && fv !== '') complete++;
+            });
+            if (submit && complete < TSCORE_STUDENTS.length) {
+                if (!confirm('还有 ' + (TSCORE_STUDENTS.length - complete) + ' 名学生未录入完整，仍要提交审核吗？')) return;
+            }
+            all[key] = {
+                cls: (document.getElementById('ts-class') || {}).value || '',
+                data: data,
+                status: submit ? '待审核' : '未提交',
+                at: new Date().toISOString().slice(0, 16).replace('T', ' ')
+            };
+            tscoreSaveAll(all);
+            toast(submit ? ('已提交教务审核（' + complete + ' 人完整）') : ('草稿已保存（' + complete + ' 人完整）'),
+                  submit ? 'success' : 'info');
+            initTScore();
+        }
+
+        window.initTScore = initTScore;
+        window.tcalc = tcalc;
+        window.saveTScore = saveTScore;
+
+        // ---------- 考勤统计（教师端汇总） ----------
+        var ATT_SUMMARY = [
+            ['20260101', '张小明', 20, 19, 1, 0, 0],
+            ['20260102', '李小红', 20, 20, 0, 0, 0],
+            ['20260103', '王强', 20, 16, 2, 1, 1],
+            ['20260104', '陈晨', 20, 20, 0, 0, 0],
+            ['20260105', '刘洋', 20, 12, 1, 2, 5],
+            ['20260106', '周婷', 20, 19, 0, 1, 0]
+        ];
+
+        function initAttSummary() {
+            var box = document.getElementById('att-summary');
+            if (!box) return;
+            var totalRate = 0, warn = 0;
+            var rows = '';
+            ATT_SUMMARY.forEach(function (r) {
+                var no = r[0], name = r[1], should = r[2], actual = r[3], late = r[4], leave = r[5], absent = r[6];
+                var rate = Math.round((actual + late) / should * 100);
+                totalRate += rate;
+                var isWarn = (absent / should) >= (1 / 3);
+                if (isWarn) warn++;
+                var color = rate >= 95 ? '#059669' : (rate >= 85 ? '#D97706' : '#DC2626');
+                var bg = rate >= 95 ? '#ECFDF5' : (rate >= 85 ? '#FFFBEB' : '#FEF2F2');
+                rows += '<tr>' +
+                    '<td style="font-family:Consolas,monospace;color:#64748B">' + no + '</td>' +
+                    '<td><b>' + name + '</b></td>' +
+                    '<td>' + should + '</td>' +
+                    '<td style="color:#059669;font-weight:600">' + actual + '</td>' +
+                    '<td style="color:#D97706">' + late + '</td>' +
+                    '<td style="color:#2563EB">' + leave + '</td>' +
+                    '<td style="color:#DC2626;font-weight:600">' + absent + '</td>' +
+                    '<td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' + color + ';background:' + bg + '">' + rate + '%</span></td>' +
+                    '<td>' + (isWarn
+                        ? '<span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:#DC2626;background:#FEF2F2">学业预警</span>'
+                        : '<span style="padding:2px 9px;border-radius:5px;font-size:12px;color:#059669;background:#ECFDF5">正常</span>') + '</td>' +
+                    '</tr>';
+            });
+            var avg = Math.round(totalRate / ATT_SUMMARY.length);
+
+            box.innerHTML =
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">' +
+                    '<div style="background:#EEF2FF;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#4F46E5">班级平均出勤率</div><div style="font-size:20px;font-weight:700;color:#4F46E5;margin-top:3px">' + avg + '%</div></div>' +
+                    '<div style="background:#F8FAFC;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#64748B">统计学生</div><div style="font-size:20px;font-weight:700;color:#1E293B;margin-top:3px">' + ATT_SUMMARY.length + ' 人</div></div>' +
+                    '<div style="background:#FEF2F2;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#DC2626">学业预警</div><div style="font-size:20px;font-weight:700;color:#DC2626;margin-top:3px">' + warn + ' 人</div></div>' +
+                '</div>' +
+                '<table><thead><tr><th>学号</th><th>姓名</th><th>应到课时</th><th>实到</th><th>迟到</th><th>请假</th><th>缺勤</th><th>出勤率</th><th>状态</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 统计口径：</span>出勤率 =（实到 + 迟到）÷ 应到课时；' +
+                    '请假不计入出勤但不算缺勤；缺勤累计达到应到课时 1/3 时标记为「学业预警」，由班主任与学生处跟进。' +
+                '</div>';
+        }
+
+        window.initAttSummary = initAttSummary;
 
         // ---------- 课堂考勤 ----------
         var ATT_STUDENTS = [
@@ -3061,13 +3562,66 @@
             var tr = btn.closest('tr');
             if (!tr) return;
             var title = tr.cells[0] ? tr.cells[0].innerText.trim() : '该作业';
-            if (!confirm('确认提交《' + title + '》吗？\\n提交后将不能修改，逾期会标记为迟交。')) return;
+            var old = document.getElementById('hw-modal');
+            if (old) old.parentNode.removeChild(old);
+
+            var m = document.createElement('div');
+            m.id = 'hw-modal';
+            m.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.45)';
+            m.innerHTML =
+                '<div style="background:#fff;border-radius:16px;width:min(500px,94vw);box-shadow:0 24px 64px rgba(15,23,42,.28)">' +
+                    '<div style="padding:18px 24px;border-bottom:1px solid #F1F5F9">' +
+                        '<div style="font-size:16px;font-weight:700;color:#1E293B">提交作业</div>' +
+                        '<div style="font-size:12px;color:#94A3B8;margin-top:3px">' + title + '</div>' +
+                    '</div>' +
+                    '<div style="padding:18px 24px;display:grid;gap:14px">' +
+                        '<label style="display:grid;gap:6px;font-size:13px;color:#475569">' +
+                            '<span style="font-weight:600">作业附件</span>' +
+                            '<input id="hw-file" type="file" style="padding:9px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;color:#1E293B">' +
+                            '<span style="font-size:12px;color:#94A3B8">支持提交文档、图片等文件（演示环境仅记录文件名）</span>' +
+                        '</label>' +
+                        '<label style="display:grid;gap:6px;font-size:13px;color:#475569">' +
+                            '<span style="font-weight:600">提交说明（选填）</span>' +
+                            '<textarea id="hw-note" rows="3" placeholder="可以向老师说明完成情况或疑问" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;color:#1E293B;resize:vertical;font-family:inherit"></textarea>' +
+                        '</label>' +
+                    '</div>' +
+                    '<div style="padding:14px 24px;border-top:1px solid #F1F5F9;display:flex;justify-content:flex-end;gap:10px">' +
+                        '<button onclick="document.getElementById(\'hw-modal\').remove()" style="padding:9px 20px;border:1px solid #E2E8F0;border-radius:9px;color:#475569;font-size:14px">取消</button>' +
+                        '<button onclick="confirmHomework(this)" style="padding:9px 22px;background:#7C3AED;color:#fff;border-radius:9px;font-size:14px;font-weight:600">确认提交</button>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(m);
+            m.addEventListener('click', function (e) { if (e.target === m) m.remove(); });
+            m._row = tr;
+            m._title = title;
+        }
+
+        function confirmHomework() {
+            var m = document.getElementById('hw-modal');
+            if (!m) return;
+            var tr = m._row, title = m._title;
+            var fileEl = document.getElementById('hw-file');
+            var noteEl = document.getElementById('hw-note');
+            var fname = (fileEl && fileEl.files && fileEl.files.length) ? fileEl.files[0].name : '';
+            var note = noteEl ? noteEl.value.trim() : '';
+            m.parentNode.removeChild(m);
+
             tr.cells[4].innerHTML = '<span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">已提交</span>';
             tr.cells[5].textContent = '待批改';
-            btn.className = 'js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors';
-            btn.textContent = '查看提交';
-            toast('已提交《' + title + '》', 'success');
+            var btn = tr.querySelector('.js-submit');
+            if (btn) {
+                btn.className = 'js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors';
+                btn.textContent = '查看提交';
+            }
+            try {
+                var rec = JSON.parse(localStorage.getItem('cy_hw_v1') || '{}');
+                rec[title] = { file: fname, note: note, at: new Date().toISOString().slice(0, 16).replace('T', ' ') };
+                localStorage.setItem('cy_hw_v1', JSON.stringify(rec));
+            } catch (e) {}
+            toast(fname ? ('已提交《' + title + '》· 附件 ' + fname) : ('已提交《' + title + '》'), 'success');
         }
+
+        window.confirmHomework = confirmHomework;
 
         window.openEval = openEval;
         window.closeEval = closeEval;
