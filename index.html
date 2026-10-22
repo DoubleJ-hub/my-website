@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.9.3
+      冲鸭教育管理系统   v1.10.0
       单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
@@ -367,6 +367,7 @@
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂考勤', this)">课堂考勤</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考勤统计', this)">考勤统计</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学进度', this)">教学进度</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('请假审批', this)">请假审批</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评语', this)">学生评语</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩录入', this)">成绩录入</div>
                 </div>
@@ -385,6 +386,7 @@
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的成绩', this)">我的成绩</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的作业', this)">我的作业</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学评价', this)">教学评价</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('请假申请', this)">请假申请</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('通知公告', this)">通知公告</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('个人信息', this)">个人信息</div>
                 </div>
@@ -424,6 +426,7 @@
                 <div id="stu-menu" class="hidden mt-1 space-y-1">
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生档案', this)">学生档案</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('班级管理', this)">班级管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学籍异动', this)">学籍异动</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考试管理', this)">考试管理</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩登记', this)">成绩登记</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩管理', this)">成绩管理</div>
@@ -481,7 +484,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.9.3 · 期中版
+            冲鸭教育 · v1.10.0 · 期中版
         </div>
     </aside>
 
@@ -1456,6 +1459,51 @@
                 </div>`;
             }
 
+
+            // A1. 学籍异动（教务）
+            else if (title === '学籍异动') {
+                refText = '休学 / 复学 / 转学 / 退学 登记与审批';
+                titleHtml = '学籍异动管理';
+                recordCount = 6;
+                html = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">
+                    <div style="background:#F8FAFC;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#64748B">本学期异动</div><div style="font-size:20px;font-weight:700;color:#1E293B;margin-top:3px">6 人次</div></div>
+                    <div style="background:#FFFBEB;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#D97706">待审批</div><div style="font-size:20px;font-weight:700;color:#D97706;margin-top:3px">2 条</div></div>
+                    <div style="background:#ECFDF5;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#059669">已生效</div><div style="font-size:20px;font-weight:700;color:#059669;margin-top:3px">4 条</div></div>
+                    <div style="background:#EEF2FF;border-radius:10px;padding:13px 15px"><div style="font-size:12px;color:#4F46E5">在读学生</div><div style="font-size:20px;font-weight:700;color:#4F46E5;margin-top:3px">1,244 人</div></div>
+                </div>
+                <table><thead><tr>
+                    <th>异动编号</th><th>学号</th><th>姓名</th><th>班级</th><th>异动类型</th>
+                    <th>申请日期</th><th>生效日期</th><th>审批状态</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>YD-2026-001</td><td>20260215</td><td>黄志强</td><td>高一(2)班</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">休学</span></td><td>2026-09-15</td><td>2026-09-20</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已生效</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium">详情</button></td></tr>
+                    <tr><td>YD-2026-002</td><td>20260222</td><td>韦丽娟</td><td>高一(3)班</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">转学</span></td><td>2026-09-28</td><td>2026-10-08</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已生效</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium">详情</button></td></tr>
+                    <tr><td>YD-2026-003</td><td>20260311</td><td>莫小龙</td><td>高二(1)班</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">休学</span></td><td>2026-10-10</td><td>2026-10-25</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待审批</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium">审批</button></td></tr>
+                    <tr><td>YD-2026-004</td><td>20260118</td><td>覃思思</td><td>高一(1)班</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">复学</span></td><td>2026-10-12</td><td>2026-10-14</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已生效</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium">详情</button></td></tr>
+                    <tr><td>YD-2026-005</td><td>20260402</td><td>李伟明</td><td>高二(3)班</td><td><span class="bg-red-50 text-red-600 px-2 py-1 rounded text-xs font-medium">退学</span></td><td>2026-10-15</td><td>—</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待审批</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium">审批</button></td></tr>
+                    <tr><td>YD-2026-006</td><td>20260099</td><td>周小敏</td><td>高一(2)班</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">转学</span></td><td>2026-10-16</td><td>2026-10-20</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已生效</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium">详情</button></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📋 业务规则：</span>异动申请须经教务审批后才生效；休学学生学籍保留但移出在读名单；复学须在休学期满前提出；退学为终态，不可撤销；转学需原校与新校双方确认。
+                </div>`;
+            }
+
+            // A2. 请假申请（学生）
+            else if (title === '请假申请') {
+                refText = '提交请假申请 —— 由任课教师或班主任审批';
+                titleHtml = '请假申请';
+                recordCount = 0;
+                html = '<div id="leave-box" style="padding:2px 0 12px"></div>';
+            }
+
+            // A3. 请假审批（教师）
+            else if (title === '请假审批') {
+                refText = '审批本班学生请假申请 —— 批准后自动计入考勤';
+                titleHtml = '请假审批';
+                recordCount = 0;
+                html = '<div id="leave-approve" style="padding:2px 0 12px"></div>';
+            }
+
             // E1. 考试管理
             else if (title === '考试管理') {
                 refText = '考试批次与考场安排 —— 共 4 场';
@@ -1815,7 +1863,7 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -2609,6 +2657,16 @@
                 enhanceToolbar();
                 return;
             }
+            if (title === '请假申请') {
+                setTimeout(function () { if (window.initLeave) initLeave(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '请假审批') {
+                setTimeout(function () { if (window.initLeaveApprove) initLeaveApprove(); }, 0);
+                enhanceToolbar();
+                return;
+            }
             if (title === '成绩录入') {
                 setTimeout(function () { if (window.initTScore) initTScore(); }, 0);
                 enhanceToolbar();
@@ -2941,6 +2999,143 @@
         window.selectCourse = selectCourse;
         window.dropCourse = dropCourse;
         window.initMyCourses = initMyCourses;
+
+        // ---------- 请假申请 / 审批 ----------
+        var LEAVE_KEY = 'cy_leave_v1';
+        var LEAVE_DEFAULT = [
+            { id: 'QJ-2026-001', stu: '20260101', name: '张小明', cls: '高一(1)班', type: '病假',
+              from: '2026-10-20', to: '2026-10-20', reason: '感冒发烧，医院就诊', status: '已批准', by: '王建国' },
+            { id: 'QJ-2026-002', stu: '20260103', name: '王强', cls: '高一(1)班', type: '事假',
+              from: '2026-10-24', to: '2026-10-25', reason: '家中有事需返家', status: '待审批', by: '' }
+        ];
+
+        function leaveAll() {
+            try {
+                var raw = localStorage.getItem(LEAVE_KEY);
+                if (!raw) return JSON.parse(JSON.stringify(LEAVE_DEFAULT));
+                var a = JSON.parse(raw);
+                return Array.isArray(a) ? a : JSON.parse(JSON.stringify(LEAVE_DEFAULT));
+            } catch (e) { return JSON.parse(JSON.stringify(LEAVE_DEFAULT)); }
+        }
+        function leaveSave(a) {
+            try { localStorage.setItem(LEAVE_KEY, JSON.stringify(a)); } catch (e) {}
+        }
+
+        function initLeave() {
+            var box = document.getElementById('leave-box');
+            if (!box) return;
+            var all = leaveAll();
+            var mine = all.filter(function (r) { return r.stu === '20260101'; });
+
+            var rows = '';
+            mine.forEach(function (r) {
+                var c = r.status === '已批准' ? ['#059669', '#ECFDF5'] :
+                        (r.status === '已驳回' ? ['#DC2626', '#FEF2F2'] : ['#D97706', '#FFFBEB']);
+                rows += '<tr><td>' + r.id + '</td><td>' + r.type + '</td><td>' + r.from + (r.to !== r.from ? ' 至 ' + r.to : '') + '</td>' +
+                    '<td>' + r.reason + '</td><td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' + c[0] + ';background:' + c[1] + '">' + r.status + '</span></td></tr>';
+            });
+            if (!rows) {
+                rows = '<tr><td colspan="5" style="text-align:center;color:#94A3B8;padding:26px">暂无请假记录</td></tr>';
+            }
+
+            box.innerHTML =
+                '<div style="background:#F8FAFC;border-radius:12px;padding:16px;margin-bottom:16px">' +
+                    '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:10px">提交新的请假申请</div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">请假类型' +
+                            '<select id="lv-type" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"><option>病假</option><option>事假</option><option>公假</option></select></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">开始日期' +
+                            '<input id="lv-from" type="date" value="2026-10-26" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">结束日期' +
+                            '<input id="lv-to" type="date" value="2026-10-26" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B;flex:1;min-width:180px">请假事由' +
+                            '<input id="lv-reason" type="text" placeholder="请说明请假原因" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"></label>' +
+                        '<button onclick="submitLeave()" style="padding:9px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">提交申请</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:8px">我的请假记录</div>' +
+                '<table><thead><tr><th>申请编号</th><th>类型</th><th>请假日期</th><th>事由</th><th>审批状态</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 流程说明：</span>提交后状态为「待审批」，由任课教师或班主任审批；批准后该时段考勤自动记为「请假」，不计缺勤。' +
+                '</div>';
+        }
+
+        function submitLeave() {
+            var type = (document.getElementById('lv-type') || {}).value || '事假';
+            var from = (document.getElementById('lv-from') || {}).value || '';
+            var to = (document.getElementById('lv-to') || {}).value || '';
+            var reason = ((document.getElementById('lv-reason') || {}).value || '').trim();
+            if (!from || !to) { toast('请选择请假日期', 'error'); return; }
+            if (to < from) { toast('结束日期不能早于开始日期', 'error'); return; }
+            if (!reason) { toast('请填写请假事由', 'error'); return; }
+            var all = leaveAll();
+            var no = 'QJ-2026-' + String(all.length + 1).padStart(3, '0');
+            all.push({ id: no, stu: '20260101', name: '张小明', cls: '高一(1)班', type: type,
+                       from: from, to: to, reason: reason, status: '待审批', by: '' });
+            leaveSave(all);
+            toast('请假申请已提交，等待教师审批', 'success');
+            initLeave();
+        }
+
+        function initLeaveApprove() {
+            var box = document.getElementById('leave-approve');
+            if (!box) return;
+            var all = leaveAll();
+            var pending = all.filter(function (r) { return r.status === '待审批'; });
+            var history = all.filter(function (r) { return r.status !== '待审批'; });
+
+            var pRows = '';
+            if (!pending.length) {
+                pRows = '<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:26px">暂无待审批的请假申请</td></tr>';
+            } else {
+                pending.forEach(function (r) {
+                    pRows += '<tr><td>' + r.id + '</td><td><b>' + r.name + '</b><br><span style="font-size:11px;color:#94A3B8">' + r.stu + '</span></td>' +
+                        '<td>' + r.type + '</td><td>' + r.from + (r.to !== r.from ? ' 至 ' + r.to : '') + '</td>' +
+                        '<td style="max-width:220px">' + r.reason + '</td>' +
+                        '<td><button onclick="approveLeave(\'' + r.id + '\',1)" style="padding:5px 12px;background:#059669;color:#fff;border-radius:6px;font-size:12px;font-weight:600;margin-right:6px">批准</button>' +
+                        '<button onclick="approveLeave(\'' + r.id + '\',0)" style="padding:5px 12px;border:1px solid #FECACA;border-radius:6px;font-size:12px;color:#DC2626;background:#fff">驳回</button></td></tr>';
+                });
+            }
+
+            var hRows = '';
+            history.forEach(function (r) {
+                var c = r.status === '已批准' ? ['#059669', '#ECFDF5'] : ['#DC2626', '#FEF2F2'];
+                hRows += '<tr><td>' + r.id + '</td><td>' + r.name + '</td><td>' + r.type + '</td><td>' + r.from + '</td>' +
+                    '<td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' + c[0] + ';background:' + c[1] + '">' + r.status + '</span></td></tr>';
+            });
+            if (!hRows) hRows = '<tr><td colspan="5" style="text-align:center;color:#94A3B8;padding:20px">暂无历史记录</td></tr>';
+
+            box.innerHTML =
+                '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
+                    '<span style="font-size:14px;font-weight:600;color:#1E293B">待审批</span>' +
+                    '<span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:#D97706;background:#FFFBEB">' + pending.length + ' 条</span>' +
+                '</div>' +
+                '<table style="margin-bottom:20px"><thead><tr><th>申请编号</th><th>学生</th><th>类型</th><th>请假日期</th><th>事由</th><th>操作</th></tr></thead><tbody>' + pRows + '</tbody></table>' +
+                '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:8px">审批记录</div>' +
+                '<table><thead><tr><th>申请编号</th><th>学生</th><th>类型</th><th>请假日期</th><th>结果</th></tr></thead><tbody>' + hRows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 说明：</span>批准后该学生对应日期的考勤自动记为「请假」；驳回需在记录中注明理由（演示环境从简）。' +
+                '</div>';
+        }
+
+        function approveLeave(id, pass) {
+            var all = leaveAll();
+            for (var i = 0; i < all.length; i++) {
+                if (all[i].id === id) {
+                    all[i].status = pass ? '已批准' : '已驳回';
+                    all[i].by = '王建国';
+                    break;
+                }
+            }
+            leaveSave(all);
+            toast(pass ? '已批准该请假申请' : '已驳回该请假申请', pass ? 'success' : 'info');
+            initLeaveApprove();
+        }
+
+        window.initLeave = initLeave;
+        window.submitLeave = submitLeave;
+        window.initLeaveApprove = initLeaveApprove;
+        window.approveLeave = approveLeave;
 
         // ---------- 成绩录入（教师端，仅本人班级） ----------
         var TSCORE_KEY = 'cy_tscore_v1';
