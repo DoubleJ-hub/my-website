@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.10.0
+      冲鸭教育管理系统   v1.10.1
       单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
@@ -366,6 +366,7 @@
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的班级', this)">我的班级</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂考勤', this)">课堂考勤</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考勤统计', this)">考勤统计</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('工作量统计', this)">工作量统计</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学进度', this)">教学进度</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('请假审批', this)">请假审批</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评语', this)">学生评语</div>
@@ -429,7 +430,7 @@
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学籍异动', this)">学籍异动</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考试管理', this)">考试管理</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩登记', this)">成绩登记</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩管理', this)">成绩管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩台账', this)">成绩台账</div>
                 </div>
             </div>
             <!-- 老师管理 -->
@@ -484,7 +485,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.10.0 · 期中版
+            冲鸭教育 · v1.10.1 · 期中版
         </div>
     </aside>
 
@@ -867,9 +868,9 @@
                 </tbody></table>`;
             }
             // 7. 成绩管理 (表4.8)
-            else if (title === '成绩管理') {
-                refText = '对应表4.8 成绩';
-                titleHtml = '成绩管理';
+            else if (title === '成绩台账') {
+                refText = '全部成绩记录 —— 仅供查询与导出，成绩录入请前往「成绩登记」';
+                titleHtml = '成绩台账';
                 recordCount = 3;
                 html = `
                 <table><thead><tr>
@@ -879,7 +880,15 @@
                     <tr><td>1</td><td>20260101</td><td>88</td><td>2026</td><td>第一学期</td><td>85</td><td>90</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>1</td><td>20260102</td><td>92</td><td>2026</td><td>第一学期</td><td>89</td><td>94</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
                     <tr><td>2</td><td>20260101</td><td>85</td><td>2026</td><td>第一学期</td><td>82</td><td>87</td><td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
-                </tbody></table>`;
+                </tbody></table>
+                <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#F8FAFC;border-radius:10px">
+                    <span style="font-size:13px;color:#64748B">
+                        <span style="font-weight:600;color:#475569">📋 职责分工：</span>
+                        成绩由任课教师在「成绩录入」提交、教务在「成绩登记」审核入账；本页仅用于查询、核对与导出。
+                    </span>
+                    <button onclick="(function(){var el=Array.prototype.slice.call(document.querySelectorAll('[onclick]')).filter(function(n){return (n.getAttribute('onclick')||'').indexOf(\"changeContent('成绩登记'\")===0;})[0]; if(el) changeContent('成绩登记', el);})()"
+                        style="padding:7px 16px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap">去成绩登记</button>
+                </div>`;
             }
             // 8. 学生评教 (表4.7)
             else if (title === '学生评教') {
@@ -1411,6 +1420,15 @@
                 html = '<div id="tscore-box" style="padding:2px 0 12px"></div>';
             }
 
+
+            // T3d. 工作量统计
+            else if (title === '工作量统计') {
+                refText = '本学期任课与课时统计 —— 王建国（数学）';
+                titleHtml = '教师工作量统计';
+                recordCount = 0;
+                html = '<div id="workload-box" style="padding:2px 0 12px"></div>';
+            }
+
             // T4. 教学进度
             else if (title === '教学进度') {
                 refText = '本人任教课程的教学进度 —— 高一(1)班 数学';
@@ -1571,6 +1589,8 @@
                     </div>
                     <button onclick="saveScores()" style="padding:9px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">保存本场成绩</button>
                     <button onclick="initScorePage()" style="padding:9px 16px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#475569;background:#fff">重置为已存数据</button>
+                    <button onclick="(function(){var el=Array.prototype.slice.call(document.querySelectorAll('[onclick]')).filter(function(n){return (n.getAttribute('onclick')||'').indexOf(\"changeContent('成绩台账'\")===0;})[0]; if(el) changeContent('成绩台账', el);})()"
+                        style="padding:9px 16px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#475569;background:#fff">查看成绩台账</button>
                     <span id="score-hint" style="font-size:13px;color:#94A3B8;margin-left:auto"></span>
                 </div>
                 <table id="score-table"><thead><tr>
@@ -1863,7 +1883,7 @@
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '选课中心', '我的课程', '课堂签到', '考勤统计', '成绩录入', '请假申请', '请假审批', '学籍异动', '工作量统计', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -2657,6 +2677,11 @@
                 enhanceToolbar();
                 return;
             }
+            if (title === '工作量统计') {
+                setTimeout(function () { if (window.initWorkload) initWorkload(); }, 0);
+                enhanceToolbar();
+                return;
+            }
             if (title === '请假申请') {
                 setTimeout(function () { if (window.initLeave) initLeave(); }, 0);
                 enhanceToolbar();
@@ -2999,6 +3024,88 @@
         window.selectCourse = selectCourse;
         window.dropCourse = dropCourse;
         window.initMyCourses = initMyCourses;
+
+        // ---------- 教师工作量统计 ----------
+        var WORKLOAD = [
+            { course: '数学', cls: '高一(1)班', weekly: 4, weeks: 20, students: 36, done: 16, color: '#4F46E5' },
+            { course: '数学', cls: '高一(2)班', weekly: 2, weeks: 20, students: 36, done: 16, color: '#7C3AED' },
+            { course: '数学', cls: '高一(3)班', weekly: 2, weeks: 20, students: 36, done: 16, color: '#A21CAF' },
+            { course: '数学', cls: '高一(1)班（答疑）', weekly: 1, weeks: 20, students: 12, done: 8, color: '#0EA5E9' }
+        ];
+
+        function initWorkload() {
+            var box = document.getElementById('workload-box');
+            if (!box) return;
+            var courses = WORKLOAD.length;
+            var weekly = 0, total = 0, students = 0, doneTotal = 0;
+            WORKLOAD.forEach(function (w) {
+                weekly += w.weekly;
+                total += w.weekly * w.weeks;
+                doneTotal += w.weekly * w.done;
+            });
+            students = 108;
+
+            var cards = [
+                ['任课门数', courses + ' 个班课', '#4F46E5', '#EEF2FF'],
+                ['周课时', weekly + ' 节', '#7C3AED', '#F5F3FF'],
+                ['学期总课时', total + ' 节', '#0EA5E9', '#F0F9FF'],
+                ['任教学生', students + ' 人', '#059669', '#ECFDF5']
+            ];
+            var statHtml = '';
+            cards.forEach(function (c) {
+                statHtml += '<div style="background:' + c[3] + ';border-radius:10px;padding:14px 16px">' +
+                    '<div style="font-size:12px;color:' + c[2] + '">' + c[0] + '</div>' +
+                    '<div style="font-size:21px;font-weight:700;color:' + c[2] + ';margin-top:3px">' + c[1] + '</div></div>';
+            });
+
+            var maxWeekly = 4;
+            var bars = '';
+            WORKLOAD.forEach(function (w) {
+                var pct = Math.round(w.weekly / maxWeekly * 100);
+                bars += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">' +
+                    '<div style="width:150px;font-size:12px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + w.course + ' · ' + w.cls + '</div>' +
+                    '<div style="flex:1;height:9px;background:#F1F5F9;border-radius:99px;overflow:hidden">' +
+                        '<div style="width:' + pct + '%;height:100%;background:' + w.color + ';border-radius:99px"></div></div>' +
+                    '<span style="width:34px;text-align:right;font-size:12px;font-weight:600;color:#475569">' + w.weekly + '节</span>' +
+                '</div>';
+            });
+
+            var rows = '';
+            WORKLOAD.forEach(function (w) {
+                var term = w.weekly * w.weeks;
+                var doneH = w.weekly * w.done;
+                var pct = Math.round(doneH / term * 100);
+                rows += '<tr>' +
+                    '<td><b>' + w.course + '</b></td>' +
+                    '<td>' + w.cls + '</td>' +
+                    '<td>' + w.students + '</td>' +
+                    '<td>' + w.weekly + '</td>' +
+                    '<td>' + term + '</td>' +
+                    '<td>' + doneH + '</td>' +
+                    '<td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;min-width:56px;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:' + w.color + '"></div></div><span style="font-size:12px;color:#64748B;white-space:nowrap">' + pct + '%</span></div></td>' +
+                    '</tr>';
+            });
+
+            var overall = Math.round(doneTotal / total * 100);
+
+            box.innerHTML =
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px">' + statHtml + '</div>' +
+                '<div style="background:#FAFBFC;border:1px solid #F1F5F9;border-radius:12px;padding:16px 18px;margin-bottom:18px">' +
+                    '<div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:12px">周课时分布</div>' + bars +
+                '</div>' +
+                '<table><thead><tr><th>课程</th><th>班级</th><th>学生数</th><th>周课时</th><th>学期课时</th><th>已完成</th><th>进度</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F8FAFC;border-radius:10px">' +
+                    '<span style="font-size:13px;color:#64748B">学期整体进度</span>' +
+                    '<div style="flex:1;height:8px;background:#E2E8F0;border-radius:99px;overflow:hidden"><div style="width:' + overall + '%;height:100%;background:linear-gradient(90deg,#8B5CF6,#D946EF)"></div></div>' +
+                    '<span style="font-size:13px;font-weight:700;color:#7C3AED">' + overall + '%</span>' +
+                '</div>' +
+                '<div style="margin-top:10px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📌 统计口径：</span>周课时按教务排课表统计；学期课时 = 周课时 × 20 教学周；' +
+                    '工作量作为教师考核与排课均衡的依据，由教务主任查看。' +
+                '</div>';
+        }
+
+        window.initWorkload = initWorkload;
 
         // ---------- 请假申请 / 审批 ----------
         var LEAVE_KEY = 'cy_leave_v1';
