@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <!--
     ==============================================================================
-      冲鸭教育管理系统   v1.13.1
+      冲鸭教育管理系统   v1.15.0
       单文件静态 Web 应用  ·  HTML5 + CSS3 + 原生 JavaScript（零框架依赖）
     ==============================================================================
     
@@ -328,6 +328,13 @@
             .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
             .lg\:col-span-2 { grid-column: span 2 / span 2; }
         }
+        /* 菜单当前项高亮 */
+        nav [data-page] { position: relative; }
+        nav [data-page].menu-active { background: #EFF6FF; color: #2563EB; font-weight: 600; }
+        nav [data-page].menu-active::before {
+            content: ''; position: absolute; left: 22px; width: 3px; height: 14px;
+            border-radius: 2px; background: #2563EB;
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden text-slate-800">
@@ -344,149 +351,147 @@
             </div>
             <button class="md:hidden text-slate-400" onclick="closeSidebar()">✕</button>
         </div>
-        <nav class="flex-1 px-3 py-4 space-y-1 text-sm text-slate-600 overflow-y-auto">
-            <!-- 仪表盘 -->
-            <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('仪表盘', this)">
-                <span>📊</span> <span>数据概览</span>
+                <nav class="flex-1 px-3 py-3 text-sm text-slate-600 overflow-y-auto">
+            <div class="mb-3">
+                <input id="menu-search" type="text" placeholder="搜索功能…" oninput="applyMenuVisibility()"
+                       class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all"
+                       style="font-size:13px">
             </div>
-            <!-- 数据分析 -->
-            <div class="mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('数据分析', this)">
-                    <span>📈</span> <span>数据分析</span>
-                </div>
-            </div>
-            <!-- 教师工作台 -->
-            <div class="menu-group mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('twork')">
-                    <div class="flex items-center space-x-3"><span>👩‍🏫</span> <span>教师工作台</span></div>
-                    <span class="text-xs text-slate-400">▼</span>
-                </div>
-                <div id="twork-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表_师', this)">我的课表</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的班级', this)">我的班级</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂考勤', this)">课堂考勤</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考勤统计', this)">考勤统计</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('工作量统计', this)">工作量统计</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学进度', this)">教学进度</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('请假审批', this)">请假审批</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评语', this)">学生评语</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩录入', this)">成绩录入</div>
-                </div>
-            </div>
-            <!-- 我的学习（学生端工作区） -->
-            <div class="menu-group mt-2">
+            <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" data-page="仪表盘" data-key="dashboard" onclick="changeContent('仪表盘', this)"><span>📊</span> <span>数据概览</span></div>
+            <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" data-page="数据分析" data-key="analysis" onclick="changeContent('数据分析', this)"><span>📈</span> <span>数据分析</span></div>
+
+            <div class="menu-group mt-2" data-key="mine">
                 <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('mine')">
-                    <div class="flex items-center space-x-3"><span>🎒</span> <span>我的学习</span></div>
+                    <div class="flex items-center space-x-3"><span>📚</span> <span>我的学习</span></div>
                     <span class="text-xs text-slate-400">▼</span>
                 </div>
                 <div id="mine-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表', this)">我的课表</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('选课中心', this)">选课中心</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课程', this)">我的课程</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的成绩', this)">我的成绩</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学习进度', this)">学习进度</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的作业', this)">我的作业</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学评价', this)">教学评价</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('请假申请', this)">请假申请</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('通知公告', this)">通知公告</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('个人信息', this)">个人信息</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="我的课表" onclick="changeContent('我的课表', this)">我的课表</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="选课中心" onclick="changeContent('选课中心', this)">选课中心</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="我的课程" onclick="changeContent('我的课程', this)">我的课程</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="学习进度" onclick="changeContent('学习进度', this)">学习进度</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="我的成绩" onclick="changeContent('我的成绩', this)">我的成绩</div>
                 </div>
             </div>
-            <!-- 劳务管理（实验五：劳务管理系统） -->
-            <div class="menu-group mt-2">
+            <div class="menu-group mt-2" data-key="mine2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('mine2')">
+                    <div class="flex items-center space-x-3"><span>🗂️</span> <span>我的事务</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="mine2-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="我的作业" onclick="changeContent('我的作业', this)">我的作业</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="教学评价" onclick="changeContent('教学评价', this)">教学评价</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="请假申请" onclick="changeContent('请假申请', this)">请假申请</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="通知公告" onclick="changeContent('通知公告', this)">通知公告</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="个人信息" onclick="changeContent('个人信息', this)">个人信息</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="twork">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('twork')">
+                    <div class="flex items-center space-x-3"><span>👩‍🏫</span> <span>教学工作</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="twork-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="我的课表_师" onclick="changeContent('我的课表_师', this)">我的课表_师</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="我的班级" onclick="changeContent('我的班级', this)">我的班级</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="课堂考勤" onclick="changeContent('课堂考勤', this)">课堂考勤</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="考勤统计" onclick="changeContent('考勤统计', this)">考勤统计</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="工作量统计" onclick="changeContent('工作量统计', this)">工作量统计</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="twork2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('twork2')">
+                    <div class="flex items-center space-x-3"><span>📝</span> <span>教学事务</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="twork2-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="教学进度" onclick="changeContent('教学进度', this)">教学进度</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="学生评语" onclick="changeContent('学生评语', this)">学生评语</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="请假审批" onclick="changeContent('请假审批', this)">请假审批</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="调课申请" onclick="changeContent('调课申请', this)">调课申请</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="成绩录入" onclick="changeContent('成绩录入', this)">成绩录入</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="stu">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('stu')">
+                    <div class="flex items-center space-x-3"><span>🎓</span> <span>学籍管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="stu-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="学生档案" onclick="changeContent('学生档案', this)">学生档案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="班级管理" onclick="changeContent('班级管理', this)">班级管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="学籍异动" onclick="changeContent('学籍异动', this)">学籍异动</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="teacher">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('teacher')">
+                    <div class="flex items-center space-x-3"><span>📦</span> <span>教学管理</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="teacher-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="师资档案" onclick="changeContent('师资档案', this)">师资档案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="课程管理" onclick="changeContent('课程管理', this)">课程管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="课表管理" onclick="changeContent('课表管理', this)">课表管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="调课审批" onclick="changeContent('调课审批', this)">调课审批</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="教材管理" onclick="changeContent('教材管理', this)">教材管理</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="exam">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('exam')">
+                    <div class="flex items-center space-x-3"><span>📋</span> <span>考试与成绩</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="exam-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="考试管理" onclick="changeContent('考试管理', this)">考试管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="成绩登记" onclick="changeContent('成绩登记', this)">成绩登记</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="成绩台账" onclick="changeContent('成绩台账', this)">成绩台账</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="学生评教" onclick="changeContent('学生评教', this)">学生评教</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="hw">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('hw')">
+                    <div class="flex items-center space-x-3"><span>📢</span> <span>作业与资源</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="hw-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="作业布置" onclick="changeContent('作业布置', this)">作业布置</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="作业提交" onclick="changeContent('作业提交', this)">作业提交</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="作业批改" onclick="changeContent('作业批改', this)">作业批改</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="课件资源" onclick="changeContent('课件资源', this)">课件资源</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="题库管理" onclick="changeContent('题库管理', this)">题库管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="奖学金管理" onclick="changeContent('奖学金管理', this)">奖学金管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="新闻管理" onclick="changeContent('新闻管理', this)">新闻管理</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="sys">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('sys')">
+                    <div class="flex items-center space-x-3"><span>⚙️</span> <span>系统设置</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="sys-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="教务管理员信息" onclick="changeContent('教务管理员信息', this)">教务管理员信息</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="角色权限" onclick="changeContent('角色权限', this)">角色权限</div>
+                </div>
+            </div>
+            <div class="menu-group mt-2" data-key="lw">
                 <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('lw')">
                     <div class="flex items-center space-x-3"><span>🏗️</span> <span>劳务管理</span></div>
                     <span class="text-xs text-slate-400">▼</span>
                 </div>
                 <div id="lw-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('建筑劳务备案', this)">建筑劳务备案</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('劳务合同管理', this)">劳务合同管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('工程项目管理', this)">工程项目管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('派遣考勤管理', this)">派遣考勤管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('工资管理', this)">工资管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('劳务查询统计', this)">查询统计</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('劳务系统管理', this)">劳务系统管理</div>
-                </div>
-            </div>
-            <!-- 系统管理 -->
-            <div class="menu-group mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('sys')">
-                    <div class="flex items-center space-x-3"><span>⚙️</span> <span>系统管理</span></div>
-                    <span class="text-xs text-slate-400">▼</span>
-                </div>
-                <div id="sys-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教务管理员信息', this)">教务管理员信息</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('角色权限', this)">角色权限</div>
-                </div>
-            </div>
-            <!-- 学生管理 -->
-            <div class="menu-group mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('stu')">
-                    <div class="flex items-center space-x-3"><span>👨‍🎓</span> <span>学生管理</span></div>
-                    <span class="text-xs text-slate-400">▼</span>
-                </div>
-                <div id="stu-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生档案', this)">学生档案</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('班级管理', this)">班级管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学籍异动', this)">学籍异动</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考试管理', this)">考试管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩登记', this)">成绩登记</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩台账', this)">成绩台账</div>
-                </div>
-            </div>
-            <!-- 老师管理 -->
-            <div class="menu-group mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('teacher')">
-                    <div class="flex items-center space-x-3"><span>👩‍🏫</span> <span>老师管理</span></div>
-                    <span class="text-xs text-slate-400">▼</span>
-                </div>
-                <div id="teacher-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('师资档案', this)">师资档案</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课程管理', this)">课程管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课表管理', this)">课表管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评教', this)">学生评教</div>
-                </div>
-            </div>
-            <!-- 作业管理 -->
-            <div class="menu-group mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('hw')">
-                    <div class="flex items-center space-x-3"><span>📝</span> <span>作业管理</span></div>
-                    <span class="text-xs text-slate-400">▼</span>
-                </div>
-                <div id="hw-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('作业布置', this)">作业布置</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('作业提交', this)">作业提交</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('作业批改', this)">作业批改</div>
-                </div>
-            </div>
-            <!-- 资源库管理 -->
-            <div class="menu-group mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('res')">
-                    <div class="flex items-center space-x-3"><span>📦</span> <span>资源库管理</span></div>
-                    <span class="text-xs text-slate-400">▼</span>
-                </div>
-                <div id="res-menu" class="hidden mt-1 space-y-1">
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课件资源', this)">课件资源</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教材管理', this)">教材管理</div>
-                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('题库管理', this)">题库管理</div>
-                </div>
-            </div>
-            <!-- 奖学金管理 -->
-            <div class="mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('奖学金管理', this)">
-                    <span>🏆</span> <span>奖学金管理</span>
-                </div>
-            </div>
-            <!-- 新闻管理 -->
-            <div class="mt-2">
-                <div class="px-4 py-2.5 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition-colors" onclick="changeContent('新闻管理', this)">
-                    <span>📰</span> <span>新闻管理</span>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="建筑劳务备案" onclick="changeContent('建筑劳务备案', this)">建筑劳务备案</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="劳务合同管理" onclick="changeContent('劳务合同管理', this)">劳务合同管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="工程项目管理" onclick="changeContent('工程项目管理', this)">工程项目管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="派遣考勤管理" onclick="changeContent('派遣考勤管理', this)">派遣考勤管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="工资管理" onclick="changeContent('工资管理', this)">工资管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="劳务查询统计" onclick="changeContent('劳务查询统计', this)">劳务查询统计</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" data-page="劳务系统管理" onclick="changeContent('劳务系统管理', this)">劳务系统管理</div>
                 </div>
             </div>
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.13.1 · 期中版
+            冲鸭教育 · v1.15.0 · 期中版
         </div>
     </aside>
 
@@ -650,8 +655,58 @@
             document.getElementById('overlay').classList.add('hidden');
         }
 
+        // 手风琴：展开一个菜单组时自动收起其它
         function toggleMenu(id) {
-            document.getElementById(id + '-menu').classList.toggle('hidden');
+            var target = document.getElementById(id + '-menu');
+            if (!target) return;
+            var opening = target.classList.contains('hidden');
+            document.querySelectorAll('nav [id$="-menu"]').forEach(function (m) {
+                if (m.id !== id + '-menu') m.classList.add('hidden');
+            });
+            if (opening) target.classList.remove('hidden');
+            else target.classList.add('hidden');
+        }
+
+        // 角色权限 + 搜索 综合计算菜单可见性
+        function applyMenuVisibility() {
+            var nav = document.querySelector('nav');
+            if (!nav) return;
+            var q = ((document.getElementById('menu-search') || {}).value || '').trim();
+            nav.querySelectorAll('.menu-group').forEach(function (g) {
+                var allowed = g.getAttribute('data-allowed') !== '0';
+                var vis = 0;
+                g.querySelectorAll('[data-page]').forEach(function (it) {
+                    var hit = !q || it.getAttribute('data-page').indexOf(q) >= 0;
+                    it.style.display = hit ? '' : 'none';
+                    if (hit) vis++;
+                });
+                g.style.display = (allowed && (!q || vis > 0)) ? '' : 'none';
+                var body = g.querySelector('[id$="-menu"]');
+                if (body) { if (q) body.classList.remove('hidden'); else body.classList.add('hidden'); }
+            });
+            nav.querySelectorAll(':scope > [data-page]').forEach(function (it) {
+                var allowed = it.getAttribute('data-allowed') !== '0';
+                var hit = !q || it.getAttribute('data-page').indexOf(q) >= 0;
+                it.style.display = (allowed && hit) ? '' : 'none';
+            });
+        }
+
+        // 定位当前页：展开分组并高亮
+        function syncMenuActive(title) {
+            var nav = document.querySelector('nav');
+            if (!nav) return;
+            var target = null;
+            nav.querySelectorAll('[data-page]').forEach(function (it) {
+                it.classList.remove('menu-active');
+                if (it.getAttribute('data-page') === title) target = it;
+            });
+            if (!target) return;
+            target.classList.add('menu-active');
+            var g = target.closest('.menu-group');
+            if (g) {
+                var body = g.querySelector('[id$="-menu"]');
+                if (body) body.classList.remove('hidden');
+            }
         }
 
         // 当前页面数据记录数（用于分页器显示）
@@ -1428,6 +1483,22 @@
                 titleHtml = '教师工作量统计';
                 recordCount = 0;
                 html = '<div id="workload-box" style="padding:2px 0 12px"></div>';
+            }
+
+            // T3e. 调课申请（教师）
+            else if (title === '调课申请') {
+                refText = '提交调课申请 —— 经教务审批通过后生效';
+                titleHtml = '调课申请';
+                recordCount = 0;
+                html = '<div id="adjust-box" style="padding:2px 0 12px"></div>';
+            }
+
+            // A4. 调课审批（教务）
+            else if (title === '调课审批') {
+                refText = '审批教师提交的调课申请 —— 通过后更新课表';
+                titleHtml = '调课审批';
+                recordCount = 0;
+                html = '<div id="adjust-approve" style="padding:2px 0 12px"></div>';
             }
 
             // T4. 教学进度（可标记章节完成，联动学生端）
@@ -2389,6 +2460,8 @@
         window.changeContent = function (title, el) {
             _cc(title, el);
             currentTitle = title;
+            try { syncMenuActive(title); } catch (e) {}
+
             if (title && title !== '仪表盘') {
                 applyView(title);
                 setTimeout(function () {
@@ -2402,12 +2475,11 @@
         // ---------- 角色权限：菜单可见性 ----------
         // 与实验五报告中的"数据范围隔离"设计保持一致
         var ROLE_MENUS = {
-            '超级管理员': ['dashboard', 'analysis', 'mine', 'twork', 'sys', 'stu', 'teacher',
-                           'hw', 'res', 'lw', 'scholarship', 'news'],
-            '教务管理员': ['dashboard', 'analysis', 'sys', 'stu', 'teacher', 'hw', 'res',
-                           'scholarship', 'news'],
-            '授课教师': ['dashboard', 'twork', 'teacher', 'hw', 'res'],
-            '学生': ['mine'],
+            '超级管理员': ['dashboard', 'analysis', 'mine', 'mine2', 'twork', 'twork2',
+                           'stu', 'teacher', 'exam', 'hw', 'sys', 'lw'],
+            '教务管理员': ['dashboard', 'analysis', 'stu', 'teacher', 'exam', 'hw', 'sys'],
+            '授课教师': ['dashboard', 'analysis', 'twork', 'twork2', 'hw'],
+            '学生': ['mine', 'mine2'],
             '劳务管理员': ['dashboard', 'analysis', 'lw'],
             '项目经理': ['dashboard', 'analysis', 'lw'],
             '财务人员': ['dashboard', 'analysis', 'lw']
@@ -2415,87 +2487,41 @@
 
         function applyRoleMenus(role) {
             var allow = ROLE_MENUS[role] || ROLE_MENUS['教务管理员'];
-            // 菜单组：按 toggleMenu 的 id 定位其外层容器
-            var groups = document.querySelectorAll('nav .menu-group');
-            var groupKeys = ['sys', 'stu', 'teacher', 'hw', 'res', 'lw'];
-            // 奖学金 / 新闻 是独立项（不在 menu-group 内），单独处理
-            for (var i = 0; i < groups.length; i++) {
-                var g = groups[i];
-                var key = null;
-                for (var k = 0; k < groupKeys.length; k++) {
-                    if (g.querySelector("#" + groupKeys[k] + "-menu") || 
-                        (g.querySelector('[onclick*="toggleMenu(\'' + groupKeys[k] + '\')"]'))) {
-                        key = groupKeys[k];
-                        break;
-                    }
-                }
-                if (key) {
-                    g.style.display = allow.indexOf(key) >= 0 ? '' : 'none';
-                }
-            }
-            // 独立菜单项：数据概览、数据分析、奖学金、新闻
-            // 注意：onclick 可能挂在内层元素上，需向上找到 nav 的顶层子元素再隐藏
             var nav = document.querySelector('nav');
-            if (nav) {
-                var needMap = {
-                    '仪表盘': 'dashboard', '数据分析': 'analysis',
-                    '奖学金管理': 'scholarship', '新闻管理': 'news'
-                };
-                var nodes = nav.querySelectorAll('[onclick]');
-                for (var j = 0; j < nodes.length; j++) {
-                    var n = nodes[j];
-                    var oc = n.getAttribute('onclick') || '';
-                    var mm = oc.match(/changeContent\('([^']+)'/);
-                    if (!mm) continue;
-                    var need = needMap[mm[1]];
-                    if (!need) continue;
-                    var top = n;
-                    var guard = 0;
-                    while (top.parentElement && top.parentElement !== nav && guard < 10) {
-                        top = top.parentElement;
-                        guard++;
-                    }
-                    if (top.parentElement === nav) {
-                        top.style.display = (allow.indexOf(need) >= 0) ? '' : 'none';
-                    }
-                }
-            }
-            // 若当前页不在允许范围，回到数据概览
+            if (!nav) return;
+
+            nav.querySelectorAll('[data-key]').forEach(function (el) {
+                el.setAttribute('data-allowed', allow.indexOf(el.getAttribute('data-key')) >= 0 ? '1' : '0');
+            });
+            applyMenuVisibility();
+
+            var PAGE_GROUP = {
+                '仪表盘': 'dashboard', '数据分析': 'analysis',
+                '我的课表': 'mine', '选课中心': 'mine', '我的课程': 'mine',
+                '学习进度': 'mine', '我的成绩': 'mine',
+                '我的作业': 'mine2', '教学评价': 'mine2', '请假申请': 'mine2',
+                '通知公告': 'mine2', '个人信息': 'mine2',
+                '我的课表_师': 'twork', '我的班级': 'twork', '课堂考勤': 'twork',
+                '考勤统计': 'twork', '工作量统计': 'twork',
+                '教学进度': 'twork2', '学生评语': 'twork2', '请假审批': 'twork2',
+                '调课申请': 'twork2', '成绩录入': 'twork2',
+                '学生档案': 'stu', '班级管理': 'stu', '学籍异动': 'stu',
+                '师资档案': 'teacher', '课程管理': 'teacher', '课表管理': 'teacher',
+                '调课审批': 'teacher', '教材管理': 'teacher',
+                '考试管理': 'exam', '成绩登记': 'exam', '成绩台账': 'exam', '学生评教': 'exam',
+                '作业布置': 'hw', '作业提交': 'hw', '作业批改': 'hw',
+                '课件资源': 'hw', '题库管理': 'hw', '奖学金管理': 'hw', '新闻管理': 'hw',
+                '教务管理员信息': 'sys', '角色权限': 'sys',
+                '建筑劳务备案': 'lw', '劳务合同管理': 'lw', '工程项目管理': 'lw',
+                '派遣考勤管理': 'lw', '工资管理': 'lw', '劳务查询统计': 'lw', '劳务系统管理': 'lw'
+            };
             var cur = document.getElementById('breadcrumb');
             if (cur) {
                 var t = cur.innerText.trim();
-                var map = {
-                    '教务管理员信息': 'sys', '学生档案': 'stu', '班级管理': 'stu', '成绩管理': 'stu',
-                    '师资档案': 'teacher', '课程管理': 'teacher', '课表管理': 'teacher',
-                    '学生评教': 'teacher', '作业布置': 'hw', '作业提交': 'hw', '作业批改': 'hw',
-                    '课件资源': 'res', '教材管理': 'res', '题库管理': 'res',
-                    '建筑劳务备案': 'lw', '劳务合同管理': 'lw', '工程项目管理': 'lw',
-                    '派遣考勤管理': 'lw', '工资管理': 'lw', '劳务查询统计': 'lw', '劳务系统管理': 'lw',
-                    '奖学金管理': 'scholarship', '新闻管理': 'news'
-                };
-                var need = map[t];
+                var need = PAGE_GROUP[t];
                 if (need && allow.indexOf(need) < 0) {
-                    var dash = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
-                        .filter(function (n) { return (n.getAttribute('onclick') || '').indexOf("changeContent('仪表盘'") === 0; })[0];
+                    var dash = nav.querySelector('[data-page="仪表盘"]');
                     if (dash) changeContent('仪表盘', dash);
-                }
-            }
-            if (typeof applyRoleSubMenus === 'function') applyRoleSubMenus(role);
-
-            // 学生：默认进入「我的课表」，且不允许停留在机构级页面
-            if (role === '学生') {
-                var STUDENT_PAGES = ['我的课表', '我的课程', '我的成绩', '我的作业',
-                                     '教学评价', '通知公告', '个人信息'];
-                var curEl = document.getElementById('breadcrumb');
-                var curTitle = curEl ? curEl.innerText.trim() : '';
-                if (STUDENT_PAGES.indexOf(curTitle) < 0) {
-                    setTimeout(function () {
-                        var target = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
-                            .filter(function (n) {
-                                return (n.getAttribute('onclick') || '').indexOf("changeContent('我的课表'") === 0;
-                            })[0];
-                        if (target) changeContent('我的课表', target);
-                    }, 0);
                 }
             }
         }
@@ -2568,7 +2594,7 @@
             var tb = tbodyEl();
             if (!tb) return;
             // 交互型页面不参与分页
-            if (['课堂考勤', '成绩登记', '教学进度', '选课中心', '我的课程', '考勤统计', '工作量统计', '学习进度', '角色权限', '请假申请', '请假审批', '成绩录入', '作业布置'].indexOf(title) >= 0) {
+            if (['课堂考勤', '成绩登记', '教学进度', '选课中心', '我的课程', '考勤统计', '工作量统计', '学习进度', '角色权限', '请假申请', '请假审批', '成绩录入', '作业布置', '调课申请', '调课审批'].indexOf(title) >= 0) {
                 var bx0 = paginationBox();
                 if (bx0) {
                     var bw0 = bx0.wrapper.querySelector('div:last-child');
@@ -2671,6 +2697,16 @@
             }
             if (title === '角色权限') {
                 setTimeout(function () { if (window.initPermPage) initPermPage(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '调课申请') {
+                setTimeout(function () { if (window.initAdjust) initAdjust(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '调课审批') {
+                setTimeout(function () { if (window.initAdjustApprove) initAdjustApprove(); }, 0);
                 enhanceToolbar();
                 return;
             }
@@ -2875,7 +2911,7 @@
             { key: 'mine', label: '我的学习', menus: ['mine'],
               pages: ['我的课表', '课堂签到', '选课中心', '我的课程', '我的成绩', '我的作业', '教学评价', '请假申请', '通知公告', '个人信息'] },
             { key: 'twork', label: '教师工作台', menus: ['twork'],
-              pages: ['我的课表_师', '我的班级', '课堂考勤', '考勤统计', '工作量统计', '教学进度', '学生评语', '请假审批', '成绩录入'] },
+              pages: ['我的课表_师', '我的班级', '课堂考勤', '考勤统计', '工作量统计', '教学进度', '学生评语', '请假审批', '成绩录入', '调课申请', '调课审批', '角色权限'] },
             { key: 'edu', label: '教务管理', menus: ['sys', 'stu', 'teacher', 'hw', 'res', 'scholarship', 'news'],
               pages: ['学生档案', '班级管理', '学籍异动', '考试管理', '成绩登记', '成绩台账', '师资档案', '课程管理', '课表管理', '学生评教', '作业布置', '作业提交', '作业批改', '课件资源', '教材管理', '题库管理', '奖学金管理', '新闻管理', '教务管理员信息', '角色权限'] },
             { key: 'lw', label: '劳务管理', menus: ['lw'],
@@ -3251,6 +3287,159 @@
         }
 
         window.initWorkload = initWorkload;
+
+        // ---------- 调课申请 / 审批 ----------
+        var ADJUST_KEY = 'cy_adjust_v1';
+        var ADJUST_DEFAULT = [
+            { id: 'TK-2026-001', course: '数学', cls: '高一(1)班', from: '周三 第5-6节',
+              to: '周四 第7-8节', reason: '参加市级教研活动', status: '已批准', by: '教务处' },
+            { id: 'TK-2026-002', course: '数学', cls: '高一(2)班', from: '周二 第3-4节',
+              to: '周五 第3-4节', reason: '班级月考冲突', status: '待审批', by: '' }
+        ];
+
+        function adjustAll() {
+            try {
+                var raw = localStorage.getItem(ADJUST_KEY);
+                if (!raw) return JSON.parse(JSON.stringify(ADJUST_DEFAULT));
+                var a = JSON.parse(raw);
+                return Array.isArray(a) ? a : JSON.parse(JSON.stringify(ADJUST_DEFAULT));
+            } catch (e) { return JSON.parse(JSON.stringify(ADJUST_DEFAULT)); }
+        }
+        function adjustSave(a) {
+            try { localStorage.setItem(ADJUST_KEY, JSON.stringify(a)); } catch (e) {}
+        }
+
+        function initAdjust() {
+            var box = document.getElementById('adjust-box');
+            if (!box) return;
+            var all = adjustAll();
+            var rows = '';
+            all.forEach(function (r) {
+                var c = r.status === '已批准' ? ['#059669', '#ECFDF5'] :
+                        (r.status === '已驳回' ? ['#DC2626', '#FEF2F2'] : ['#D97706', '#FFFBEB']);
+                rows += '<tr><td>' + r.id + '</td><td>' + r.course + '</td><td>' + r.cls + '</td>' +
+                    '<td style="color:#94A3B8;text-decoration:line-through">' + r.from + '</td>' +
+                    '<td style="color:#7C3AED;font-weight:600">' + r.to + '</td>' +
+                    '<td style="max-width:190px">' + r.reason + '</td>' +
+                    '<td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' +
+                        c[0] + ';background:' + c[1] + '">' + r.status + '</span></td></tr>';
+            });
+            if (!rows) rows = '<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:24px">暂无调课申请</td></tr>';
+
+            box.innerHTML =
+                '<div style="background:#F8FAFC;border-radius:12px;padding:16px;margin-bottom:16px">' +
+                    '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:10px">提交新的调课申请</div>' +
+                    '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">课程' +
+                            '<select id="adj-course" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"><option>数学</option><option>英语</option><option>物理</option></select></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">班级' +
+                            '<select id="adj-cls" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"><option>高一(1)班</option><option>高一(2)班</option><option>高一(3)班</option></select></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">原上课时间' +
+                            '<input id="adj-from" type="text" value="周一 第1-2节" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;width:130px"></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B">调整到' +
+                            '<input id="adj-to" type="text" placeholder="如 周五 第5-6节" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;width:130px"></label>' +
+                        '<label style="display:grid;gap:5px;font-size:12px;color:#64748B;flex:1;min-width:200px">调课事由' +
+                            '<input id="adj-reason" type="text" placeholder="请说明调课原因" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px"></label>' +
+                        '<button data-adj-submit="1" style="padding:9px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">提交申请</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:8px">我的调课记录</div>' +
+                '<table><thead><tr><th>申请编号</th><th>课程</th><th>班级</th><th>原时间</th><th>调整到</th><th>事由</th><th>状态</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 流程说明：</span>教师只能提交调课申请，<b>不能直接改课表</b>；申请由教务审批，通过后课表同步调整。' +
+                '</div>';
+
+            var sb = box.querySelector('[data-adj-submit]');
+            if (sb) sb.addEventListener('click', submitAdjust);
+        }
+
+        function submitAdjust() {
+            var course = (document.getElementById('adj-course') || {}).value || '';
+            var cls = (document.getElementById('adj-cls') || {}).value || '';
+            var from = ((document.getElementById('adj-from') || {}).value || '').trim();
+            var to = ((document.getElementById('adj-to') || {}).value || '').trim();
+            var reason = ((document.getElementById('adj-reason') || {}).value || '').trim();
+            if (!to) { toast('请填写调整后的上课时间', 'error'); return; }
+            if (!reason) { toast('请填写调课事由', 'error'); return; }
+            if (to === from) { toast('调整后的时间不能与原来相同', 'error'); return; }
+            var all = adjustAll();
+            var no = 'TK-2026-' + String(all.length + 1).padStart(3, '0');
+            all.push({ id: no, course: course, cls: cls, from: from, to: to,
+                       reason: reason, status: '待审批', by: '' });
+            adjustSave(all);
+            toast('调课申请已提交，等待教务审批', 'success');
+            initAdjust();
+        }
+
+        function initAdjustApprove() {
+            var box = document.getElementById('adjust-approve');
+            if (!box) return;
+            var all = adjustAll();
+            var pending = all.filter(function (r) { return r.status === '待审批'; });
+            var history = all.filter(function (r) { return r.status !== '待审批'; });
+
+            var pRows = '';
+            if (!pending.length) {
+                pRows = '<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:24px">暂无待审批的调课申请</td></tr>';
+            } else {
+                pending.forEach(function (r) {
+                    pRows += '<tr><td>' + r.id + '</td><td><b>' + r.course + '</b></td><td>' + r.cls + '</td>' +
+                        '<td style="color:#94A3B8;text-decoration:line-through">' + r.from + '</td>' +
+                        '<td style="color:#7C3AED;font-weight:600">' + r.to + '</td>' +
+                        '<td style="max-width:170px">' + r.reason + '</td>' +
+                        '<td><button data-adj-ok="' + r.id + '" style="padding:5px 12px;background:#059669;color:#fff;border-radius:6px;font-size:12px;font-weight:600;margin-right:6px">批准</button>' +
+                        '<button data-adj-no="' + r.id + '" style="padding:5px 12px;border:1px solid #FECACA;border-radius:6px;font-size:12px;color:#DC2626;background:#fff">驳回</button></td></tr>';
+                });
+            }
+
+            var hRows = '';
+            history.forEach(function (r) {
+                var c = r.status === '已批准' ? ['#059669', '#ECFDF5'] : ['#DC2626', '#FEF2F2'];
+                hRows += '<tr><td>' + r.id + '</td><td>' + r.course + '</td><td>' + r.cls + '</td>' +
+                    '<td>' + r.from + ' → ' + r.to + '</td>' +
+                    '<td><span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:' +
+                        c[0] + ';background:' + c[1] + '">' + r.status + '</span></td></tr>';
+            });
+            if (!hRows) hRows = '<tr><td colspan="5" style="text-align:center;color:#94A3B8;padding:20px">暂无历史记录</td></tr>';
+
+            box.innerHTML =
+                '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
+                    '<span style="font-size:14px;font-weight:600;color:#1E293B">待审批</span>' +
+                    '<span style="padding:2px 9px;border-radius:5px;font-size:12px;font-weight:600;color:#D97706;background:#FFFBEB">' + pending.length + ' 条</span>' +
+                '</div>' +
+                '<table style="margin-bottom:20px"><thead><tr><th>编号</th><th>课程</th><th>班级</th><th>原时间</th><th>调整到</th><th>事由</th><th>操作</th></tr></thead><tbody>' + pRows + '</tbody></table>' +
+                '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:8px">审批记录</div>' +
+                '<table><thead><tr><th>编号</th><th>课程</th><th>班级</th><th>调整</th><th>结果</th></tr></thead><tbody>' + hRows + '</tbody></table>' +
+                '<div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">' +
+                    '<span style="font-weight:600;color:#475569">📋 说明：</span>批准后系统按新时间更新课表，教师与学生端「我的课表」同步显示；驳回的申请保留记录供教师查看。' +
+                '</div>';
+
+            box.querySelectorAll('[data-adj-ok]').forEach(function (b) {
+                b.addEventListener('click', function () { approveAdjust(b.getAttribute('data-adj-ok'), true); });
+            });
+            box.querySelectorAll('[data-adj-no]').forEach(function (b) {
+                b.addEventListener('click', function () { approveAdjust(b.getAttribute('data-adj-no'), false); });
+            });
+        }
+
+        function approveAdjust(id, pass) {
+            var all = adjustAll();
+            for (var i = 0; i < all.length; i++) {
+                if (all[i].id === id) {
+                    all[i].status = pass ? '已批准' : '已驳回';
+                    all[i].by = '教务处';
+                    break;
+                }
+            }
+            adjustSave(all);
+            toast(pass ? '已批准调课申请，课表已更新' : '已驳回调课申请', pass ? 'success' : 'info');
+            initAdjustApprove();
+        }
+
+        window.initAdjust = initAdjust;
+        window.submitAdjust = submitAdjust;
+        window.initAdjustApprove = initAdjustApprove;
+        window.approveAdjust = approveAdjust;
 
         // ---------- 教学进度存储（教师写 / 学生读） ----------
         var TEACH_PROG_KEY = 'cy_teach_prog_v1';
