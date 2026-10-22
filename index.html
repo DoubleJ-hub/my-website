@@ -397,7 +397,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.6.0 · 期中版
+            冲鸭教育 · v1.6.1 · 期中版
         </div>
     </aside>
 
@@ -1306,6 +1306,7 @@
                     btn.innerHTML = '<span style="font-size:15px">👤</span> ' + sess.role + ' · 退出';
                     btn.title = '当前登录：' + sess.user + '（' + sess.role + '）';
                 }
+                if (typeof applyRoleMenus === 'function') applyRoleMenus(sess.role);
             } else {
                 if (gate) gate.style.display = 'flex';
             }
@@ -1318,6 +1319,7 @@
             if (!pass) { toast('请输入密码', 'error'); return; }
             setSession({ user: user, role: role, at: Date.now() });
             applySession();
+            applyRoleMenus(role);
             toast('欢迎回来，' + user + '（' + role + '）', 'success');
         });
         // 回车登录
@@ -1643,6 +1645,89 @@
                 setTimeout(enhanceToolbar, 0);
             }
         };
+
+        // ---------- 角色权限：菜单可见性 ----------
+        // 与实验五报告中的"数据范围隔离"设计保持一致
+        var ROLE_MENUS = {
+            '超级管理员': ['dashboard', 'analysis', 'sys', 'stu', 'teacher', 'hw', 'res', 'lw',
+                           'scholarship', 'news'],
+            '教务管理员': ['dashboard', 'analysis', 'sys', 'stu', 'teacher', 'hw', 'res',
+                           'scholarship', 'news'],
+            '授课教师': ['dashboard', 'teacher', 'hw', 'res'],
+            '学生': ['dashboard'],
+            '劳务管理员': ['dashboard', 'analysis', 'lw'],
+            '项目经理': ['dashboard', 'analysis', 'lw'],
+            '财务人员': ['dashboard', 'analysis', 'lw']
+        };
+
+        function applyRoleMenus(role) {
+            var allow = ROLE_MENUS[role] || ROLE_MENUS['教务管理员'];
+            // 菜单组：按 toggleMenu 的 id 定位其外层容器
+            var groups = document.querySelectorAll('nav .menu-group');
+            var groupKeys = ['sys', 'stu', 'teacher', 'hw', 'res', 'lw'];
+            // 奖学金 / 新闻 是独立项（不在 menu-group 内），单独处理
+            for (var i = 0; i < groups.length; i++) {
+                var g = groups[i];
+                var key = null;
+                for (var k = 0; k < groupKeys.length; k++) {
+                    if (g.querySelector("#" + groupKeys[k] + "-menu") || 
+                        (g.querySelector('[onclick*="toggleMenu(\'' + groupKeys[k] + '\')"]'))) {
+                        key = groupKeys[k];
+                        break;
+                    }
+                }
+                if (key) {
+                    g.style.display = allow.indexOf(key) >= 0 ? '' : 'none';
+                }
+            }
+            // 独立菜单项：数据概览、数据分析、奖学金、新闻
+            // 注意：onclick 可能挂在内层元素上，需向上找到 nav 的顶层子元素再隐藏
+            var nav = document.querySelector('nav');
+            if (nav) {
+                var needMap = {
+                    '仪表盘': 'dashboard', '数据分析': 'analysis',
+                    '奖学金管理': 'scholarship', '新闻管理': 'news'
+                };
+                var nodes = nav.querySelectorAll('[onclick]');
+                for (var j = 0; j < nodes.length; j++) {
+                    var n = nodes[j];
+                    var oc = n.getAttribute('onclick') || '';
+                    var mm = oc.match(/changeContent\('([^']+)'/);
+                    if (!mm) continue;
+                    var need = needMap[mm[1]];
+                    if (!need) continue;
+                    var top = n;
+                    var guard = 0;
+                    while (top.parentElement && top.parentElement !== nav && guard < 10) {
+                        top = top.parentElement;
+                        guard++;
+                    }
+                    if (top.parentElement === nav) {
+                        top.style.display = (allow.indexOf(need) >= 0) ? '' : 'none';
+                    }
+                }
+            }
+            // 若当前页不在允许范围，回到数据概览
+            var cur = document.getElementById('breadcrumb');
+            if (cur) {
+                var t = cur.innerText.trim();
+                var map = {
+                    '教务管理员信息': 'sys', '学生档案': 'stu', '班级管理': 'stu', '成绩管理': 'stu',
+                    '师资档案': 'teacher', '课程管理': 'teacher', '课表管理': 'teacher',
+                    '学生评教': 'teacher', '作业布置': 'hw', '作业提交': 'hw', '作业批改': 'hw',
+                    '课件资源': 'res', '教材管理': 'res', '题库管理': 'res',
+                    '建筑劳务备案': 'lw', '劳务合同管理': 'lw', '工程项目管理': 'lw',
+                    '派遣考勤管理': 'lw', '工资管理': 'lw', '劳务查询统计': 'lw', '劳务系统管理': 'lw',
+                    '奖学金管理': 'scholarship', '新闻管理': 'news'
+                };
+                var need = map[t];
+                if (need && allow.indexOf(need) < 0) {
+                    var dash = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
+                        .filter(function (n) { return (n.getAttribute('onclick') || '').indexOf("changeContent('仪表盘'") === 0; })[0];
+                    if (dash) changeContent('仪表盘', dash);
+                }
+            }
+        }
 
         // ---------- 启动 ----------
         applySession();
