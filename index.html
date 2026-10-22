@@ -362,6 +362,37 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                     <span>📈</span> <span>数据分析</span>
                 </div>
             </div>
+            <!-- 教师工作台 -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('twork')">
+                    <div class="flex items-center space-x-3"><span>👩‍🏫</span> <span>教师工作台</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="twork-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表_师', this)">我的课表</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的班级', this)">我的班级</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('课堂考勤', this)">课堂考勤</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学进度', this)">教学进度</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生评语', this)">学生评语</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩登记', this)">成绩录入</div>
+                </div>
+            </div>
+            <!-- 我的学习（学生端工作区） -->
+            <div class="menu-group mt-2">
+                <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('mine')">
+                    <div class="flex items-center space-x-3"><span>🎒</span> <span>我的学习</span></div>
+                    <span class="text-xs text-slate-400">▼</span>
+                </div>
+                <div id="mine-menu" class="hidden mt-1 space-y-1">
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课表', this)">我的课表</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的课程', this)">我的课程</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的成绩', this)">我的成绩</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('我的作业', this)">我的作业</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('教学评价', this)">教学评价</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('通知公告', this)">通知公告</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('个人信息', this)">个人信息</div>
+                </div>
+            </div>
             <!-- 劳务管理（实验五：劳务管理系统） -->
             <div class="menu-group mt-2">
                 <div class="px-4 py-2.5 rounded-lg flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleMenu('lw')">
@@ -397,6 +428,8 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                 <div id="stu-menu" class="hidden mt-1 space-y-1">
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('学生档案', this)">学生档案</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('班级管理', this)">班级管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('考试管理', this)">考试管理</div>
+                    <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩登记', this)">成绩登记</div>
                     <div class="px-10 py-2 rounded-lg cursor-pointer hover:text-blue-600 transition-colors" onclick="changeContent('成绩管理', this)">成绩管理</div>
                 </div>
             </div>
@@ -452,7 +485,7 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.6.4 · 期中版
+            冲鸭教育 · v1.8.1 · 期中版
         </div>
     </aside>
 
@@ -1208,6 +1241,568 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                 </div>`;
             }
 
+
+
+
+            // T1. 我的课表（教师）
+            else if (title === '我的课表_师') {
+                refText = '2026 学年 第一学期 · 第 8 周 · 王建国（数学）';
+                titleHtml = '我的课表';
+                recordCount = 0;
+                var TT2 = [
+                    ['第 1-2 节', '高一(1)班·数学', '301', '', '', '高一(2)班·数学', '302', '', '', '', ''],
+                    ['第 3-4 节', '', '', '高一(1)班·数学', '301', '', '', '高一(3)班·数学', '301', '', ''],
+                    ['第 5-6 节', '', '', '', '', '高一(2)班·数学', '302', '', '', '高一(1)班·数学', '301'],
+                    ['第 7-8 节', '答疑值班', '301', '', '', '', '', '', '', '', '']
+                ];
+                var g2 = '';
+                for (var a = 0; a < TT2.length; a++) {
+                    g2 += '<tr><td style="padding:12px 10px;font-size:12px;color:#64748B;font-weight:600;white-space:nowrap;border-bottom:1px solid #F1F5F9">' + TT2[a][0] + '</td>';
+                    for (var b = 1; b < TT2[a].length; b += 2) {
+                        var cs2 = TT2[a][b], rm2 = TT2[a][b + 1];
+                        if (cs2) {
+                            g2 += '<td style="padding:8px;border-bottom:1px solid #F1F5F9"><div style="background:#EEF2FF;border-radius:8px;padding:8px 6px;text-align:center">' +
+                                '<div style="font-size:12px;font-weight:600;color:#4F46E5">' + cs2 + '</div>' +
+                                '<div style="font-size:11px;color:#94A3B8;margin-top:2px">' + rm2 + '</div></div></td>';
+                        } else {
+                            g2 += '<td style="padding:8px;border-bottom:1px solid #F1F5F9"></td>';
+                        }
+                    }
+                    g2 += '</tr>';
+                }
+                html = `
+                <div style="padding:2px 0 12px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">
+                        <div style="background:#F8FAFC;border-radius:10px;padding:13px">
+                            <div style="font-size:12px;color:#64748B">本周课时</div>
+                            <div style="font-size:21px;font-weight:700;color:#1E293B;margin-top:2px">8 节</div>
+                        </div>
+                        <div style="background:#F8FAFC;border-radius:10px;padding:13px">
+                            <div style="font-size:12px;color:#64748B">任教班级</div>
+                            <div style="font-size:21px;font-weight:700;color:#1E293B;margin-top:2px">3 个</div>
+                        </div>
+                        <div style="background:#F8FAFC;border-radius:10px;padding:13px">
+                            <div style="font-size:12px;color:#64748B">任教学生</div>
+                            <div style="font-size:21px;font-weight:700;color:#1E293B;margin-top:2px">108 人</div>
+                        </div>
+                        <div style="background:#FFF7ED;border-radius:10px;padding:13px">
+                            <div style="font-size:12px;color:#EA580C">待批作业</div>
+                            <div style="font-size:21px;font-weight:700;color:#EA580C;margin-top:2px">27 份</div>
+                        </div>
+                    </div>
+                    <table style="table-layout:fixed"><thead><tr>
+                        <th style="width:78px">节次</th><th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th>
+                    </tr></thead><tbody>${g2}</tbody></table>
+                    <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                        <span style="font-weight:600;color:#475569">📌 说明：</span>课表由教务编排；如需调课，请通过「调课申请」提交，经教务审批后方可生效。
+                    </div>
+                </div>`;
+            }
+
+            // T2. 我的班级
+            else if (title === '我的班级') {
+                refText = '本人任教的 3 个班级 —— 共 108 名学生';
+                titleHtml = '我的班级';
+                recordCount = 3;
+                html = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:18px">
+                    <div style="border:1px solid #E2E8F0;border-radius:12px;padding:16px;background:#fff">
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <div style="font-size:16px;font-weight:700;color:#1E293B">高一(1)班</div>
+                            <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">36 人</span>
+                        </div>
+                        <div style="font-size:12px;color:#94A3B8;margin-top:6px">班主任：王建国 · 教室 301</div>
+                        <div style="font-size:12px;color:#64748B;margin-top:8px">本周课时 4 节 · 平均分 82.3</div>
+                    </div>
+                    <div style="border:1px solid #E2E8F0;border-radius:12px;padding:16px;background:#fff">
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <div style="font-size:16px;font-weight:700;color:#1E293B">高一(2)班</div>
+                            <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">36 人</span>
+                        </div>
+                        <div style="font-size:12px;color:#94A3B8;margin-top:6px">班主任：李华 · 教室 302</div>
+                        <div style="font-size:12px;color:#64748B;margin-top:8px">本周课时 2 节 · 平均分 79.6</div>
+                    </div>
+                    <div style="border:1px solid #E2E8F0;border-radius:12px;padding:16px;background:#fff">
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <div style="font-size:16px;font-weight:700;color:#1E293B">高一(3)班</div>
+                            <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">36 人</span>
+                        </div>
+                        <div style="font-size:12px;color:#94A3B8;margin-top:6px">班主任：陈静 · 教室 301</div>
+                        <div style="font-size:12px;color:#64748B;margin-top:8px">本周课时 2 节 · 平均分 84.1</div>
+                    </div>
+                </div>
+                <table><thead><tr>
+                    <th>学号</th><th>姓名</th><th>性别</th><th>班级</th><th>本学期数学均分</th><th>作业完成率</th><th>出勤率</th>
+                </tr></thead><tbody>
+                    <tr><td>20260101</td><td><b>张小明</b></td><td>男</td><td>高一(1)班</td><td style="color:#4F46E5;font-weight:600">90</td><td>92%</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">96%</span></td></tr>
+                    <tr><td>20260102</td><td><b>李小红</b></td><td>女</td><td>高一(1)班</td><td style="color:#4F46E5;font-weight:600">86</td><td>88%</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">98%</span></td></tr>
+                    <tr><td>20260103</td><td><b>王强</b></td><td>男</td><td>高一(1)班</td><td style="color:#4F46E5;font-weight:600">78</td><td>75%</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">90%</span></td></tr>
+                    <tr><td>20260104</td><td><b>陈晨</b></td><td>女</td><td>高一(1)班</td><td style="color:#4F46E5;font-weight:600">89</td><td>95%</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">100%</span></td></tr>
+                    <tr><td>20260105</td><td><b>刘洋</b></td><td>男</td><td>高一(1)班</td><td style="color:#4F46E5;font-weight:600">72</td><td>68%</td><td><span class="bg-red-50 text-red-600 px-2 py-1 rounded text-xs font-medium">85%</span></td></tr>
+                    <tr><td>20260106</td><td><b>周婷</b></td><td>女</td><td>高一(1)班</td><td style="color:#4F46E5;font-weight:600">91</td><td>97%</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">99%</span></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 说明：</span>教师只能查看本人任教班级的学生数据，无法访问其他班级（数据范围隔离）。
+                </div>`;
+            }
+
+            // T3. 课堂考勤
+            else if (title === '课堂考勤') {
+                refText = '按班级与节次点名 —— 记录出勤/迟到/请假/缺勤';
+                titleHtml = '课堂考勤';
+                recordCount = 0;
+                html = `
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 16px;background:#F8FAFC;border-radius:12px;margin-bottom:14px">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:13px;color:#64748B">班级</span>
+                        <select id="att-class" onchange="initAttendPage()" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#1E293B;background:#fff">
+                            <option>高一(1)班</option><option>高一(2)班</option><option>高一(3)班</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:13px;color:#64748B">课程</span>
+                        <select id="att-course" onchange="initAttendPage()" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#1E293B;background:#fff">
+                            <option>数学</option><option>英语</option><option>物理</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:13px;color:#64748B">日期</span>
+                        <input id="att-date" type="date" value="2026-10-22" onchange="initAttendPage()" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#1E293B">
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:13px;color:#64748B">节次</span>
+                        <select id="att-period" onchange="initAttendPage()" style="padding:8px 10px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#1E293B;background:#fff">
+                            <option>第1-2节</option><option>第3-4节</option><option>第5-6节</option><option>第7-8节</option>
+                        </select>
+                    </div>
+                    <button onclick="allPresent()" style="padding:8px 16px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#475569;background:#fff">一键全部出勤</button>
+                    <button onclick="saveAttend()" style="padding:9px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">保存本次考勤</button>
+                </div>
+
+                <div id="att-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:14px"></div>
+
+                <table id="att-table"><thead><tr>
+                    <th style="width:110px">学号</th><th style="width:90px">姓名</th><th>出勤状态</th><th>备注</th>
+                </tr></thead><tbody id="att-body"></tbody></table>
+
+                <div style="margin-top:16px">
+                    <div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:8px">最近考勤记录</div>
+                    <div id="att-history" style="font-size:13px;color:#64748B"></div>
+                </div>
+                <div style="margin-top:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 业务规则：</span>同一班级同一节次同一日期只能保存一条考勤记录，重复保存将覆盖；缺勤与请假会计入学生出勤率统计，缺勤累计超过课时 1/3 将触发学业预警。
+                </div>`;
+            }
+
+            // T4. 教学进度
+            else if (title === '教学进度') {
+                refText = '本人任教课程的教学进度 —— 高一(1)班 数学';
+                titleHtml = '教学进度';
+                recordCount = 6;
+                html = `
+                <table><thead><tr>
+                    <th style="width:70px">周次</th><th>教学内容</th><th style="width:80px">课时</th>
+                    <th style="width:110px">计划完成时间</th><th style="width:110px">状态</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>第 5 周</td><td>函数的概念与表示法</td><td>4</td><td>2026-10-02</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已完成</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>第 6 周</td><td>函数的单调性（第 1-8 题）</td><td>4</td><td>2026-10-09</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已完成</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>第 7 周</td><td>函数的奇偶性</td><td>4</td><td>2026-10-16</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已完成</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>第 8 周</td><td>指数函数及其性质</td><td>4</td><td>2026-10-23</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">进行中</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>第 9 周</td><td>对数函数及其性质</td><td>4</td><td>2026-10-30</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">未开始</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>第 10 周</td><td>期中复习与模拟测试</td><td>4</td><td>2026-11-06</td><td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">未开始</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#F8FAFC;border-radius:10px">
+                    <span style="font-size:13px;color:#64748B">整体进度</span>
+                    <div style="flex:1;height:8px;background:#E2E8F0;border-radius:99px;overflow:hidden">
+                        <div style="width:50%;height:100%;background:linear-gradient(90deg,#8B5CF6,#D946EF)"></div>
+                    </div>
+                    <span style="font-size:13px;font-weight:600;color:#7C3AED">50%</span>
+                </div>`;
+            }
+
+            // T5. 学生评语
+            else if (title === '学生评语') {
+                refText = '为本人任教班级学生填写学期评语';
+                titleHtml = '学生评语';
+                recordCount = 6;
+                html = `
+                <table><thead><tr>
+                    <th style="width:110px">学号</th><th style="width:90px">姓名</th><th style="width:90px">班级</th>
+                    <th>评语</th><th style="width:100px">状态</th><th class="text-right" style="width:100px">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>20260101</td><td><b>张小明</b></td><td>高一(1)班</td><td style="color:#475569">思维活跃，函数部分掌握扎实，建议加强计算准确性。</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已填写</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">修改</button></td></tr>
+                    <tr><td>20260102</td><td><b>李小红</b></td><td>高一(1)班</td><td style="color:#475569">学习态度端正，作业完成质量高，积极参与课堂互动。</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已填写</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">修改</button></td></tr>
+                    <tr><td>20260103</td><td><b>王强</b></td><td>高一(1)班</td><td style="color:#475569">基础尚可，但作业提交不够及时，需提高自主学习意识。</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已填写</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">修改</button></td></tr>
+                    <tr><td>20260104</td><td><b>陈晨</b></td><td>高一(1)班</td><td style="color:#CBD5E1">—</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待填写</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">填写</button></td></tr>
+                    <tr><td>20260105</td><td><b>刘洋</b></td><td>高一(1)班</td><td style="color:#CBD5E1">—</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待填写</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">填写</button></td></tr>
+                    <tr><td>20260106</td><td><b>周婷</b></td><td>高一(1)班</td><td style="color:#CBD5E1">—</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待填写</span></td><td class="text-right"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">填写</button></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 说明：</span>评语仅教师本人与班主任可见；填写完成后将汇总进学生「学习档案」。
+                </div>`;
+            }
+
+            // E1. 考试管理
+            else if (title === '考试管理') {
+                refText = '考试批次与考场安排 —— 共 4 场';
+                titleHtml = '考试管理';
+                recordCount = 4;
+                html = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px">
+                    <div style="background:#F8FAFC;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#64748B">本学期考试</div>
+                        <div style="font-size:22px;font-weight:700;color:#1E293B;margin-top:2px">4 场</div>
+                    </div>
+                    <div style="background:#ECFDF5;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#059669">成绩已录入</div>
+                        <div style="font-size:22px;font-weight:700;color:#059669;margin-top:2px">2 场</div>
+                    </div>
+                    <div style="background:#FFF7ED;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#EA580C">待录入</div>
+                        <div style="font-size:22px;font-weight:700;color:#EA580C;margin-top:2px">1 场</div>
+                    </div>
+                    <div style="background:#EEF2FF;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#4F46E5">即将开始</div>
+                        <div style="font-size:22px;font-weight:700;color:#4F46E5;margin-top:2px">1 场</div>
+                    </div>
+                </div>
+                <table><thead><tr>
+                    <th>考试编号</th><th>考试名称</th><th>科目</th><th>考试日期</th>
+                    <th>时间</th><th>考场</th><th>监考教师</th><th>录入状态</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>EX-2026-11-01</td><td>第一学期期中考试</td><td>数学</td><td>2026-11-05</td>
+                        <td>09:00-11:00</td><td>科教楼301</td><td>王建国</td>
+                        <td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已录入</span></td>
+                        <td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>EX-2026-11-02</td><td>第一学期期中考试</td><td>英语</td><td>2026-11-05</td>
+                        <td>14:00-16:00</td><td>科教楼302</td><td>李华</td>
+                        <td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">部分录入</span></td>
+                        <td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>EX-2026-11-03</td><td>第一学期期中考试</td><td>物理</td><td>2026-11-06</td>
+                        <td>09:00-11:00</td><td>实验楼101</td><td>赵敏</td>
+                        <td><span class="bg-red-50 text-red-600 px-2 py-1 rounded text-xs font-medium">未录入</span></td>
+                        <td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                    <tr><td>EX-2026-10-01</td><td>10 月月考</td><td>数学</td><td>2026-10-08</td>
+                        <td>15:00-17:00</td><td>科教楼301</td><td>王建国</td>
+                        <td><span class="bg-slate-100 text-slate-500 px-2 py-1 rounded text-xs font-medium">已归档</span></td>
+                        <td class="text-right space-x-2"><button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 业务规则：</span>「已归档」的考试不可再修改成绩；成绩录入完成后状态自动置为「已录入」；考试日期与考场冲突时系统拒绝保存。
+                </div>`;
+            }
+
+            // E2. 成绩登记
+            else if (title === '成绩登记') {
+                refText = '选择考试后逐生登记成绩 —— 总评按「期中 40% + 期末 60%」自动计算';
+                titleHtml = '成绩登记';
+                recordCount = 6;
+                html = `
+                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 16px;background:#F8FAFC;border-radius:12px;margin-bottom:16px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:13px;color:#64748B">选择考试</span>
+                        <select id="score-exam" onchange="initScorePage()" style="padding:8px 12px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#1E293B;background:#fff">
+                            <option value="EX-2026-11-01">EX-2026-11-01 · 期中考试 · 数学</option>
+                            <option value="EX-2026-11-02">EX-2026-11-02 · 期中考试 · 英语</option>
+                            <option value="EX-2026-11-03">EX-2026-11-03 · 期中考试 · 物理</option>
+                        </select>
+                    </div>
+                    <button onclick="saveScores()" style="padding:9px 20px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">保存本场成绩</button>
+                    <button onclick="initScorePage()" style="padding:9px 16px;border:1px solid #E2E8F0;border-radius:8px;font-size:13px;color:#475569;background:#fff">重置为已存数据</button>
+                    <span id="score-hint" style="font-size:13px;color:#94A3B8;margin-left:auto"></span>
+                </div>
+                <table id="score-table"><thead><tr>
+                    <th>学号</th><th>姓名</th><th>班级</th>
+                    <th>期中成绩</th><th>期末成绩</th><th>总评</th><th>等级</th>
+                </tr></thead><tbody id="score-body"></tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#FFFBEB;border-radius:10px;font-size:13px;color:#92400E">
+                    <span style="font-weight:600">📌 录入说明：</span>期中、期末为 0～100 的整数；总评 = 期中 × 40% + 期末 × 60%，自动计算不可手改；保存后写入本场考试的登记记录。
+                </div>`;
+            }
+
+            // ================= 我的学习（学生端）=================
+
+            // S1. 我的课表
+            else if (title === '我的课表') {
+                refText = '2026 学年 第一学期 · 第 8 周 · 高一(1)班';
+                titleHtml = '我的课表';
+                recordCount = 0;
+                var TT = [
+                    ['第 1-2 节', '数学', '王建国', '英语', '李华', '语文', '陈静', '数学', '王建国', '物理', '赵敏'],
+                    ['第 3-4 节', '英语', '李华', '物理', '赵敏', '数学', '王建国', '化学', '刘强', '英语', '李华'],
+                    ['第 5-6 节', '物理', '赵敏', '语文', '陈静', '化学', '刘强', '英语', '李华', '数学', '王建国'],
+                    ['第 7-8 节', '自习', '—', '化学', '刘强', '体育', '周伟', '语文', '陈静', '自习', '—']
+                ];
+                var COLORS = {
+                    '数学': ['#EEF2FF', '#4F46E5'], '英语': ['#ECFDF5', '#059669'],
+                    '物理': ['#FFF7ED', '#EA580C'], '语文': ['#FEF2F2', '#DC2626'],
+                    '化学': ['#F5F3FF', '#7C3AED'], '体育': ['#F0F9FF', '#0284C7'],
+                    '自习': ['#F8FAFC', '#94A3B8']
+                };
+                var grid = '';
+                for (var ti = 0; ti < TT.length; ti++) {
+                    grid += '<tr>';
+                    grid += '<td style="padding:12px 10px;font-size:12px;color:#64748B;font-weight:600;white-space:nowrap;border-bottom:1px solid #F1F5F9">' + TT[ti][0] + '</td>';
+                    for (var ci = 1; ci < TT[ti].length; ci += 2) {
+                        var cname = TT[ti][ci], tname = TT[ti][ci + 1];
+                        var col = COLORS[cname] || ['#F8FAFC', '#64748B'];
+                        grid += '<td style="padding:8px;border-bottom:1px solid #F1F5F9">' +
+                            '<div style="background:' + col[0] + ';border-radius:8px;padding:8px 6px;text-align:center">' +
+                            '<div style="font-size:13px;font-weight:600;color:' + col[1] + '">' + cname + '</div>' +
+                            '<div style="font-size:11px;color:#94A3B8;margin-top:2px">' + (tname === '—' ? '' : tname) + '</div>' +
+                            '</div></td>';
+                    }
+                    grid += '</tr>';
+                }
+                html = `
+                <div style="padding:4px 0 8px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px">
+                        <div style="background:#F8FAFC;border-radius:10px;padding:12px 14px">
+                            <div style="font-size:12px;color:#64748B">本周课程</div>
+                            <div style="font-size:20px;font-weight:700;color:#1E293B;margin-top:2px">18 节</div>
+                        </div>
+                        <div style="background:#F8FAFC;border-radius:10px;padding:12px 14px">
+                            <div style="font-size:12px;color:#64748B">今日课程</div>
+                            <div style="font-size:20px;font-weight:700;color:#1E293B;margin-top:2px">4 节</div>
+                        </div>
+                        <div style="background:#F8FAFC;border-radius:10px;padding:12px 14px">
+                            <div style="font-size:12px;color:#64748B">待完成作业</div>
+                            <div style="font-size:20px;font-weight:700;color:#EA580C;margin-top:2px">2 份</div>
+                        </div>
+                        <div style="background:#F8FAFC;border-radius:10px;padding:12px 14px">
+                            <div style="font-size:12px;color:#64748B">总评均分</div>
+                            <div style="font-size:20px;font-weight:700;color:#4F46E5;margin-top:2px">82.2</div>
+                        </div>
+                    </div>
+                    <table style="table-layout:fixed">
+                        <thead><tr>
+                            <th style="width:78px">节次</th><th>周一</th><th>周二</th><th>周三</th><th>周四</th><th>周五</th>
+                        </tr></thead>
+                        <tbody>${grid}</tbody>
+                    </table>
+                    <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                        <span style="font-weight:600;color:#475569">📌 说明：</span>课表由教务编排，如有调课会通过「通知公告」发布；本页数据实时同步。
+                    </div>
+                </div>`;
+            }
+
+            // S2. 我的课程
+            else if (title === '我的课程') {
+                refText = '本学期已选课程 —— 共 5 门';
+                titleHtml = '我的课程';
+                recordCount = 5;
+                html = `
+                <table><thead><tr>
+                    <th>课程名称</th><th>任课教师</th><th>总课时</th><th>已学课时</th>
+                    <th>学习进度</th><th>上课教室</th><th>课程类别</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td><b>数学</b></td><td>王建国</td><td>96</td><td>32</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:33%;height:100%;background:#4F46E5"></div></div><span style="font-size:12px;color:#64748B">33%</span></div></td>
+                        <td>科教楼301</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
+                    <tr><td><b>英语</b></td><td>李华</td><td>96</td><td>32</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:33%;height:100%;background:#059669"></div></div><span style="font-size:12px;color:#64748B">33%</span></div></td>
+                        <td>科教楼302</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
+                    <tr><td><b>物理</b></td><td>赵敏</td><td>64</td><td>24</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:38%;height:100%;background:#EA580C"></div></div><span style="font-size:12px;color:#64748B">38%</span></div></td>
+                        <td>实验楼101</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
+                    <tr><td><b>语文</b></td><td>陈静</td><td>80</td><td>28</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:35%;height:100%;background:#DC2626"></div></div><span style="font-size:12px;color:#64748B">35%</span></div></td>
+                        <td>科教楼303</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">必修</span></td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
+                    <tr><td><b>化学</b></td><td>刘强</td><td>64</td><td>20</td>
+                        <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:31%;height:100%;background:#7C3AED"></div></div><span style="font-size:12px;color:#64748B">31%</span></div></td>
+                        <td>实验楼102</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">选修</span></td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看详情</button></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 说明：</span>课程由教务在「学生档案—选课记录」中登记，学生端仅供查看；如需调整请联系班主任。
+                </div>`;
+            }
+
+            // S3. 我的成绩
+            else if (title === '我的成绩') {
+                refText = '本学期各科成绩 —— 期中、期末与总评';
+                titleHtml = '我的成绩';
+                recordCount = 5;
+                html = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px">
+                    <div style="background:#EEF2FF;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#6366F1">总评均分</div>
+                        <div style="font-size:24px;font-weight:700;color:#4F46E5;margin-top:2px">82.2</div>
+                    </div>
+                    <div style="background:#F8FAFC;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#64748B">班级平均分</div>
+                        <div style="font-size:24px;font-weight:700;color:#1E293B;margin-top:2px">78.5</div>
+                    </div>
+                    <div style="background:#ECFDF5;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#059669">高于平均的科目</div>
+                        <div style="font-size:24px;font-weight:700;color:#059669;margin-top:2px">4 / 5</div>
+                    </div>
+                    <div style="background:#FFF7ED;border-radius:10px;padding:14px">
+                        <div style="font-size:12px;color:#EA580C">需加强的科目</div>
+                        <div style="font-size:24px;font-weight:700;color:#EA580C;margin-top:2px">化学</div>
+                    </div>
+                </div>
+                <table><thead><tr>
+                    <th>科目</th><th>任课教师</th><th>期中成绩</th><th>期末成绩</th><th>总评</th><th>等级</th><th>与班均对比</th>
+                </tr></thead><tbody>
+                    <tr><td><b>数学</b></td><td>王建国</td><td>92</td><td>88</td><td style="font-weight:700;color:#4F46E5">90</td><td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">优秀</span></td><td style="color:#059669">↑ 11.5</td></tr>
+                    <tr><td><b>英语</b></td><td>李华</td><td>78</td><td>82</td><td style="font-weight:700;color:#4F46E5">80</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">良好</span></td><td style="color:#059669">↑ 1.5</td></tr>
+                    <tr><td><b>物理</b></td><td>赵敏</td><td>85</td><td>79</td><td style="font-weight:700;color:#4F46E5">82</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">良好</span></td><td style="color:#059669">↑ 3.5</td></tr>
+                    <tr><td><b>语文</b></td><td>陈静</td><td>88</td><td>91</td><td style="font-weight:700;color:#4F46E5">89</td><td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">良好</span></td><td style="color:#059669">↑ 10.5</td></tr>
+                    <tr><td><b>化学</b></td><td>刘强</td><td>73</td><td>68</td><td style="font-weight:700;color:#DC2626">70</td><td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">合格</span></td><td style="color:#DC2626">↓ 8.5</td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#FFF7ED;border-radius:10px;font-size:13px;color:#92400E">
+                    <span style="font-weight:600">💡 学习建议：</span>化学总评 70 分，低于班级平均分 8.5 分，且期末较期中下降 5 分，建议重点复习化学方程式配平与计算题；其余科目均高于班均，保持即可。
+                </div>
+                <div style="margin-top:10px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 隐私说明：</span>按权限设计，学生端仅显示本人成绩与班级平均分，不显示其他同学成绩与个人名次。
+                </div>`;
+            }
+
+            // S4. 我的作业
+            else if (title === '我的作业') {
+                refText = '待完成与已提交的作业 —— 共 4 份';
+                titleHtml = '我的作业';
+                recordCount = 4;
+                html = `
+                <table><thead><tr>
+                    <th>作业标题</th><th>课程</th><th>布置时间</th><th>截止时间</th>
+                    <th>提交状态</th><th>批改结果</th><th class="text-right">操作</th>
+                </tr></thead><tbody>
+                    <tr><td>函数单调性练习（第1-8题）</td><td>数学</td><td>2026-10-05</td><td>2026-10-08</td>
+                        <td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待提交</span></td>
+                        <td style="color:#94A3B8">—</td>
+                        <td class="text-right"><button class="js-submit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">提交作业</button></td></tr>
+                    <tr><td>Unit 4 阅读理解专项训练</td><td>英语</td><td>2026-10-04</td><td>2026-10-07</td>
+                        <td><span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">已提交</span></td>
+                        <td style="color:#94A3B8">待批改</td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看提交</button></td></tr>
+                    <tr><td>牛顿第二定律计算题（10题）</td><td>物理</td><td>2026-10-06</td><td>2026-10-10</td>
+                        <td><span class="bg-amber-50 text-amber-600 px-2 py-1 rounded text-xs font-medium">待提交</span></td>
+                        <td style="color:#94A3B8">—</td>
+                        <td class="text-right"><button class="js-submit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">提交作业</button></td></tr>
+                    <tr><td>化学方程式配平练习</td><td>化学</td><td>2026-10-03</td><td>2026-10-06</td>
+                        <td><span class="bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">已批改</span></td>
+                        <td style="font-weight:600;color:#059669">85 分 · 良好</td>
+                        <td class="text-right"><button class="js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">查看点评</button></td></tr>
+                </tbody></table>
+                <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                    <span style="font-weight:600;color:#475569">📌 说明：</span>逾期提交会标记为「迟交」，仍可被批改；提交后如需修改请先撤回。
+                </div>`;
+            }
+
+            // S5. 教学评价
+            else if (title === '教学评价') {
+                refText = '对本学期任课教师进行评价 —— 匿名提交，教师看不到具体学生';
+                titleHtml = '教学评价';
+                recordCount = 0;
+                var TCH = [
+                    ['王建国', '数学', '科教楼301'],
+                    ['李华', '英语', '科教楼302'],
+                    ['赵敏', '物理', '实验楼101'],
+                    ['陈静', '语文', '科教楼303'],
+                    ['刘强', '化学', '实验楼102']
+                ];
+                var done = {};
+                try { done = JSON.parse(localStorage.getItem('cy_eval_v1') || '{}'); } catch (e) { done = {}; }
+                var cards = '';
+                for (var ei = 0; ei < TCH.length; ei++) {
+                    var nm = TCH[ei][0], cs = TCH[ei][1], rm = TCH[ei][2];
+                    var isDone = !!done[nm];
+                    cards += '<div style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px">' +
+                        '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#D946EF);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:15px">' + nm.charAt(0) + '</div>' +
+                        '<div style="flex:1">' +
+                            '<div style="font-size:15px;font-weight:600;color:#1E293B">' + nm + ' <span style="font-size:12px;font-weight:400;color:#94A3B8">· ' + cs + ' · ' + rm + '</span></div>' +
+                            '<div style="font-size:12px;color:#94A3B8;margin-top:3px">' +
+                                (isDone ? '已提交评价（匿名）' : '尚未评价') + '</div>' +
+                        '</div>' +
+                        (isDone
+                            ? '<span style="padding:7px 16px;background:#ECFDF5;color:#059669;border-radius:8px;font-size:13px;font-weight:500">✓ 已评价</span>'
+                            : '<button onclick="openEval(\'' + nm + '\',\'' + cs + '\')" style="padding:8px 18px;background:#7C3AED;color:#fff;border-radius:8px;font-size:13px;font-weight:600">去评价</button>') +
+                        '</div>';
+                }
+                var doneCount = Object.keys(done).length;
+                html = `
+                <div style="padding:2px 0 12px">
+                    <div style="background:#EEF2FF;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+                        <div>
+                            <div style="font-size:13px;color:#6366F1;font-weight:600">本学期评教进度</div>
+                            <div style="font-size:12px;color:#94A3B8;margin-top:3px">共 5 位任课教师，已评价 ${doneCount} 位</div>
+                        </div>
+                        <div style="font-size:26px;font-weight:700;color:#4F46E5">${doneCount}<span style="font-size:15px;color:#94A3B8;font-weight:400"> / 5</span></div>
+                    </div>
+                    <div style="display:grid;gap:12px">${cards}</div>
+                    <div style="margin-top:16px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                        <span style="font-weight:600;color:#475569">🔒 匿名说明：</span>评价内容与学生身份解耦存储，教师只能看到各维度汇总均分，无法追溯是哪位学生提交；同一学生对同一教师本学期仅可提交一次。
+                    </div>
+                </div>`;
+            }
+
+            // S6. 通知公告
+            else if (title === '通知公告') {
+                refText = '教务与班主任发布的通知';
+                titleHtml = '通知公告';
+                recordCount = 0;
+                var NEWS = [
+                    ['置顶', '关于秋季学期期中考试安排的通知', '教务处', '2026-10-20', '期中考试定于 11 月 5 日至 7 日进行，请各位同学于考前一周查收考场安排。'],
+                    ['调课', '第 8 周数学课程调整通知', '王建国', '2026-10-19', '本周四第 3-4 节数学课调整至周五第 5-6 节，教室不变，请相互转告。'],
+                    ['活动', '校园科技节报名开始', '学生处', '2026-10-18', '本届科技节设编程、机器人、模型三个赛道，报名截止 10 月 30 日。'],
+                    ['作业', '化学作业提交提醒', '刘强', '2026-10-17', '化学方程式配平练习已批改完毕，请在「我的作业」中查看点评。']
+                ];
+                var list = '';
+                for (var ni = 0; ni < NEWS.length; ni++) {
+                    var n = NEWS[ni];
+                    var tagColor = n[0] === '置顶' ? ['#FEF2F2', '#DC2626'] : n[0] === '调课' ? ['#FFF7ED', '#EA580C'] : ['#EEF2FF', '#4F46E5'];
+                    list += '<div style="border:1px solid #E2E8F0;border-radius:12px;padding:16px 18px;margin-bottom:10px">' +
+                        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+                            '<div style="display:flex;align-items:center;gap:8px">' +
+                                '<span style="background:' + tagColor[0] + ';color:' + tagColor[1] + ';padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600">' + n[0] + '</span>' +
+                                '<span style="font-size:15px;font-weight:600;color:#1E293B">' + n[1] + '</span>' +
+                            '</div>' +
+                            '<span style="font-size:12px;color:#94A3B8;white-space:nowrap">' + n[3] + '</span>' +
+                        '</div>' +
+                        '<div style="font-size:13px;color:#64748B;line-height:1.7">' + n[4] + '</div>' +
+                        '<div style="font-size:12px;color:#CBD5E1;margin-top:6px">发布人：' + n[2] + '</div>' +
+                    '</div>';
+                }
+                html = '<div style="padding:2px 0 12px">' + list + '</div>';
+            }
+
+            // S7. 个人信息
+            else if (title === '个人信息') {
+                refText = '本人档案信息 —— 如需修改请联系班主任';
+                titleHtml = '个人信息';
+                recordCount = 0;
+                var PROFILE = [
+                    ['学号', '20260101'], ['姓名', '张小明'], ['性别', '男'], ['年龄', '17'],
+                    ['班级', '高一(1)班'], ['班主任', '王建国'], ['联系电话', '138****5678'],
+                    ['入学日期', '2026-09-01'], ['在读状态', '在读'],
+                    ['本学期选课', '数学、英语、物理、语文、化学（5 门）']
+                ];
+                var rows = '';
+                for (var pi = 0; pi < PROFILE.length; pi++) {
+                    rows += '<tr><td style="width:160px;color:#64748B;background:#FAFBFC;font-weight:500">' + PROFILE[pi][0] + '</td><td style="color:#1E293B">' + PROFILE[pi][1] + '</td></tr>';
+                }
+                html = `
+                <div style="padding:2px 0 12px">
+                    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:18px;background:linear-gradient(135deg,#F5F3FF,#EEF2FF);border-radius:14px">
+                        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#D946EF);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700">张</div>
+                        <div>
+                            <div style="font-size:20px;font-weight:700;color:#1E293B">张小明</div>
+                            <div style="font-size:13px;color:#64748B;margin-top:3px">学号 20260101 · 高一(1)班 · 在读</div>
+                        </div>
+                    </div>
+                    <table><tbody>${rows}</tbody></table>
+                    <div style="margin-top:14px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px;color:#64748B">
+                        <span style="font-weight:600;color:#475569">🔒 说明：</span>手机号按隐私要求脱敏展示；个人档案的修改需经班主任或教务审核。
+                    </div>
+                </div>`;
+            }
+
             // 注入页面内容
             main.innerHTML = `
                 <div class="bg-white rounded-2xl soft-shadow border border-slate-100 p-8 min-h-full flex flex-col fade-in">
@@ -1216,7 +1811,7 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                             <h2 class="text-xl font-bold text-slate-800">${titleHtml}</h2>
                             <p class="text-slate-500 text-sm mt-1">${refText}</p>
                         </div>
-                        ${(title === '劳务查询统计' || title === '数据分析') ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
+                        ${(['劳务查询统计', '数据分析', '我的课表', '我的课程', '我的成绩', '我的作业', '教学评价', '通知公告', '个人信息', '成绩登记', '课堂考勤', '我的课表_师', '我的班级', '教学进度', '学生评语'].indexOf(title) >= 0) ? '' : `<button class="js-add bg-blue-600 text-white px-5 py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 hover:bg-blue-700 transition-all font-medium">
                             ${title === '新闻管理' ? '+ 发布新闻' : '+ 新增记录'}
                         </button>`}
                     </div>
@@ -1690,6 +2285,13 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
         function enhanceToolbar() {
             var bar = document.querySelector('#main-content .flex.flex-wrap.justify-between');
             if (!bar || bar.querySelector('.js-export')) return;
+            // 无表格的页面不显示导出
+            if (!document.querySelector('#main-content table')) return;
+            // 课表、个人信息等非列表页不显示导出
+            var NO_EXPORT = ['我的课表', '我的课表_师', '个人信息', '教学评价', '通知公告', '成绩登记', '课堂考勤', '我的班级', '教学进度', '学生评语', '数据分析', '劳务查询统计'];
+            var bcEl = document.getElementById('breadcrumb');
+            var curT = bcEl ? bcEl.innerText.trim() : '';
+            if (NO_EXPORT.indexOf(curT) >= 0) return;
             var wrap = document.createElement('div');
             wrap.style.cssText = 'display:flex;gap:8px;align-items:center';
             var addBtn = bar.querySelector('.js-add');
@@ -1714,6 +2316,7 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
             else if (btn.classList.contains('js-edit')) { openForm('edit', btn.closest('tr')); }
             else if (btn.classList.contains('js-delete')) { deleteRow(btn); }
             else if (btn.classList.contains('js-view')) { viewRow(btn); }
+            else if (btn.classList.contains('js-submit')) { submitHomework(btn); }
         });
 
         // ---------- 接管 changeContent ----------
@@ -1730,12 +2333,12 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
         // ---------- 角色权限：菜单可见性 ----------
         // 与实验五报告中的"数据范围隔离"设计保持一致
         var ROLE_MENUS = {
-            '超级管理员': ['dashboard', 'analysis', 'sys', 'stu', 'teacher', 'hw', 'res', 'lw',
-                           'scholarship', 'news'],
+            '超级管理员': ['dashboard', 'analysis', 'mine', 'twork', 'sys', 'stu', 'teacher',
+                           'hw', 'res', 'lw', 'scholarship', 'news'],
             '教务管理员': ['dashboard', 'analysis', 'sys', 'stu', 'teacher', 'hw', 'res',
                            'scholarship', 'news'],
-            '授课教师': ['dashboard', 'teacher', 'hw', 'res'],
-            '学生': ['dashboard'],
+            '授课教师': ['dashboard', 'twork', 'teacher', 'hw', 'res'],
+            '学生': ['mine'],
             '劳务管理员': ['dashboard', 'analysis', 'lw'],
             '项目经理': ['dashboard', 'analysis', 'lw'],
             '财务人员': ['dashboard', 'analysis', 'lw']
@@ -1809,6 +2412,23 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                 }
             }
             if (typeof applyRoleSubMenus === 'function') applyRoleSubMenus(role);
+
+            // 学生：默认进入「我的课表」，且不允许停留在机构级页面
+            if (role === '学生') {
+                var STUDENT_PAGES = ['我的课表', '我的课程', '我的成绩', '我的作业',
+                                     '教学评价', '通知公告', '个人信息'];
+                var curEl = document.getElementById('breadcrumb');
+                var curTitle = curEl ? curEl.innerText.trim() : '';
+                if (STUDENT_PAGES.indexOf(curTitle) < 0) {
+                    setTimeout(function () {
+                        var target = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
+                            .filter(function (n) {
+                                return (n.getAttribute('onclick') || '').indexOf("changeContent('我的课表'") === 0;
+                            })[0];
+                        if (target) changeContent('我的课表', target);
+                    }, 0);
+                }
+            }
         }
 
         // ---------- 数据范围：项目经理只看本项目 ----------
@@ -1878,6 +2498,35 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
         function renderPagination(title) {
             var tb = tbodyEl();
             if (!tb) return;
+            // 交互型页面不参与分页
+            if (['课堂考勤', '成绩登记'].indexOf(title) >= 0) {
+                var bx0 = paginationBox();
+                if (bx0) {
+                    var bw0 = bx0.wrapper.querySelector('div:last-child');
+                    if (bw0) bw0.innerHTML = '';
+                    bx0.count.innerHTML = '';
+                }
+                return;
+            }
+            // 只有「数据列表」才分页：必须存在「操作」列
+            var hasAction = cols().some(function (c) { return c.action; });
+            if (!hasAction) {
+                var allRows = tb.querySelectorAll('tr');
+                for (var q = 0; q < allRows.length; q++) {
+                    allRows[q].style.display = (allRows[q].getAttribute('data-out') === '1') ? 'none' : '';
+                }
+                var bx = paginationBox();
+                if (bx) {
+                    var n2 = 0;
+                    for (var r2 = 0; r2 < allRows.length; r2++) {
+                        if (allRows[r2].getAttribute('data-out') !== '1') n2++;
+                    }
+                    bx.count.innerHTML = '共 <span class="text-slate-700 font-medium">' + n2 + '</span> 条记录';
+                    var bw = bx.wrapper.querySelector('div:last-child');
+                    if (bw) bw.innerHTML = '';
+                }
+                return;
+            }
             var all = tb.querySelectorAll('tr');
             var pool = [];
             for (var i = 0; i < all.length; i++) {
@@ -1941,6 +2590,16 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
         }
 
         function applyView(title) {
+            if (title === '课堂考勤') {
+                setTimeout(function () { if (window.initAttendPage) initAttendPage(); }, 0);
+                enhanceToolbar();
+                return;
+            }
+            if (title === '成绩登记') {
+                setTimeout(function () { if (window.initScorePage) initScorePage(); }, 0);
+                enhanceToolbar();
+                return;
+            }
             restoreTable(title);
             applyScope();
             renderPagination(title);
@@ -1991,6 +2650,436 @@ var Vr={},Br={};var Fr=function(){function t(t,e,n){var i=this;this._sleepAfterS
                 renderPagination(currentTitle);
             });
         }
+
+        // ---------- 课堂考勤 ----------
+        var ATT_STUDENTS = [
+            ['20260101', '张小明'], ['20260102', '李小红'], ['20260103', '王强'],
+            ['20260104', '陈晨'], ['20260105', '刘洋'], ['20260106', '周婷']
+        ];
+        var ATT_STATUS = [
+            ['出勤', '#059669', '#ECFDF5'],
+            ['迟到', '#D97706', '#FFFBEB'],
+            ['请假', '#2563EB', '#EFF6FF'],
+            ['缺勤', '#DC2626', '#FEF2F2']
+        ];
+        var attState = {};
+        var ATT_KEY = 'cy_attend_v1';
+
+        function attAll() {
+            try { return JSON.parse(localStorage.getItem(ATT_KEY) || '[]'); } catch (e) { return []; }
+        }
+        function attSave(arr) {
+            try { localStorage.setItem(ATT_KEY, JSON.stringify(arr)); } catch (e) {}
+        }
+        function attKeyOf() {
+            var c = (document.getElementById('att-class') || {}).value || '';
+            var k = (document.getElementById('att-course') || {}).value || '';
+            var d = (document.getElementById('att-date') || {}).value || '';
+            var p = (document.getElementById('att-period') || {}).value || '';
+            return [c, k, d, p].join('|');
+        }
+
+        function initAttendPage() {
+            var body = document.getElementById('att-body');
+            if (!body) return;
+            var key = attKeyOf();
+            var list = attAll();
+            var found = null;
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].key === key) { found = list[i]; break; }
+            }
+            attState = found ? JSON.parse(JSON.stringify(found.data)) : {};
+            if (!found) {
+                ATT_STUDENTS.forEach(function (s) { attState[s[0]] = '出勤'; });
+            }
+
+            var rows = '';
+            ATT_STUDENTS.forEach(function (stu) {
+                var cur = attState[stu[0]] || '出勤';
+                var btns = '';
+                ATT_STATUS.forEach(function (st) {
+                    var on = (st[0] === cur);
+                    btns += '<button type="button" onclick="setAttend(\'' + stu[0] + '\',\'' + st[0] + '\')" ' +
+                        'data-att="' + stu[0] + '" data-st="' + st[0] + '" ' +
+                        'style="padding:5px 12px;margin-right:6px;border-radius:7px;font-size:12px;font-weight:500;border:1px solid ' +
+                        (on ? st[1] : '#E2E8F0') + ';background:' + (on ? st[2] : '#fff') + ';color:' + (on ? st[1] : '#94A3B8') + '">' +
+                        st[0] + '</button>';
+                });
+                rows += '<tr>' +
+                    '<td style="font-family:Consolas,monospace;color:#64748B">' + stu[0] + '</td>' +
+                    '<td><b>' + stu[1] + '</b></td>' +
+                    '<td>' + btns + '</td>' +
+                    '<td><input type="text" placeholder="选填" style="width:100%;padding:6px 9px;border:1px solid #E2E8F0;border-radius:6px;font-size:12px;color:#475569"></td>' +
+                    '</tr>';
+            });
+            body.innerHTML = rows;
+            updateAttStats();
+
+            // 历史记录
+            var hist = document.getElementById('att-history');
+            if (hist) {
+                var mine = list.filter(function (r) { return r.key.indexOf(key.split('|')[0] + '|') === 0; });
+                mine.sort(function (a, b) { return (b.at || '').localeCompare(a.at || ''); });
+                if (!mine.length) {
+                    hist.innerHTML = '<div style="padding:10px 0;color:#94A3B8">暂无历史记录，保存本次考勤后将显示在这里。</div>';
+                } else {
+                    var h = '<table><thead><tr><th>日期</th><th>节次</th><th>课程</th><th>出勤</th><th>迟到</th><th>请假</th><th>缺勤</th><th>出勤率</th></tr></thead><tbody>';
+                    mine.slice(0, 5).forEach(function (r) {
+                        var c = { '出勤': 0, '迟到': 0, '请假': 0, '缺勤': 0 };
+                        for (var k in r.data) { if (c[r.data[k]] !== undefined) c[r.data[k]]++; }
+                        var total = Object.keys(r.data).length || 1;
+                        var rate = Math.round((c['出勤'] + c['迟到']) / total * 100);
+                        var parts = r.key.split('|');
+                        h += '<tr><td>' + parts[2] + '</td><td>' + parts[3] + '</td><td>' + parts[1] + '</td>' +
+                            '<td style="color:#059669;font-weight:600">' + c['出勤'] + '</td>' +
+                            '<td style="color:#D97706">' + c['迟到'] + '</td>' +
+                            '<td style="color:#2563EB">' + c['请假'] + '</td>' +
+                            '<td style="color:#DC2626">' + c['缺勤'] + '</td>' +
+                            '<td><b>' + rate + '%</b></td></tr>';
+                    });
+                    h += '</tbody></table>';
+                    hist.innerHTML = h;
+                }
+            }
+        }
+
+        function setAttend(stuId, status) {
+            attState[stuId] = status;
+            var btns = document.querySelectorAll('button[data-att="' + stuId + '"]');
+            for (var i = 0; i < btns.length; i++) {
+                var st = btns[i].getAttribute('data-st');
+                var conf = null;
+                for (var j = 0; j < ATT_STATUS.length; j++) {
+                    if (ATT_STATUS[j][0] === st) { conf = ATT_STATUS[j]; break; }
+                }
+                var on = (st === status);
+                btns[i].style.borderColor = on ? conf[1] : '#E2E8F0';
+                btns[i].style.background = on ? conf[2] : '#fff';
+                btns[i].style.color = on ? conf[1] : '#94A3B8';
+            }
+            updateAttStats();
+        }
+
+        function allPresent() {
+            ATT_STUDENTS.forEach(function (s) { setAttend(s[0], '出勤'); });
+            toast('已全部标记为出勤', 'info');
+        }
+
+        function updateAttStats() {
+            var box = document.getElementById('att-stats');
+            if (!box) return;
+            var c = { '出勤': 0, '迟到': 0, '请假': 0, '缺勤': 0 };
+            for (var k in attState) { if (c[attState[k]] !== undefined) c[attState[k]]++; }
+            var total = ATT_STUDENTS.length;
+            var rate = Math.round((c['出勤'] + c['迟到']) / total * 100);
+            var cards = [
+                ['出勤', c['出勤'], '#059669', '#ECFDF5'],
+                ['迟到', c['迟到'], '#D97706', '#FFFBEB'],
+                ['请假', c['请假'], '#2563EB', '#EFF6FF'],
+                ['缺勤', c['缺勤'], '#DC2626', '#FEF2F2'],
+                ['出勤率', rate + '%', '#4F46E5', '#EEF2FF']
+            ];
+            var h = '';
+            cards.forEach(function (x) {
+                h += '<div style="background:' + x[3] + ';border-radius:10px;padding:11px 13px">' +
+                    '<div style="font-size:12px;color:' + x[2] + '">' + x[0] + '</div>' +
+                    '<div style="font-size:19px;font-weight:700;color:' + x[2] + ';margin-top:1px">' + x[1] + '</div></div>';
+            });
+            box.innerHTML = h;
+        }
+
+        function saveAttend() {
+            var key = attKeyOf();
+            if (!key || key.split('|').length !== 4) { toast('请先选择班级、课程、日期与节次', 'error'); return; }
+            var list = attAll();
+            var idx = -1;
+            for (var i = 0; i < list.length; i++) { if (list[i].key === key) { idx = i; break; } }
+            var rec = { key: key, data: attState, at: new Date().toISOString().slice(0, 19).replace('T', ' ') };
+            if (idx >= 0) { list[idx] = rec; } else { list.push(rec); }
+            attSave(list);
+            var c = 0;
+            for (var k in attState) { if (attState[k] === '缺勤') c++; }
+            toast('考勤已保存（缺勤 ' + c + ' 人），记录已写入历史', 'success');
+            initAttendPage();
+        }
+
+        window.initAttendPage = initAttendPage;
+        window.setAttend = setAttend;
+        window.allPresent = allPresent;
+        window.saveAttend = saveAttend;
+
+        // ---------- 成绩登记 ----------
+        var SCORE_STUDENTS = [
+            ['20260101', '张小明', '高一(1)班'],
+            ['20260102', '李小红', '高一(1)班'],
+            ['20260103', '王强', '高一(1)班'],
+            ['20260104', '陈晨', '高一(1)班'],
+            ['20260105', '刘洋', '高一(1)班'],
+            ['20260106', '周婷', '高一(1)班']
+        ];
+
+        function scoreStore() {
+            try { return JSON.parse(localStorage.getItem('cy_score_v1') || '{}'); } catch (e) { return {}; }
+        }
+        function scoreSaveStore(o) {
+            try { localStorage.setItem('cy_score_v1', JSON.stringify(o)); } catch (e) {}
+        }
+        function gradeOf(t) {
+            if (t === null || isNaN(t)) return ['—', '#94A3B8', '#F8FAFC'];
+            if (t >= 90) return ['优秀', '#059669', '#ECFDF5'];
+            if (t >= 80) return ['良好', '#2563EB', '#EFF6FF'];
+            if (t >= 70) return ['中等', '#7C3AED', '#F5F3FF'];
+            if (t >= 60) return ['合格', '#EA580C', '#FFF7ED'];
+            return ['待提高', '#DC2626', '#FEF2F2'];
+        }
+
+        function initScorePage() {
+            var body = document.getElementById('score-body');
+            if (!body) return;
+            var sel = document.getElementById('score-exam');
+            var examNo = sel ? sel.value : 'EX-2026-11-01';
+            var all = scoreStore();
+            var cur = all[examNo] || {};
+
+            var rows = '';
+            SCORE_STUDENTS.forEach(function (stu) {
+                var rec = cur[stu[0]] || {};
+                var mid = (rec.mid === undefined || rec.mid === null || rec.mid === '') ? '' : rec.mid;
+                var fin = (rec.fin === undefined || rec.fin === null || rec.fin === '') ? '' : rec.fin;
+                rows += '<tr>' +
+                    '<td style="font-family:Consolas,monospace;color:#64748B">' + stu[0] + '</td>' +
+                    '<td><b>' + stu[1] + '</b></td>' +
+                    '<td>' + stu[2] + '</td>' +
+                    '<td><input type="number" min="0" max="100" data-stu="' + stu[0] + '" data-part="mid" value="' + mid +
+                        '" oninput="calcScoreRow(this)" placeholder="0-100" ' +
+                        'style="width:88px;padding:7px 10px;border:1px solid #E2E8F0;border-radius:7px;font-size:13px;color:#1E293B;text-align:center"></td>' +
+                    '<td><input type="number" min="0" max="100" data-stu="' + stu[0] + '" data-part="fin" value="' + fin +
+                        '" oninput="calcScoreRow(this)" placeholder="0-100" ' +
+                        'style="width:88px;padding:7px 10px;border:1px solid #E2E8F0;border-radius:7px;font-size:13px;color:#1E293B;text-align:center"></td>' +
+                    '<td data-total="' + stu[0] + '" style="font-weight:700;color:#94A3B8">—</td>' +
+                    '<td data-grade="' + stu[0] + '"><span style="padding:2px 8px;border-radius:5px;font-size:12px;color:#94A3B8;background:#F8FAFC">—</span></td>' +
+                    '</tr>';
+            });
+            body.innerHTML = rows;
+
+            // 初始计算
+            SCORE_STUDENTS.forEach(function (stu) {
+                var el = body.querySelector('input[data-stu="' + stu[0] + '"][data-part="mid"]');
+                if (el && el.value !== '') calcScoreRow(el, true);
+            });
+
+            var hint = document.getElementById('score-hint');
+            if (hint) {
+                var filled = 0;
+                SCORE_STUDENTS.forEach(function (stu) {
+                    var r = cur[stu[0]] || {};
+                    if (r.mid !== undefined && r.mid !== '' && r.fin !== undefined && r.fin !== '') filled++;
+                });
+                hint.textContent = '共 ' + SCORE_STUDENTS.length + ' 名学生，已完整登记 ' + filled + ' 名';
+            }
+        }
+
+        function calcScoreRow(inp, silent) {
+            var stu = inp.getAttribute('data-stu');
+            var td = inp.closest('td');
+            var tr = td.parentElement;
+            var midEl = tr.querySelector('input[data-stu="' + stu + '"][data-part="mid"]');
+            var finEl = tr.querySelector('input[data-stu="' + stu + '"][data-part="fin"]');
+            var totalCell = tr.querySelector('[data-total="' + stu + '"]');
+            var gradeCell = tr.querySelector('[data-grade="' + stu + '"]');
+
+            var mv = midEl ? midEl.value.trim() : '';
+            var fv = finEl ? finEl.value.trim() : '';
+            // 范围修正
+            [midEl, finEl].forEach(function (el) {
+                if (!el || el.value === '') return;
+                var n = parseFloat(el.value);
+                if (isNaN(n)) return;
+                if (n > 100) el.value = '100';
+                if (n < 0) el.value = '0';
+            });
+
+            var m = midEl && midEl.value !== '' ? parseFloat(midEl.value) : null;
+            var f = finEl && finEl.value !== '' ? parseFloat(finEl.value) : null;
+            var total = null;
+            if (m !== null && f !== null) total = Math.round(m * 0.4 + f * 0.6);
+            else if (m !== null) total = Math.round(m);
+            else if (f !== null) total = Math.round(f);
+
+            if (totalCell) {
+                totalCell.textContent = (total === null) ? '—' : total;
+                totalCell.style.color = (total === null) ? '#94A3B8'
+                    : (total >= 80 ? '#059669' : (total >= 60 ? '#EA580C' : '#DC2626'));
+            }
+            if (gradeCell) {
+                var g = gradeOf(total);
+                gradeCell.innerHTML = '<span style="padding:2px 8px;border-radius:5px;font-size:12px;font-weight:500;color:' +
+                    g[1] + ';background:' + g[2] + '">' + g[0] + '</span>';
+            }
+            return total;
+        }
+
+        function saveScores() {
+            var sel = document.getElementById('score-exam');
+            var examNo = sel ? sel.value : '';
+            var body = document.getElementById('score-body');
+            if (!body) return;
+            var rec = {};
+            var complete = 0;
+            SCORE_STUDENTS.forEach(function (stu) {
+                var m = body.querySelector('input[data-stu="' + stu[0] + '"][data-part="mid"]');
+                var f = body.querySelector('input[data-stu="' + stu[0] + '"][data-part="fin"]');
+                var mv = m ? m.value.trim() : '';
+                var fv = f ? f.value.trim() : '';
+                if (mv === '' && fv === '') return;
+                rec[stu[0]] = {
+                    mid: mv === '' ? '' : Number(mv),
+                    fin: fv === '' ? '' : Number(fv)
+                };
+                if (mv !== '' && fv !== '') complete++;
+            });
+            var all = scoreStore();
+            all[examNo] = rec;
+            scoreSaveStore(all);
+            var hint = document.getElementById('score-hint');
+            if (hint) hint.textContent = '共 ' + SCORE_STUDENTS.length + ' 名学生，已完整登记 ' + complete + ' 名';
+            toast('已保存 ' + complete + ' 名学生的成绩（' + examNo + '）', 'success');
+        }
+
+        window.initScorePage = initScorePage;
+        window.calcScoreRow = calcScoreRow;
+        window.saveScores = saveScores;
+
+        // ---------- 教学评价弹窗 ----------
+        var EVAL_DIMS = [
+            ['comprehensive', '综合素质', '教学态度、师德与责任心'],
+            ['position', '岗位适配', '专业能力与课程匹配度'],
+            ['skill', '教学技能', '讲解清晰度、课堂组织与互动'],
+            ['tutor', '辅导情况', '答疑耐心与课后辅导']
+        ];
+        var evalState = { teacher: '', course: '', scores: {} };
+
+        function openEval(teacher, course) {
+            var old = document.getElementById('eval-modal');
+            if (old) old.parentNode.removeChild(old);
+            evalState = { teacher: teacher, course: course, scores: {} };
+            var m = document.createElement('div');
+            m.id = 'eval-modal';
+            m.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.45)';
+            var dimsHtml = '';
+            EVAL_DIMS.forEach(function (d) {
+                var stars = '';
+                for (var i = 1; i <= 5; i++) {
+                    stars += '<span data-dim="' + d[0] + '" data-v="' + i + '" class="ev-star" ' +
+                             'style="cursor:pointer;font-size:26px;line-height:1;color:#E2E8F0;transition:color .12s">★</span>';
+                }
+                dimsHtml +=
+                    '<div style="padding:12px 0;border-bottom:1px solid #F1F5F9">' +
+                        '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">' +
+                            '<div><span style="font-size:14px;font-weight:600;color:#1E293B">' + d[1] + '</span>' +
+                            '<span style="font-size:12px;color:#94A3B8;margin-left:8px">' + d[2] + '</span></div>' +
+                            '<span id="ev-score-' + d[0] + '" style="font-size:12px;color:#94A3B8">未评分</span>' +
+                        '</div>' +
+                        '<div style="display:flex;gap:4px">' + stars + '</div>' +
+                    '</div>';
+            });
+            m.innerHTML =
+                '<div style="background:#fff;border-radius:16px;width:min(520px,94vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(15,23,42,.28)">' +
+                    '<div style="padding:18px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center">' +
+                        '<div>' +
+                            '<div style="font-size:16px;font-weight:700;color:#1E293B">教学评价</div>' +
+                            '<div style="font-size:12px;color:#94A3B8;margin-top:2px">' + teacher + ' · ' + course + ' · 匿名提交</div>' +
+                        '</div>' +
+                        '<button onclick="closeEval()" style="color:#94A3B8;font-size:18px">✕</button>' +
+                    '</div>' +
+                    '<div style="padding:6px 24px 4px;overflow-y:auto">' +
+                        dimsHtml +
+                        '<div style="padding:14px 0 6px">' +
+                            '<div style="font-size:14px;font-weight:600;color:#1E293B;margin-bottom:8px">意见建议（选填）</div>' +
+                            '<textarea id="ev-comment" rows="3" placeholder="可以从课堂节奏、作业量、答疑方式等方面提出建议" ' +
+                                'style="width:100%;padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;color:#1E293B;resize:vertical;font-family:inherit"></textarea>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="padding:14px 24px;border-top:1px solid #F1F5F9;display:flex;justify-content:flex-end;gap:10px">' +
+                        '<button onclick="closeEval()" style="padding:9px 20px;border:1px solid #E2E8F0;border-radius:9px;color:#475569;font-size:14px">取消</button>' +
+                        '<button onclick="submitEval()" style="padding:9px 22px;background:#7C3AED;color:#fff;border-radius:9px;font-size:14px;font-weight:600">提交评价</button>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(m);
+            m.addEventListener('click', function (e) { if (e.target === m) closeEval(); });
+
+            // 星级点击
+            var stars = m.querySelectorAll('.ev-star');
+            for (var i = 0; i < stars.length; i++) {
+                stars[i].addEventListener('click', function () {
+                    var dim = this.getAttribute('data-dim');
+                    var val = parseInt(this.getAttribute('data-v'), 10);
+                    evalState.scores[dim] = val;
+                    var same = m.querySelectorAll('.ev-star[data-dim="' + dim + '"]');
+                    for (var j = 0; j < same.length; j++) {
+                        var v = parseInt(same[j].getAttribute('data-v'), 10);
+                        same[j].style.color = (v <= val) ? '#F59E0B' : '#E2E8F0';
+                    }
+                    var lbl = document.getElementById('ev-score-' + dim);
+                    if (lbl) {
+                        var names = { 1: '很不同意', 2: '不同意', 3: '一般', 4: '同意', 5: '很同意' };
+                        lbl.textContent = val + ' 分 · ' + names[val];
+                        lbl.style.color = '#F59E0B';
+                    }
+                });
+            }
+        }
+
+        function closeEval() {
+            var m = document.getElementById('eval-modal');
+            if (m && m.parentNode) m.parentNode.removeChild(m);
+        }
+
+        function submitEval() {
+            var missing = [];
+            EVAL_DIMS.forEach(function (d) {
+                if (!evalState.scores[d[0]]) missing.push(d[1]);
+            });
+            if (missing.length) {
+                toast('还有 ' + missing.length + ' 个维度未评分：' + missing.join('、'), 'error');
+                return;
+            }
+            var total = 0;
+            EVAL_DIMS.forEach(function (d) { total += evalState.scores[d[0]]; });
+            var avg = (total / EVAL_DIMS.length).toFixed(2);
+            var saved = {};
+            try { saved = JSON.parse(localStorage.getItem('cy_eval_v1') || '{}'); } catch (e) { saved = {}; }
+            saved[evalState.teacher] = {
+                course: evalState.course,
+                scores: evalState.scores,
+                avg: avg,
+                comment: (document.getElementById('ev-comment') || {}).value || '',
+                at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            };
+            try { localStorage.setItem('cy_eval_v1', JSON.stringify(saved)); } catch (e) {}
+            closeEval();
+            toast('评价已提交（匿名）· 平均 ' + avg + ' 分', 'success');
+            var el = Array.prototype.slice.call(document.querySelectorAll('[onclick]'))
+                .filter(function (n) { return (n.getAttribute('onclick') || '').indexOf("changeContent('教学评价'") === 0; })[0];
+            if (el) changeContent('教学评价', el);
+        }
+
+        // ---------- 作业提交 ----------
+        function submitHomework(btn) {
+            var tr = btn.closest('tr');
+            if (!tr) return;
+            var title = tr.cells[0] ? tr.cells[0].innerText.trim() : '该作业';
+            if (!confirm('确认提交《' + title + '》吗？\\n提交后将不能修改，逾期会标记为迟交。')) return;
+            tr.cells[4].innerHTML = '<span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-medium">已提交</span>';
+            tr.cells[5].textContent = '待批改';
+            btn.className = 'js-view text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors';
+            btn.textContent = '查看提交';
+            toast('已提交《' + title + '》', 'success');
+        }
+
+        window.openEval = openEval;
+        window.closeEval = closeEval;
+        window.submitEval = submitEval;
 
         // 暴露给调试
         window.__crud = { export: exportCSV, store: function () { return STORE; } };
