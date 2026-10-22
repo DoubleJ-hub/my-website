@@ -397,7 +397,7 @@
         </nav>
         <!-- 底部版本信息 -->
         <div class="p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-            冲鸭教育 · v1.5.0
+            冲鸭教育 · v1.6.0 · 期中版
         </div>
     </aside>
 
@@ -1183,21 +1183,10 @@
         }
 
         // ============ 事件委托：表格操作按钮 ============
-        document.getElementById('main-content').addEventListener('click', function (e) {
-            const btn = e.target.closest('button');
-            if (!btn) return;
-            const row = btn.closest('tr');
-            const firstCell = row ? row.cells[0].innerText.trim() : '';
-            if (btn.classList.contains('js-edit')) toast(`编辑第 ${firstCell} 条记录（演示）`, 'info');
-            else if (btn.classList.contains('js-delete')) toast(`已删除第 ${firstCell} 条记录（演示）`, 'error');
-            else if (btn.classList.contains('js-view')) toast(`查看第 ${firstCell} 条评教详情（演示）`, 'info');
-            else if (btn.classList.contains('js-add')) toast('演示环境：新增需接入后端接口', 'info');
-        });
+        // 点击交互已由期中升级模块接管（见文件末尾 CRUD 引擎）
 
         // ============ 登录按钮 ============
-        document.getElementById('login-btn').addEventListener('click', function () {
-            toast('演示环境：登录功能需接入后端验证', 'info');
-        });
+        // 登录逻辑由期中升级模块接管
 
         // ============ 全局搜索过滤 ============
         document.getElementById('global-search').addEventListener('input', function () {
@@ -1238,5 +1227,439 @@
             window.__onEChartsReady = function () { boot(); };
         }
     </script>
+
+    <!-- ==================== 登录门 ==================== -->
+    <div id="login-gate" style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F5F3FF 0%,#EEF2F7 50%,#E0E7FF 100%)">
+        <div style="width:min(420px,92vw);background:#fff;border-radius:20px;padding:34px 32px 28px;box-shadow:0 24px 64px rgba(15,23,42,.16)">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+                <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#D946EF);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 20px rgba(139,92,246,.35)">🦆</div>
+                <div>
+                    <div style="font-size:19px;font-weight:700;color:#1E293B">冲鸭教育管理系统</div>
+                    <div style="font-size:12px;color:#94A3B8;margin-top:2px">Chongya Education Management System</div>
+                </div>
+            </div>
+            <div style="height:1px;background:#F1F5F9;margin:18px 0 20px"></div>
+
+            <label style="display:grid;gap:6px;font-size:13px;color:#475569;margin-bottom:14px">
+                <span style="font-weight:600">登录角色</span>
+                <select id="login-role" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B;background:#fff">
+                    <option value="超级管理员">超级管理员　（全部功能）</option>
+                    <option value="教务管理员" selected>教务管理员　（教务业务全流程）</option>
+                    <option value="授课教师">授课教师　（本人课表与成绩）</option>
+                    <option value="学生">学生　（成绩、作业与评教）</option>
+                    <option value="劳务管理员">劳务管理员　（劳务全流程）</option>
+                    <option value="项目经理">项目经理　（本项目数据）</option>
+                    <option value="财务人员">财务人员　（工资复核发放）</option>
+                </select>
+            </label>
+
+            <label style="display:grid;gap:6px;font-size:13px;color:#475569;margin-bottom:14px">
+                <span style="font-weight:600">用户名</span>
+                <input id="login-user" type="text" value="admin" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B">
+            </label>
+
+            <label style="display:grid;gap:6px;font-size:13px;color:#475569;margin-bottom:20px">
+                <span style="font-weight:600">密码</span>
+                <input id="login-pass" type="password" value="123456" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B">
+            </label>
+
+            <button id="login-submit" style="width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#7C3AED,#A21CAF);color:#fff;font-size:15px;font-weight:600;box-shadow:0 8px 20px rgba(124,58,237,.3)">登 录 系 统</button>
+            <div style="margin-top:14px;font-size:12px;color:#94A3B8;text-align:center;line-height:1.7">
+                演示账号已预填，直接点「登录系统」即可进入<br>
+                数据保存在浏览器本地，刷新不会丢失
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 期中升级：真实 CRUD 引擎 ==================== -->
+    <script>
+    (function () {
+        'use strict';
+
+        var STORE_KEY = 'cy_data_v160';
+        var SESSION_KEY = 'cy_session_v160';
+        var STORE = {};
+        var currentTitle = '仪表盘';
+        var editingRow = null;
+
+        try { STORE = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { STORE = {}; }
+        function persist() {
+            try { localStorage.setItem(STORE_KEY, JSON.stringify(STORE)); } catch (e) {
+                console.warn('存储写入失败', e);
+            }
+        }
+
+        // ---------- 会话 ----------
+        function getSession() {
+            try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { return null; }
+        }
+        function setSession(obj) {
+            try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(obj)); } catch (e) {}
+        }
+        function applySession() {
+            var sess = getSession();
+            var gate = document.getElementById('login-gate');
+            var btn = document.getElementById('login-btn');
+            if (sess) {
+                if (gate) gate.style.display = 'none';
+                if (btn) {
+                    btn.innerHTML = '<span style="font-size:15px">👤</span> ' + sess.role + ' · 退出';
+                    btn.title = '当前登录：' + sess.user + '（' + sess.role + '）';
+                }
+            } else {
+                if (gate) gate.style.display = 'flex';
+            }
+        }
+        document.getElementById('login-submit').addEventListener('click', function () {
+            var user = (document.getElementById('login-user').value || '').trim();
+            var role = document.getElementById('login-role').value;
+            var pass = document.getElementById('login-pass').value || '';
+            if (!user) { toast('请输入用户名', 'error'); return; }
+            if (!pass) { toast('请输入密码', 'error'); return; }
+            setSession({ user: user, role: role, at: Date.now() });
+            applySession();
+            toast('欢迎回来，' + user + '（' + role + '）', 'success');
+        });
+        // 回车登录
+        ['login-user', 'login-pass'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') document.getElementById('login-submit').click();
+            });
+        });
+        document.getElementById('login-btn').addEventListener('click', function (e) {
+            if (getSession()) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                if (confirm('确定退出登录吗？')) {
+                    try { sessionStorage.removeItem(SESSION_KEY); } catch (err) {}
+                    applySession();
+                    toast('已退出登录', 'info');
+                }
+            } else {
+                applySession();
+            }
+        }, true);
+
+        // ---------- 表格与列 ----------
+        function mainTable() { return document.querySelector('#main-content table'); }
+        function tbodyEl() { var t = mainTable(); return t ? t.querySelector('tbody') : null; }
+
+        function cols() {
+            var t = mainTable();
+            if (!t) return [];
+            var ths = t.querySelectorAll('thead th');
+            var out = [];
+            for (var i = 0; i < ths.length; i++) {
+                var raw = ths[i].innerText.trim();
+                var m = raw.match(/^(.*?)\s*[（(]([^)）]+)[)）]\s*$/);
+                out.push({
+                    idx: i,
+                    label: (m ? m[1] : raw).trim(),
+                    field: m ? m[2].trim() : '',
+                    action: /操作/.test(raw)
+                });
+            }
+            return out;
+        }
+        function editableCols() { return cols().filter(function (c) { return !c.action; }); }
+
+        // ---------- 记录数联动 ----------
+        function syncCount() {
+            var tb = tbodyEl();
+            if (!tb) return;
+            var n = tb.querySelectorAll('tr').length;
+            var spans = document.querySelectorAll('#main-content span');
+            for (var i = 0; i < spans.length; i++) {
+                var sp = spans[i];
+                var parent = sp.parentElement;
+                if (parent && /条记录/.test(parent.innerText) && sp.classList.contains('font-medium')) {
+                    parent.innerHTML = '共 <span class="text-slate-700 font-medium">' + n +
+                        '</span> 条记录，当前显示 ' + (n ? 1 : 0) + '-' + n + ' 条';
+                    break;
+                }
+            }
+        }
+
+        // ---------- 持久化 ----------
+        function saveTable() {
+            var tb = tbodyEl();
+            if (!tb || !currentTitle) return;
+            STORE[currentTitle] = tb.innerHTML;
+            persist();
+        }
+        function restoreTable(title) {
+            var tb = tbodyEl();
+            if (!tb) return;
+            if (STORE[title]) {
+                tb.innerHTML = STORE[title];
+            } else {
+                // 首次进入：把示例数据存下来作为基准
+                STORE[title] = tb.innerHTML;
+                persist();
+            }
+            syncCount();
+        }
+
+        // ---------- 模态框 ----------
+        function ensureModal() {
+            var d = document.getElementById('crud-modal');
+            if (d) return d;
+            d = document.createElement('div');
+            d.id = 'crud-modal';
+            d.style.cssText = 'position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.45)';
+            d.innerHTML =
+                '<div style="background:#fff;border-radius:16px;width:min(600px,94vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(15,23,42,.28)">' +
+                  '<div style="display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid #F1F5F9">' +
+                    '<div id="crud-title" style="font-size:16px;font-weight:700;color:#1E293B">新增记录</div>' +
+                    '<button type="button" id="crud-x" style="color:#94A3B8;font-size:18px;line-height:1">✕</button>' +
+                  '</div>' +
+                  '<div id="crud-body" style="padding:20px 24px;overflow-y:auto;display:grid;gap:14px"></div>' +
+                  '<div style="display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid #F1F5F9">' +
+                    '<button type="button" id="crud-cancel" style="padding:9px 20px;border:1px solid #E2E8F0;border-radius:9px;color:#475569;font-size:14px">取消</button>' +
+                    '<button type="button" id="crud-save" style="padding:9px 22px;background:#7C3AED;color:#fff;border-radius:9px;font-size:14px;font-weight:600">保存</button>' +
+                  '</div>' +
+                '</div>';
+            document.body.appendChild(d);
+            d.addEventListener('click', function (e) { if (e.target === d) closeModal(); });
+            d.querySelector('#crud-x').onclick = closeModal;
+            d.querySelector('#crud-cancel').onclick = closeModal;
+            d.querySelector('#crud-save').onclick = saveForm;
+            return d;
+        }
+        function closeModal() {
+            var d = document.getElementById('crud-modal');
+            if (d) d.style.display = 'none';
+            editingRow = null;
+        }
+
+        function guessType(c) {
+            var s = c.label + ' ' + c.field;
+            if (/日期|Date|日期|时间/.test(s)) return 'date';
+            if (/金额|工资|时薪|工时|分数|人数|年龄|数量|课时|学时|阅读量|序号|次数/.test(s)) return 'number';
+            if (/密码|pwd|password/i.test(s)) return 'text';
+            return 'text';
+        }
+
+        function openForm(mode, row) {
+            ensureModal();
+            editingRow = (mode === 'edit') ? row : null;
+            var d = document.getElementById('crud-modal');
+            var titleEl = document.getElementById('crud-title');
+            var body = document.getElementById('crud-body');
+            titleEl.textContent = (mode === 'edit' ? '编辑记录' : '新增记录') + '　—　' + currentTitle;
+            body.innerHTML = '';
+
+            var list = editableCols();
+            list.forEach(function (c) {
+                var wrap = document.createElement('label');
+                wrap.style.cssText = 'display:grid;gap:6px;font-size:13px;color:#475569';
+                var t = guessType(c);
+                var hint = c.field ? ' <span style="color:#94A3B8;font-weight:400">(' + c.field + ')</span>' : '';
+                wrap.innerHTML =
+                    '<span style="font-weight:600">' + c.label + hint + '</span>' +
+                    '<input data-idx="' + c.idx + '" type="' + t + '" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#1E293B;background:#fff">';
+                body.appendChild(wrap);
+            });
+
+            if (row) {
+                list.forEach(function (c) {
+                    var inp = body.querySelector('input[data-idx="' + c.idx + '"]');
+                    var cell = row.cells[c.idx];
+                    if (inp && cell) inp.value = cell.innerText.trim();
+                });
+            }
+            d.style.display = 'flex';
+            var first = body.querySelector('input');
+            if (first) setTimeout(function () { first.focus(); }, 60);
+        }
+
+        function saveForm() {
+            var tb = tbodyEl();
+            if (!tb) { closeModal(); return; }
+            var body = document.getElementById('crud-body');
+            var colList = cols();
+            var list = editableCols();
+            var vals = {};
+            var inputs = body.querySelectorAll('input');
+            for (var i = 0; i < inputs.length; i++) vals[inputs[i].dataset.idx] = inputs[i].value.trim();
+
+            // 必填校验：前两列
+            for (var k = 0; k < Math.min(2, list.length); k++) {
+                var c = list[k];
+                if (!vals[c.idx]) {
+                    toast('请填写「' + c.label + '」', 'error');
+                    var el = body.querySelector('input[data-idx="' + c.idx + '"]');
+                    if (el) el.focus();
+                    return;
+                }
+            }
+
+            if (editingRow) {
+                colList.forEach(function (c) {
+                    if (c.action) return;
+                    var cell = editingRow.cells[c.idx];
+                    if (cell && vals[c.idx] !== undefined) cell.innerHTML = vals[c.idx] || '—';
+                });
+                toast('修改已保存', 'success');
+            } else {
+                var tr = document.createElement('tr');
+                var sample = tb.querySelector('tr');
+                colList.forEach(function (c) {
+                    var td = document.createElement('td');
+                    if (c.action) {
+                        if (sample && sample.cells[c.idx]) {
+                            td.className = sample.cells[c.idx].className;
+                            var btns = sample.cells[c.idx].querySelectorAll('button');
+                            var html = '';
+                            for (var b = 0; b < btns.length; b++) {
+                                html += btns[b].outerHTML;
+                            }
+                            td.innerHTML = html;
+                        } else {
+                            td.className = 'text-right space-x-2';
+                            td.innerHTML = '<button class="js-edit text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs font-medium transition-colors">编辑</button>';
+                        }
+                    } else {
+                        td.textContent = vals[c.idx] || '—';
+                    }
+                    tr.appendChild(td);
+                });
+                tb.appendChild(tr);
+                toast('已新增 1 条记录', 'success');
+            }
+            saveTable();
+            syncCount();
+            closeModal();
+        }
+
+        function deleteRow(btn) {
+            var tr = btn.closest('tr');
+            if (!tr) return;
+            var first = tr.cells[0] ? tr.cells[0].innerText.trim() : '';
+            if (!confirm('确定删除「' + first + '」这条记录吗？\n删除后不可恢复。')) return;
+            tr.parentNode.removeChild(tr);
+            saveTable();
+            syncCount();
+            toast('已删除 1 条记录', 'success');
+        }
+
+        function viewRow(btn) {
+            var tr = btn.closest('tr');
+            if (!tr) return;
+            ensureModal();
+            editingRow = null;
+            var d = document.getElementById('crud-modal');
+            var body = document.getElementById('crud-body');
+            document.getElementById('crud-title').textContent = '记录详情　—　' + currentTitle;
+            body.innerHTML = '';
+            var list = editableCols();
+            list.forEach(function (c) {
+                var cell = tr.cells[c.idx];
+                var div = document.createElement('div');
+                div.style.cssText = 'display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:#F8FAFC;border-radius:8px;font-size:13px';
+                div.innerHTML = '<span style="color:#64748B;flex-shrink:0">' + c.label + '</span>' +
+                                '<span style="color:#1E293B;font-weight:500;text-align:right">' +
+                                (cell ? cell.innerText.trim() || '—' : '—') + '</span>';
+                body.appendChild(div);
+            });
+            var footer = d.querySelector('#crud-save');
+            if (footer) footer.style.display = 'none';
+            d.style.display = 'flex';
+        }
+
+        // ---------- CSV 导出 ----------
+        function exportCSV() {
+            var t = mainTable();
+            if (!t) { toast('当前页面无表格可导出', 'error'); return; }
+            var rows = [];
+            var ths = t.querySelectorAll('thead th');
+            var head = [];
+            for (var i = 0; i < ths.length; i++) {
+                var txt = ths[i].innerText.trim();
+                if (/操作/.test(txt)) continue;
+                head.push(txt.replace(/[（(][^)）]+[)）]/, '').trim());
+            }
+            rows.push(head);
+            var trs = t.querySelectorAll('tbody tr');
+            for (var r = 0; r < trs.length; r++) {
+                var cells = trs[r].cells;
+                var line = [];
+                for (var c = 0; c < cells.length; c++) {
+                    if (c >= head.length) break;
+                    line.push('"' + cells[c].innerText.trim().replace(/"/g, '""') + '"');
+                }
+                rows.push(line);
+            }
+            var csv = '\ufeff' + rows.map(function (x) { return x.join(','); }).join('\r\n');
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = currentTitle + '_' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+            toast('已导出 ' + (rows.length - 1) + ' 条记录', 'success');
+        }
+
+        // ---------- 工具栏补充按钮 ----------
+        function enhanceToolbar() {
+            var bar = document.querySelector('#main-content .flex.flex-wrap.justify-between');
+            if (!bar || bar.querySelector('.js-export')) return;
+            var wrap = document.createElement('div');
+            wrap.style.cssText = 'display:flex;gap:8px;align-items:center';
+            var addBtn = bar.querySelector('.js-add');
+            if (addBtn) {
+                addBtn.parentNode.removeChild(addBtn);
+                wrap.appendChild(addBtn);
+            }
+            var exp = document.createElement('button');
+            exp.className = 'js-export';
+            exp.textContent = '导出 CSV';
+            exp.style.cssText = 'padding:9px 16px;border:1px solid #E2E8F0;border-radius:9px;font-size:14px;color:#475569;background:#fff';
+            exp.onclick = exportCSV;
+            wrap.appendChild(exp);
+            bar.appendChild(wrap);
+        }
+
+        // ---------- 接管点击 ----------
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('button');
+            if (!btn) return;
+            if (btn.classList.contains('js-add')) { openForm('add'); }
+            else if (btn.classList.contains('js-edit')) { openForm('edit', btn.closest('tr')); }
+            else if (btn.classList.contains('js-delete')) { deleteRow(btn); }
+            else if (btn.classList.contains('js-view')) { viewRow(btn); }
+        });
+
+        // ---------- 接管 changeContent ----------
+        var _cc = window.changeContent;
+        window.changeContent = function (title, el) {
+            _cc(title, el);
+            currentTitle = title;
+            if (title && title !== '仪表盘') {
+                restoreTable(title);
+                setTimeout(enhanceToolbar, 0);
+            }
+        };
+
+        // ---------- 启动 ----------
+        applySession();
+        (function () {
+            var bc = document.getElementById('breadcrumb');
+            var cur = bc ? bc.innerText.trim() : '';
+            if (cur && cur !== '仪表盘' && cur !== '数据概览') {
+                currentTitle = cur;
+                restoreTable(cur);
+                setTimeout(enhanceToolbar, 0);
+            }
+        })();
+
+        // 暴露给调试
+        window.__crud = { export: exportCSV, store: function () { return STORE; } };
+    })();
+    </script>
+
 </body>
 </html>
